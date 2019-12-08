@@ -81,7 +81,11 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Laravel
+                    @auth
+                        Nice 2 meet u, {{ Auth::user()->name }}
+                    @else
+                        Hi, stranger
+                    @endif
                 </div>
 
                 <div class="links">
