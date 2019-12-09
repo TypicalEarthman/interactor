@@ -13,8 +13,31 @@
                             {{ session('status') }}
                         </div>
                     @endif
+                    <form action="{{ route('video.store') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        Video:
+                        <br />
+                        <input type="file" name="video" />
+                        <br /><br />
+                        <input type="submit" value=" Upload " />
+                    </form>
+                </div>
+                <div class="card">
+                    <div class="card-header">Videos</div>
+    
+                    <div class="card-body">
+                        @if (session('status'))
+                            <div class="alert alert-success" role="alert">
+                                {{ session('status') }}
+                            </div>
+                        @endif
 
-                    You are logged in!
+                        @foreach ($videos as $video)
+                            <video src="{{ asset("storage/{$video}") }}" width="400" controls="controls">
+                            </video>
+                        </div>
+                        @endforeach
+                    </div>
                 </div>
             </div>
         </div>
