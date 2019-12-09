@@ -86,7 +86,7 @@
     <script>
         if(!window.mix) var mix = {};
 
-        const app = new Vue({
+        const app_vue = new Vue({
             el: '#app',
             mixins: [mix],
             mounted() {
