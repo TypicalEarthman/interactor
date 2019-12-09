@@ -20,3 +20,5 @@ Auth::routes();
 Route::post('/video', 'VideoUploadController@store')->name('video.store');
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/editor', 'Custom\EditorController@index')->name('editor.index');
