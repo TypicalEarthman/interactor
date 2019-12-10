@@ -15,6 +15,10 @@
                     @endif
                     <form action="{{ route('video.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
+                        Name:
+                        <br />
+                        <input type="text" name="name" />
+                        <br /><br />
                         Video:
                         <br />
                         <input type="file" name="video" />
@@ -33,8 +37,11 @@
                         @endif
 
                         @foreach ($videos as $video)
-                            <video src="{{ asset("storage/{$video}") }}" width="400" controls="controls">
-                            </video>
+                            <div>
+                                <h2> {{ $video->name }} </h2>
+                                <video src="{{ asset("{$video->url}") }}" width="400" controls="controls">
+                                </video>
+                            </div>
                         </div>
                         @endforeach
                     </div>
