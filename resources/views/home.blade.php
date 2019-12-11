@@ -13,21 +13,17 @@
                             {{ session('status') }}
                         </div>
                     @endif
-                    <form action="{{ route('video.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('project.create') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         Name:
                         <br />
                         <input type="text" name="name" />
                         <br /><br />
-                        Video:
-                        <br />
-                        <input type="file" name="video" />
-                        <br /><br />
-                        <input type="submit" value=" Upload " />
+                        <input type="submit" value="Create new project" />
                     </form>
                 </div>
                 <div class="card">
-                    <div class="card-header">Videos</div>
+                    <div class="card-header">Projects</div>
     
                     <div class="card-body">
                         @if (session('status'))
@@ -36,13 +32,10 @@
                             </div>
                         @endif
 
-                        @foreach ($videos as $video)
+                        @foreach ($projects as $project)
                             <div>
-                                <h2> {{ $video->name }} </h2>
-                                <video src="{{ asset("{$video->url}") }}" width="400" controls="controls">
-                                </video>
+                                <a href='{{ url("editor?project={$project->id}") }}'>{{ $project->name }}</a>
                             </div>
-                        </div>
                         @endforeach
                     </div>
                 </div>

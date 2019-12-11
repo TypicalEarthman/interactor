@@ -27,9 +27,9 @@ class HomeController extends Controller
     public function index()
     {   
         $id = Auth::user()->id;
-        $videos = Auth::user()->videos;
+        $projects = Auth::user()->projects;
         return view('home',[
-            'videos' => $videos
+            'projects' => $projects
         ]);
     }
 }

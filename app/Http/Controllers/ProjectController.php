@@ -2,22 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Video;
+use App\Project;
 use Auth;
 use Illuminate\Http\Request;
 
-class VideoController extends Controller
-
+class ProjectController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     public function index()
     {
         //
@@ -28,9 +27,16 @@ class VideoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        
+        $id = Auth::user()->id;
+        $project = new Project();
+        $project->name = $request->get('name');
+        $project->user_id = $id;
+        $project->save();
+
+        return redirect()->back();
     }
 
     /**
@@ -41,25 +47,16 @@ class VideoController extends Controller
      */
     public function store(Request $request)
     {
-        $id = Auth::user()->id;
-        $project_id = $request->get('project_id');
-        $video = new Video();
-        $video->name = $request->get('name');
-        $video->project_id = $project_id;
-        $video->url = "/storage/users/{$id}/project{$project_id}/{$request->video->getClientOriginalName()}";
-        $request->video->storeAs("users/{$id}/project{$project_id}", $request->video->getClientOriginalName());
-        $video->save();
-
-        return redirect()->back();
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Video  $video
+     * @param  \App\Project  $project
      * @return \Illuminate\Http\Response
      */
-    public function show(Video $video)
+    public function show(Project $project)
     {
         //
     }
@@ -67,10 +64,10 @@ class VideoController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Video  $video
+     * @param  \App\Project  $project
      * @return \Illuminate\Http\Response
      */
-    public function edit(Video $video)
+    public function edit(Project $project)
     {
         //
     }
@@ -79,10 +76,10 @@ class VideoController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Video  $video
+     * @param  \App\Project  $project
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Video $video)
+    public function update(Request $request, Project $project)
     {
         //
     }
@@ -90,10 +87,10 @@ class VideoController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Video  $video
+     * @param  \App\Project  $project
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Video $video)
+    public function destroy(Project $project)
     {
         //
     }
