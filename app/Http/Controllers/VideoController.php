@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Video;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class VideoController extends Controller
 
@@ -82,9 +83,22 @@ class VideoController extends Controller
      * @param  \App\Video  $video
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Video $video)
+    public function update(Request $request)
     {
-        //
+        $id = $request->id;
+        $project_id = $request->project_id;
+        $user_id = Auth::user()->id;
+        $video = Video::where('id', $id)->first();
+        $previous_url = $video->url;
+        $previous_url = substr($previous_url, 9);
+        Video::where('id', $id)
+            ->update([
+                'url' => "/storage/users/{$id}/project{$project_id}/{$request->video->getClientOriginalName()}",
+                'name' => $request->name
+            ]);
+        $request->video->storeAs("users/{$user_id}/project{$project_id}", $request->video->getClientOriginalName());
+        Storage::delete($previous_url);
+        return redirect()->back();
     }
 
     /**

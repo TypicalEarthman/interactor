@@ -48,7 +48,20 @@
 							<h2> {{ $video->name }} </h2>
 							<video src="{{ asset("{$video->url}") }}" width="400" controls="controls">
 							</video>
-						</div>
+							<form method="POST" action="{{ route('video.update') }}" method="POST" enctype="multipart/form-data">
+								@csrf
+								Заменить видео
+								<br />
+								New name:
+								<br /><br />
+								<input type="text" name="name" />
+								<br /><br />
+								<input type="file" name="video" />
+								<br /><br />
+								<button type="submit" class="btn btn-sm btn-default">Обновить</button>
+								<input type="hidden" name="id" value="{{$video->id}}" />
+								<input type="hidden" name="project_id" value="{{$project_id}}" />
+							</form>
 					@endforeach
 				</div>
 			</div>
