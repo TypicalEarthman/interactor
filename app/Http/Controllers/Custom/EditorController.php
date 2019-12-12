@@ -17,4 +17,13 @@ class EditorController extends Controller
             'project_id' => $project_id
         ]);
     }
+    public function preview(Request $request) {
+        $project = \App\Project::find($request->project);
+        $project_id = $project->id;
+        $videos = $project->videos;
+
+        return view('editor.preview',[
+            'videos' => $videos
+        ]);
+    }
 }

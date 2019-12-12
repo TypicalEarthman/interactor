@@ -26,28 +26,32 @@
 						<input type="hidden" name="project_id" value="{{$project_id}}"/>
                         <input type="submit" value="Upload video" />
                     </form>
-                </div>
-                <div class="card">
-                    <div class="card-header">Videos</div>
-    
-                    <div class="card-body">
-                        @if (session('status'))
-                            <div class="alert alert-success" role="alert">
-                                {{ session('status') }}
-                            </div>
-                        @endif
-						
+				</div>
+			</div>
+            <div class="card">
+				<div class="card-header">Dashboard</div>
+				<a href='{{ url("preview?project={$project_id}") }}'>Preview</a>
+			</div>
+			<div class="card">
+				<div class="card-header">Videos</div>
 
-						@foreach ($videos as $video)
-							<div>
-								<h2> {{ $video->name }} </h2>
-								<video src="{{ asset("{$video->url}") }}" width="400" controls="controls">
-								</video>
-							</div>
-						@endforeach
-                    </div>
-                </div>
-            </div>
+				<div class="card-body">
+					@if (session('status'))
+						<div class="alert alert-success" role="alert">
+							{{ session('status') }}
+						</div>
+					@endif
+					
+
+					@foreach ($videos as $video)
+						<div>
+							<h2> {{ $video->name }} </h2>
+							<video src="{{ asset("{$video->url}") }}" width="400" controls="controls">
+							</video>
+						</div>
+					@endforeach
+				</div>
+			</div>
         </div>
     </div>
 </div>

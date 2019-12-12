@@ -24,3 +24,4 @@ Route::get('/project', 'ProjectController@index')->name('project.index');
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/editor', 'Custom\EditorController@index')->name('editor.index');
+Route::get('/preview', 'Custom\EditorController@preview')->name('editor.preview');

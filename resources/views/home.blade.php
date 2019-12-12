@@ -34,7 +34,7 @@
 
                         @foreach ($projects as $project)
                             <div>
-                                <a href='{{ url("editor?project={$project->id}") }}'>{{ $project->name }}</a>
+                                <a href='{{ url("preview?project={$project->id}") }}'>{{ $project->name }}</a>
                             </div>
                         @endforeach
                     </div>
