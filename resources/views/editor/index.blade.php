@@ -62,6 +62,7 @@
 								<input type="hidden" name="id" value="{{$video->id}}" />
 								<input type="hidden" name="project_id" value="{{$project_id}}" />
 							</form>
+						</div>
 					@endforeach
 				</div>
 			</div>
@@ -72,58 +73,98 @@
 
 @section('script')
 <script>
-	/*
-	const app = new PIXI.Application();
-	const loader = PIXI.Loader.shared;
-	let sprites = {};
-	let container = new PIXI.ParticleContainer(10000, {
-		scale: true,
-    	position: true,
-    	rotation: true,
-    });
-    app.stage.addChild(container);
 
-    let kerels = [];
+const app = new PIXI.Application({
+	backgroundColor: 0x1099bb
+});
+const loader = PIXI.Loader.shared;
+let container = new PIXI.ParticleContainer(10000, {
+	scale: true,
+	position: true,
+	rotation: true,
+});
 
-	app.renderer.view.style.position = "absolute";
-	app.renderer.view.style.display = "block";
-	app.renderer.autoResize = true;
-	app.renderer.resize(window.innerWidth, window.innerHeight);
+class Video extends PIXI.Graphics {
+	constructor(x,y,el) {
+		super();
+		// Rectangle styling
+		this.beginFill(0xC27261);
+		this.drawRect(0, 0, 256, 144);
+		this.endFill();
 
-	document.body.appendChild(app.view);
+		// Add text to rectangle
+		let videoName = new PIXI.Text(el.name);
+		this.addChild(videoName);
 
-	
+		//Dragging
+		 this.interactive = true;
+		 this
+			.on('pointerdown', this.onDragStart)
+			.on('pointerup', this.onDragEnd)
+			.on('pointerupoutside', this.onDragEnd)
+			.on('pointermove', this.onDragMove);
 
-	loader.add("kerel","images/kerel.png").load((loader,resources) => {
-
-		app.stage.interactive = true;
-		app.stage.on("mousemove", (e) => {
-			let kerel = new PIXI.Sprite(resources.kerel.texture);
-			kerel.scale.set(Math.random() - 0.5);
-
-			kerel.position.copyFrom(e.data.global);
-
-			kerel.rotation = Math.random();
-			kerel.anchor.set(0.5);
-			container.addChild(kerel);
-			kerels.push(kerel);
-		});
-
-		app.ticker.add(delta => {
-			for(let i = 0; i < kerels.length; i++) {
-				let kerel = kerels[i];
-				kerel.rotation -= 0.01;
-				kerel.position.y += 1;
-				kerel.scale.x += 0.003;
-				kerel.scale.y += 0.003;
-				
-			}
-		});
-	});
-
-	function randomInt(min, max) {
-		return Math.floor(Math.random() * (max - min + 1)) + min;
+		// Rectangle positioning
+		this.x = x;
+		this.y = y;
 	}
-	*/
+	onDragStart(event) {
+		this.data = event.data;
+		this.alpha = 0.5;
+		this.dragging = true;
+	}
+	onDragEnd() {
+		this.alpha = 1;
+		this.dragging = false;
+		// Set the interaction data to null
+		this.data = null;
+	}
+
+	onDragMove() {
+		if (this.dragging) {
+			const newPosition = this.data.getLocalPosition(this.parent);
+			// Set pointer on center
+			this.x = newPosition.x - 128;
+			this.y = newPosition.y -72;
+		}
+	}
+}
+let pixi = {
+	methods: {
+		createVideo: function(i,el) {
+			let rectangle = new Video(pixi.videos['last_x'],pixi.videos['last_y'],el);
+			pixi.videos['last_x'] += 0;
+			pixi.videos['last_y'] += 170;
+			pixi.videos['rectangles'].push(rectangle);
+			app.stage.addChild(pixi.videos['rectangles'][i]);
+		},
+		startProcess: function() {
+			app.stage.addChild(container);
+			app.renderer.view.style.position = "absolute";
+			app.renderer.view.style.display = "block";
+			app.renderer.autoResize = true;
+			app.renderer.resize(window.innerWidth, window.innerHeight);
+
+			document.body.appendChild(app.view);
+			this.getVideos();
+			this.renderVideos(pixi.videosDownloaded);
+		},
+		getVideos: function() {
+			pixi.videosDownloaded = {!! json_encode($videos->toArray()) !!};
+		},
+		renderVideos: function (videos) {
+			pixi.videos['last_x'] = 0;
+			pixi.videos['last_y'] = 0;
+			pixi.videos['rectangles'] = [];
+			for(let i = 0; i < videos.length; i++) {
+				this.createVideo(i,videos[i]);
+			}
+		}
+	},
+	videosDownloaded: Array,
+	videos: Object
+}
+pixi.methods.startProcess();
+
 </script>
 @endsection
