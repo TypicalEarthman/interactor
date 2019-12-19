@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container" id="editor-root">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
@@ -66,105 +66,138 @@
 					@endforeach
 				</div>
 			</div>
+			<button @click="createConnection">
+				Создать связь
+			</button>
+			<div v-show="connectionMenu">
+				<div v-show="origin">
+					От
+					<br/>
+					<button v-for="item in videos" @click="setOrig(item)">
+						@{{ item.children[0]._text }}			
+						<br/>
+					</button>
+				</div>
+				<div v-show="!origin">
+					До
+					<br/>
+					<button v-for="item in videos" @click="setDest(item)">
+						@{{ item.children[0]._text }}
+						<br/>
+					</button>
+				</div>
+			</div>
         </div>
-    </div>
+	</div>
 </div>
 @endsection
 
 @section('script')
+<!-- 
+	Описание класса Video
+	Рендер карточек
+	Действия с карточками 
+-->
+<script src="{{ URL::asset('/js/video.js') }}"></script>
+<!-- 
+	Не в video.js т.к. используется синатксис laravel
+	Скрипт загрузки данных видео в переменную
+-->
 <script>
-
-const app = new PIXI.Application({
-	backgroundColor: 0x1099bb
-});
-const loader = PIXI.Loader.shared;
-let container = new PIXI.ParticleContainer(10000, {
-	scale: true,
-	position: true,
-	rotation: true,
-});
-
-class Video extends PIXI.Graphics {
-	constructor(x,y,el) {
-		super();
-		// Rectangle styling
-		this.beginFill(0xC27261);
-		this.drawRect(0, 0, 256, 144);
-		this.endFill();
-
-		// Add text to rectangle
-		let videoName = new PIXI.Text(el.name);
-		this.addChild(videoName);
-
-		//Dragging
-		 this.interactive = true;
-		 this
-			.on('pointerdown', this.onDragStart)
-			.on('pointerup', this.onDragEnd)
-			.on('pointerupoutside', this.onDragEnd)
-			.on('pointermove', this.onDragMove);
-
-		// Rectangle positioning
-		this.x = x;
-		this.y = y;
-	}
-	onDragStart(event) {
-		this.data = event.data;
-		this.alpha = 0.5;
-		this.dragging = true;
-	}
-	onDragEnd() {
-		this.alpha = 1;
-		this.dragging = false;
-		// Set the interaction data to null
-		this.data = null;
-	}
-
-	onDragMove() {
-		if (this.dragging) {
-			const newPosition = this.data.getLocalPosition(this.parent);
-			// Set pointer on center
-			this.x = newPosition.x - 128;
-			this.y = newPosition.y -72;
-		}
-	}
-}
-let pixi = {
+let getVideos = function() {
+	downloadedVideos = {!! json_encode($videos->toArray()) !!};
+};
+</script>
+<!-- 
+	Инициализация PIXI
+	Функции запуска скриптов
+-->
+<script src="{{ URL::asset('/js/start.js') }}"></script>
+<script>
+mix = {
+	data: {
+		connectionMenu: false,
+		origin: true,
+		connectionTemp: {
+			origin: '',
+			destination: ''
+		},
+		videos: ''
+	},
 	methods: {
-		createVideo: function(i,el) {
-			let rectangle = new Video(pixi.videos['last_x'],pixi.videos['last_y'],el);
-			pixi.videos['last_x'] += 0;
-			pixi.videos['last_y'] += 170;
-			pixi.videos['rectangles'].push(rectangle);
-			app.stage.addChild(pixi.videos['rectangles'][i]);
+		createConnection: function() {
+			this.videos = videos['rectangles'].slice();
+			this.connectionMenu = !this.connectionMenu;
+			console.log(videos['rectangles']);
 		},
-		startProcess: function() {
-			app.stage.addChild(container);
-			app.renderer.view.style.position = "absolute";
-			app.renderer.view.style.display = "block";
-			app.renderer.autoResize = true;
-			app.renderer.resize(window.innerWidth, window.innerHeight);
-
-			document.body.appendChild(app.view);
-			this.getVideos();
-			this.renderVideos(pixi.videosDownloaded);
-		},
-		getVideos: function() {
-			pixi.videosDownloaded = {!! json_encode($videos->toArray()) !!};
-		},
-		renderVideos: function (videos) {
-			pixi.videos['last_x'] = 0;
-			pixi.videos['last_y'] = 0;
-			pixi.videos['rectangles'] = [];
-			for(let i = 0; i < videos.length; i++) {
-				this.createVideo(i,videos[i]);
+		setOrig: function(item) {
+			this.connectionTemp.origin = item;
+			this.origin = !this.origin;
+			let id = item.id;
+			for(let i = 0; i < this.videos.length;i++) {
+				if(this.videos[i].id == id){
+					this.videos.splice(i, 1);
+					break;
+				}
 			}
+		},
+		setDest: function(item) {
+			this.connectionTemp.destination = item;
+			let origin = this.connectionTemp.origin;
+			let destination = this.connectionTemp.destination;
+			let line = new PIXI.Graphics();
+			line.lineStyle(2, 0xFFFFFF, 1);
+			let startx = origin.x + origin.width;
+			let starty = origin.y +origin.height/2;
+			let finishx = destination.x;
+			let finishy = destination.y+origin.height/2;
+			let cp1x = origin.x + origin.width + (destination.x - origin.x)/4;
+			let cp1y = origin.y + (destination.y - origin.y)/4*3;
+			let cp2x = origin.x + (destination.x - origin.x)/4*3;
+			let cp2y = origin.y + (destination.y - origin.y)/4;
+			if(origin.x >= destination.x) {
+				cp1x = origin.x + (destination.x - origin.x)/4;
+				cp2x = origin.x + origin.width + (destination.x - origin.x)/4*3;
+				startx = origin.x;
+				finishx = destination.x + origin.width;
+			}
+			line.moveTo(startx,starty);
+			// 1/4 от начала по x, 3/4 от начала по y
+			// 3/4 от начала по x, 1/4 от начала по y
+			line.bezierCurveTo(cp1x,cp1y,cp2x,cp2y,finishx,finishy);
+
+app.stage.addChild(line);
+			this.clearData();
+			console.log(this.connectionTemp);
+		},
+		clearData: function() {
+			this.origin = !this.origin;
+			this.connectionMenu = false;
+			this.videos = '';
+			this.connectionTemp = {origin: '', destination: ''};
 		}
 	},
-	videosDownloaded: Array,
-	videos: Object
-}
-pixi.methods.startProcess();
+	mounted: function() {
+		console.log('it works');
+	}
+};
 
+class Connection extends PIXI.Graphics {
+	constructor(el1,el2) {
+		super();
+		// Rectangle styling
+		
+		this.lineStyle(5, 0xAA0000, 1);
+
+		this.bezierCurveTo(100, 200, 200, 200, 240, 100);
+		this.position.x = 300;
+		this.position.y = 300;
+
+		app.stage.addChild(bezier);
+
+		this.x = 20;
+		this.y = 20;
+	}
+}
 </script>
 @endsection

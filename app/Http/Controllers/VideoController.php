@@ -46,7 +46,9 @@ class VideoController extends Controller
         $project_id = $request->get('project_id');
         $video = new Video();
         $video->name = $request->get('name');
+        $video->user_id = $id;
         $video->project_id = $project_id;
+        $video->meta = '{}';
         $video->url = "/storage/users/{$id}/project{$project_id}/{$request->video->getClientOriginalName()}";
         $request->video->storeAs("users/{$id}/project{$project_id}", $request->video->getClientOriginalName());
         $video->save();
@@ -71,9 +73,16 @@ class VideoController extends Controller
      * @param  \App\Video  $video
      * @return \Illuminate\Http\Response
      */
-    public function edit(Video $video)
+    public function edit(Request $request)
     {
-        //
+        $id = $request->id;
+        $video = Video::where('id', $id)->first();
+        $meta = $request->meta;
+        Video::where('id', $id)
+            ->update([
+                'meta' => $meta
+            ]);
+        return $meta;
     }
 
     /**

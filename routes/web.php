@@ -19,6 +19,7 @@ Auth::routes();
 
 Route::post('/video/store', 'VideoController@store')->name('video.store');
 Route::post('/video/update', 'VideoController@update')->name('video.update');
+Route::post('/video/edit', 'VideoController@edit')->name('video.edit');
 Route::post('/project', 'ProjectController@create')->name('project.create');
 
 Route::get('/home', 'HomeController@index')->name('home');
