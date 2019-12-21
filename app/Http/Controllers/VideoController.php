@@ -43,16 +43,19 @@ class VideoController extends Controller
     public function store(Request $request)
     {
         $id = Auth::user()->id;
+        $episode_id = $request->get('episode_id');
         $project_id = $request->get('project_id');
         $video = new Video();
         $video->name = $request->get('name');
         $video->user_id = $id;
+        $filename = $request->video->getClientOriginalName();
+        $video->filename = $filename;
+        $video->episode_id = $episode_id;
         $video->project_id = $project_id;
         $video->meta = '{}';
-        $video->url = "/storage/users/{$id}/project{$project_id}/{$request->video->getClientOriginalName()}";
-        $request->video->storeAs("users/{$id}/project{$project_id}", $request->video->getClientOriginalName());
+        $video->url = "/storage/users/{$id}/project/{$project_id}/episode/{$episode_id}/{$filename}";
+        $request->video->storeAs("users/{$id}/project/{$project_id}/episode/{$episode_id}", $filename);
         $video->save();
-
         return redirect()->back();
     }
 

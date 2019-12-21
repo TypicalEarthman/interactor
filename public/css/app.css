@@ -1,0 +1,43 @@
+#editor-root {
+  width: 98vw;
+  height: 98vh;
+  margin: 1vh auto;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+          flex-flow: row wrap;
+  -webkit-box-pack: justify;
+          justify-content: space-between;
+  align-content: space-between;
+}
+
+.editor-base-block {
+  width: 17vw;
+  height: 48vh;
+  border: 1px solid #000;
+}
+
+#preview {
+  width: 60vw;
+  height: 48vh;
+  border: 1px solid #000;
+}
+
+#manager {
+  width: 79vw;
+  height: 48vh;
+  border: 1px solid #000;
+}
+
+.dialog {
+  background: #fff;
+  width: 600px;
+  height: 400px;
+  margin-left: -300px;
+  margin-top: -200px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+

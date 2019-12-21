@@ -15,15 +15,15 @@ class CreateConnectionsTable extends Migration
     {
         Schema::create('connections', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('project_id');
+            $table->unsignedBigInteger('episode_id');
             $table->unsignedBigInteger('entry_id');
             $table->unsignedBigInteger('out_id');
             $table->json('meta');
             $table->timestamps();
 
-            $table->foreign('project_id')
+            $table->foreign('episode_id')
                 ->references('id')
-                ->on('projects')
+                ->on('episodes')
                 ->onDelete('cascade');
 
             $table->foreign('entry_id')

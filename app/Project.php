@@ -9,7 +9,7 @@ class Project extends Model
     public function user() {
         return $this->belongsTo(User::class);
     }
-    public function videos() {
-        return $this->hasMany(Video::class);
+    public function episodes() {
+        return $this->hasMany(Episode::class);
     }
 }

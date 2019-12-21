@@ -12,4 +12,10 @@ class Video extends Model
     public function project() {
         return $this->belongsTo(Project::class);
     }
+    public function episode() {
+        return $this->belongsTo(Episode::class);
+    }
+    public function connections() {
+        return $this->hasMany(Connection::class);
+    }
 }

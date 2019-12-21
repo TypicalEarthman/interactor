@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Custom;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Auth;
 
 class EditorController extends Controller
 {
@@ -11,17 +12,22 @@ class EditorController extends Controller
 
         $project = \App\Project::find($request->project);
         $project_id = $project->id;
-        $videos = $project->videos;
+        $episodes = $project->episodes;
+        $episode = $episodes[0];
+        $episode_id = $episode->id;
+        $videos = $episode->videos;
         return view('editor.index',[
             'videos' => $videos,
-            'project_id' => $project_id
+            'project' => $project,
+            'project_id' => $project_id,
+            'episodes' => $episodes,
+            'episode_id'=> $episode_id
         ]);
     }
     public function preview(Request $request) {
         $project = \App\Project::find($request->project);
         $project_id = $project->id;
         $videos = $project->videos;
-
         return view('editor.preview',[
             'videos' => $videos
         ]);

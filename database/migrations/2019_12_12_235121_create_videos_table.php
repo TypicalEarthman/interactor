@@ -15,8 +15,10 @@ class CreateVideosTable extends Migration
     {
         Schema::create('videos', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('episode_id');
             $table->unsignedBigInteger('project_id');
             $table->string('name');
+            $table->string('filename');
             $table->string('url');
             $table->unsignedBigInteger('user_id');
             $table->json('meta');
@@ -25,6 +27,11 @@ class CreateVideosTable extends Migration
             $table->foreign('project_id')
                 ->references('id')
                 ->on('projects')
+                ->onDelete('cascade');
+
+            $table->foreign('episode_id')
+                ->references('id')
+                ->on('episodes')
                 ->onDelete('cascade');
 
             $table->foreign('user_id')
