@@ -12,13 +12,17 @@
 		<h3>
 			Episodes:
 		</h3>
+		<button @click="addEpisode"> 
+			Add episode
+		</button>
 		@foreach ($episodes as $episode)
 			<div>
-				<p> {{ $episode->name }}</p>
-				<button @click="addEpisode"> 
-					Add episode
-				</button>
-				
+				<form action="{{ route('episode.show') }}" method="GET" enctype="multipart/form-data">
+					@csrf
+					<input type="hidden" name="project_id" value="{{$project_id}}"/>
+					<input type="hidden" name="episode_id" value="{{$episode->id}}"/>
+					<input type="submit" value="{{ $episode->name }}" />
+				</form>
 			</div>
 		@endforeach
 		
@@ -65,20 +69,13 @@
 		<button @click="modal=false">
 			Close dialog
 		</button>
-		<form action="{{ route('video.store') }}" method="POST" enctype="multipart/form-data">
-			@csrf
-			Name:
-			<br />
-			<input type="text" name="name" />
-			<br /><br />
-			File
-			<br />
-			<input type="file" name="video" />
-			<br /><br />
-			<input type="hidden" name="project_id" value="{{$project_id}}"/>
-			<input type="hidden" name="episode_id" value="{{$episode_id}}"/>
-			<input type="submit" value="Upload video" />
-		</form>
+		<custom-form 
+			:option="option" 
+			episode_id="{{$episode_id}}" 
+			project_id="{{$project_id}}" 
+			:route="route" 
+			token="{{csrf_token()}}">
+		</custom-form>
 	</div>
 </div>
 @endsection
@@ -87,12 +84,23 @@
 <script>
 mix = {
 	data: {
-		modal: false
+		modal: false,
+		api:  'http://127.0.0.1:8000/',
+		episode_id: '',
+		project_id: '',
+		option: '',
+		route: ''
 	},
 	methods: {
 		addVideo: function() {
+			this.option = 'video';
+			this.route = this.api + 'video/store';
 			this.modal = true;
-			console.log(this.modal);
+		},
+		addEpisode: function() {
+			this.option = 'episode';
+			this.route = this.api + 'episode/create';
+			this.modal = true;
 		}
 	},
 	mounted: function() {

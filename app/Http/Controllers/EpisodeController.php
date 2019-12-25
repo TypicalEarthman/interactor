@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 class EpisodeController extends Controller
 {
+    use \App\Traits\CreateEpisode;
     /**
      * Display a listing of the resource.
      *
@@ -27,9 +28,12 @@ class EpisodeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $project_id = $request->get('project_id');
+        $name = $request->get('name');
+        $this->createEpisode($project_id,$name);
+        return redirect()->back();
     }
 
     /**
@@ -49,9 +53,34 @@ class EpisodeController extends Controller
      * @param  \App\Episode  $episode
      * @return \Illuminate\Http\Response
      */
-    public function show(Episode $episode)
+    public function show(Request $request)
     {
-        //
+        $project_id = $request->project_id;
+        $episode_id = $request->episode_id;
+        $project = \App\Project::where('id', $project_id)->first();
+        $episodes = $project->episodes;
+        $episode;
+        if($episode_id == 0) 
+        {
+            $episode = $episodes[0];
+        }
+        else 
+        {
+            foreach($episodes as $temp_episode) {
+                if($temp_episode['id'] == $episode_id) {
+                    $episode = $temp_episode;
+                    break;
+                }
+            }
+        }
+        $videos = $episode->videos;
+        return view('editor/index',[
+            'videos' => $videos,
+            'project' => $project,
+            'project_id' => $project_id,
+            'episodes' => $episodes,
+            'episode_id'=> $episode_id
+        ]);
     }
 
     /**

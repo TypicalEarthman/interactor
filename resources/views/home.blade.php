@@ -34,7 +34,12 @@
 
                         @foreach ($projects as $project)
                             <div>
-                                <a href='{{ url("editor?project={$project->id}") }}'>{{ $project->name }}</a>
+                                <form action="{{ route('episode.show') }}" method="GET" enctype="multipart/form-data">
+                                    @csrf
+                                    <input type="hidden" name="project_id" value="{{$project->id}}"/>
+                                    <input type="hidden" name="episode_id" value="0"/>
+                                    <input type="submit" value="{{ $project->name }}" />
+                                </form>
                             </div>
                         @endforeach
                     </div>
