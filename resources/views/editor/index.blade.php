@@ -18,7 +18,6 @@
 		@foreach ($episodes as $episode)
 			<div>
 				<form action="{{ route('episode.show') }}" method="GET" enctype="multipart/form-data">
-					@csrf
 					<input type="hidden" name="project_id" value="{{$project_id}}"/>
 					<input type="hidden" name="episode_id" value="{{$episode->id}}"/>
 					<input type="submit" value="{{ $episode->name }}" />
