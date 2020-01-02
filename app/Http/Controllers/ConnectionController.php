@@ -12,6 +12,11 @@ class ConnectionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
         //
@@ -22,9 +27,15 @@ class ConnectionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $connection = new Connection();
+        $connection->episode_id = $request->get('episode_id');
+        $connection->entry_id = $request->get('entry_id');
+        $connection->out_id = $request->get('out_id');
+        $connection->meta = '{}';
+        $connection->save();
+        return $connection;
     }
 
     /**

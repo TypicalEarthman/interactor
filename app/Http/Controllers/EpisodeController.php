@@ -63,6 +63,7 @@ class EpisodeController extends Controller
         if($episode_id == 0) 
         {
             $episode = $episodes[0];
+            $episode_id = $episode->id;
         }
         else 
         {
@@ -74,8 +75,10 @@ class EpisodeController extends Controller
             }
         }
         $videos = $episode->videos;
+        $connections = $episode->connections;
         return view('editor/index',[
             'videos' => $videos,
+            'connections' => $connections,
             'project' => $project,
             'project_id' => $project_id,
             'episodes' => $episodes,

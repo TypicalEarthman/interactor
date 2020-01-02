@@ -12,4 +12,7 @@ class Episode extends Model
     public function videos() {
         return $this->hasMany(Video::class);
     }
+    public function connections() {
+        return $this->hasMany(Connection::class);
+    }
 }

@@ -61,8 +61,13 @@
 		
 	</div>
 	<div id="manager">
-		<canvas id="editor-timeline">
-		</canvas>
+		<connection-manager
+			json_videos="{{ $videos }}"
+			json_connections="{{ $connections }}"
+			episode_id="{{$episode_id}}"
+			token="{{csrf_token()}}">
+		>
+		</connection-manager>
 	</div>
 	<div class="dialog" v-show="modal">
 		<button @click="modal=false">
@@ -103,7 +108,6 @@ mix = {
 		}
 	},
 	mounted: function() {
-		console.log('it works');
 	}
 };
 
