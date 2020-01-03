@@ -35,7 +35,9 @@ class ConnectionController extends Controller
         $connection->out_id = $request->get('out_id');
         $connection->meta = '{}';
         $connection->save();
-        return $connection;
+        $episode = Episode::where('id', $episode_id)->first();
+        $connections = $episode->connections; 
+        return $connections;
     }
 
     /**

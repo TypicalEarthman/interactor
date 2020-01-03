@@ -53,6 +53,17 @@ class EpisodeController extends Controller
      * @param  \App\Episode  $episode
      * @return \Illuminate\Http\Response
      */
+    public function set_root(Request $request)
+    {
+        $id = $request->id;
+        $episode_id = $request->episode_id;
+        Episode::where('id', $episode_id)
+            ->update([
+                'root_video' => $id
+            ]);
+        $episode = Episode::where('id', $episode_id)->first();
+        return $episode;
+    }
     public function show(Request $request)
     {
         $project_id = $request->project_id;

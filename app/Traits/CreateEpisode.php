@@ -9,6 +9,8 @@ trait CreateEpisode {
                 $episode = new Episode();
                 $episode->name = $episode_name;
                 $episode->project_id = $project_id;
+                $episode->root_video = 0;
+                $episode->meta = '{}';
                 $episode->save(); 
         }
 }

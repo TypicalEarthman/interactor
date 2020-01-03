@@ -85,7 +85,7 @@ class VideoController extends Controller
             ->update([
                 'meta' => $meta
             ]);
-        return $meta;
+        return $video;
     }
 
     /**

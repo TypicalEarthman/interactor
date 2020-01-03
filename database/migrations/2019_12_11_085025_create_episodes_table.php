@@ -17,6 +17,8 @@ class CreateEpisodesTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('project_id');
             $table->string('name');
+            $table->json('meta');
+            $table->unsignedBigInteger('root_video');
             $table->timestamps();
 
             $table->foreign('project_id')
