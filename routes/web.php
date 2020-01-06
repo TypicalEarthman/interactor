@@ -17,8 +17,15 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::post('/video', 'VideoUploadController@store')->name('video.store');
+Route::post('/video/store', 'VideoController@store')->name('video.store');
+Route::post('/video/update', 'VideoController@update')->name('video.update');
+Route::post('/video/edit', 'VideoController@edit')->name('video.edit');
+Route::post('/project', 'ProjectController@create')->name('project.create');
+Route::post('/episode/create', 'EpisodeController@create')->name('episode.create');
+Route::get('/episode/show', 'EpisodeController@show')->name('episode.show');
+Route::post('/connection/add','ConnectionController@create');
+Route::post('/episode/setroot','EpisodeController@set_root');
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/editor', 'Custom\EditorController@index')->name('editor.index');
+Route::get('/preview', 'Custom\EditorController@preview')->name('editor.preview');

@@ -13,17 +13,17 @@
                             {{ session('status') }}
                         </div>
                     @endif
-                    <form action="{{ route('video.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('project.create') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        Video:
+                        Name:
                         <br />
-                        <input type="file" name="video" />
+                        <input type="text" name="name" />
                         <br /><br />
-                        <input type="submit" value=" Upload " />
+                        <input type="submit" value="Create new project" />
                     </form>
                 </div>
                 <div class="card">
-                    <div class="card-header">Videos</div>
+                    <div class="card-header">Projects</div>
     
                     <div class="card-body">
                         @if (session('status'))
@@ -32,10 +32,14 @@
                             </div>
                         @endif
 
-                        @foreach ($videos as $video)
-                            <video src="{{ asset("storage/{$video}") }}" width="400" controls="controls">
-                            </video>
-                        </div>
+                        @foreach ($projects as $project)
+                            <div>
+                                <form action="{{ route('episode.show') }}" method="GET" enctype="multipart/form-data">
+                                    <input type="hidden" name="project_id" value="{{$project->id}}"/>
+                                    <input type="hidden" name="episode_id" value="0"/>
+                                    <input type="submit" value="{{ $project->name }}" />
+                                </form>
+                            </div>
                         @endforeach
                     </div>
                 </div>

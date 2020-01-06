@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Auth;
+use User;
 
 class HomeController extends Controller
 {
@@ -26,9 +27,9 @@ class HomeController extends Controller
     public function index()
     {   
         $id = Auth::user()->id;
-        $videos = Storage::files("users/{$id}");
+        $projects = Auth::user()->projects;
         return view('home',[
-            'videos' => $videos
+            'projects' => $projects
         ]);
     }
 }
