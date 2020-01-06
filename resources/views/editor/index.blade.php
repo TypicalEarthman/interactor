@@ -33,6 +33,9 @@
 		<button @click="addVideo"> 
 			Add video
 		</button>
+		<button @click="addPage"> 
+			Add page
+		</button>
 		@foreach ($videos as $video)
 			<div>
 				<p> {{ $video->name }} ({{$video->filename }}) </p>
@@ -104,6 +107,11 @@ mix = {
 		addEpisode: function() {
 			this.option = 'episode';
 			this.route = this.api + 'episode/create';
+			this.modal = true;
+		},
+		addPage: function() {
+			this.option = 'page';
+			this.route = '?';
 			this.modal = true;
 		}
 	},

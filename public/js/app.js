@@ -278,6 +278,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {};
@@ -1339,6 +1346,36 @@ var render = function() {
             _c("input", { attrs: { type: "submit", value: "Create episode" } })
           ]
         )
+      : _vm._e(),
+    _vm._v(" "),
+    _vm.option == "page"
+      ? _c(
+          "form",
+          {
+            attrs: {
+              action: _vm.route,
+              method: "POST",
+              enctype: "multipart/form-data"
+            }
+          },
+          [
+            _vm._v("\n\t\t\tВот здесь тебе нужно всякое сделать Витя\n\t\t\t"),
+            _c("br"),
+            _c("br"),
+            _vm._v(" "),
+            _c("input", {
+              attrs: { type: "hidden", name: "project_id" },
+              domProps: { value: _vm.project_id }
+            }),
+            _vm._v(" "),
+            _c("input", {
+              attrs: { type: "hidden", name: "_token" },
+              domProps: { value: _vm.token }
+            }),
+            _vm._v(" "),
+            _c("input", { attrs: { type: "submit", value: "Create page" } })
+          ]
+        )
       : _vm._e()
   ])
 }
@@ -1759,9 +1796,9 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\interactor\interactor\resources\js\app.js */"./resources/js/app.js");
-__webpack_require__(/*! C:\interactor\interactor\resources\sass\app.scss */"./resources/sass/app.scss");
-module.exports = __webpack_require__(/*! C:\interactor\interactor\resources\sass\vendor.scss */"./resources/sass/vendor.scss");
+__webpack_require__(/*! C:\interactor\resources\js\app.js */"./resources/js/app.js");
+__webpack_require__(/*! C:\interactor\resources\sass\app.scss */"./resources/sass/app.scss");
+module.exports = __webpack_require__(/*! C:\interactor\resources\sass\vendor.scss */"./resources/sass/vendor.scss");
 
 
 /***/ })
