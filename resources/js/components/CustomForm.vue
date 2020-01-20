@@ -23,6 +23,13 @@
 			<input type="hidden" name="_token" :value="token"/>
 			<input type="submit" value="Create episode" />
 		</form>
+		<form :action="route" method="POST" enctype="multipart/form-data" v-if="option == 'page'">
+			Вот здесь тебе нужно всякое сделать Витя
+			<br /><br />
+			<input type="hidden" name="project_id" :value="project_id"/>
+			<input type="hidden" name="_token" :value="token"/>
+			<input type="submit" value="Create page" />
+		</form>
     </div>
 </template>
 
