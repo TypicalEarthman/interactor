@@ -193,6 +193,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -206,7 +210,8 @@ __webpack_require__.r(__webpack_exports__);
       root: false,
       chosenRoot: '',
       rootNumber: Number,
-      meta: ''
+      meta: '',
+      rectangles: {}
     };
   },
   props: {
@@ -251,6 +256,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     drawConnections: function drawConnections() {
       var self = this;
+      var canvas = document.getElementById("canvas");
       this.meta.videos[this.rootNumber].layer = 1;
 
       var recursiveSetLayer = function recursiveSetLayer(item) {
@@ -278,12 +284,27 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       ;
+      var x = 0;
 
       for (var i = 1; i <= maxLayer; i++) {
+        x = (i - 1) * 150 + 10;
         var currentLayer = [];
+        var y = 0;
+        var count = 0;
 
         for (var _item in this.meta.videos) {
           if (this.meta.videos[_item].layer == i) {
+            y = count * 100 + 10;
+            count++;
+            var rectangle = canvas.getContext("2d");
+            rectangle.fillStyle = "red";
+            rectangle.fillRect(x, y, 100, 60);
+            rectangle.fillStyle = "white";
+            rectangle.fillText(this.meta.videos[_item].name, x + 10, y + 10);
+            this.rectangles[this.meta.videos[_item].id] = {
+              x: x,
+              y: y
+            };
             currentLayer.push(this.meta.videos[_item]);
           }
         }
@@ -294,6 +315,20 @@ __webpack_require__.r(__webpack_exports__);
 
       ;
       console.log(this.meta);
+      console.log(this.rectangles);
+      this.connections.forEach(function (item) {
+        var context = canvas.getContext('2d');
+        var origin = self.rectangles[item.entry_id];
+        var destination = self.rectangles[item.out_id]; // Reset the current path
+
+        context.beginPath(); // Staring point (10,45)
+
+        context.moveTo(origin.x + 100, origin.y + 30); // End point (180,47)
+
+        context.lineTo(destination.x, destination.y + 30); // Make the line visible
+
+        context.stroke();
+      });
       console.log(this.connections);
     }
   },
@@ -1314,28 +1349,19 @@ var render = function() {
       ]
     ),
     _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "parent" },
-      _vm._l(this.meta.connections, function(layer) {
-        return _c(
-          "div",
-          { staticClass: "layer" },
-          _vm._l(layer, function(video) {
-            return _c("div", { staticClass: "video" }, [
-              _vm._v(
-                "\n                " + _vm._s(video.name) + "\n            "
-              )
-            ])
-          }),
-          0
-        )
-      }),
-      0
-    )
+    _vm._m(0)
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "parent" }, [
+      _c("canvas", { attrs: { id: "canvas", width: "900", height: "330" } })
+    ])
+  }
+]
 render._withStripped = true
 
 

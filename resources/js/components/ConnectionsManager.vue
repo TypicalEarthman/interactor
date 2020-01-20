@@ -51,6 +51,9 @@
             </button>
         </div>
         <div class="parent">
+            <canvas id="canvas" width="900" height="330">
+            </canvas>
+            <!--
             <div
                 class="layer"
                 v-for="layer in this.meta.connections"
@@ -62,6 +65,7 @@
                     {{ video.name }}
                 </div>
             </div>
+            -->
         </div>
     </div>
 </template>
@@ -110,7 +114,8 @@ export default {
             root: false,
             chosenRoot: '',
             rootNumber: Number,
-            meta: ''
+            meta: '',
+            rectangles: {}
         }
     },
     props: {
@@ -158,7 +163,8 @@ export default {
             });
         },
         drawConnections: function() {
-            let self = this;
+            let self = this;  
+            let canvas = document.getElementById("canvas");
             this.meta.videos[this.rootNumber].layer = 1;
             let recursiveSetLayer = function(item) {
                 if(self.meta.videos[item.entry_id].hasOwnProperty('layer')) {
@@ -184,10 +190,27 @@ export default {
                     maxLayer = this.meta.videos[item].layer;
                 }
             };
+            let x = 0;
             for(let i = 1; i <= maxLayer; i++){
+                x = (i-1)*150 + 10;
                 let currentLayer = [];
+                let y = 0;
+                let count = 0;
                 for(let item in this.meta.videos) {
                     if(this.meta.videos[item].layer == i) {
+                        y=count*100 + 10;
+                        count++;
+
+                        let rectangle = canvas.getContext("2d");
+                        rectangle.fillStyle = "red";
+                        rectangle.fillRect(x, y, 100, 60);
+                        rectangle.fillStyle = "white";
+                        rectangle.fillText(this.meta.videos[item].name, x+10, y+10);
+
+                        this.rectangles[this.meta.videos[item].id] = {
+                            x: x,
+                            y: y
+                        };
                         currentLayer.push(this.meta.videos[item]);
                     }          
                 }
@@ -195,6 +218,21 @@ export default {
                 currentLayer = [];
             };
             console.log(this.meta);
+            console.log(this.rectangles);
+            this.connections.forEach(function(item) {
+                let context = canvas.getContext('2d');
+                let origin = self.rectangles[item.entry_id];
+                let destination = self.rectangles[item.out_id];
+                // Reset the current path
+                context.beginPath(); 
+                // Staring point (10,45)
+                context.moveTo(origin.x + 100,origin.y + 30);
+                // End point (180,47)
+                context.lineTo(destination.x,destination.y+30);
+                // Make the line visible
+                context.stroke();
+
+            });
             console.log(this.connections);
         }
     },
