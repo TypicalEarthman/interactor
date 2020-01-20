@@ -178,6 +178,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -189,14 +204,17 @@ __webpack_require__.r(__webpack_exports__);
       connections: Object,
       connected: '',
       root: false,
-      chosenRoot: ''
+      chosenRoot: '',
+      rootNumber: Number,
+      meta: ''
     };
   },
   props: {
     json_videos: String,
     episode_id: '',
     token: String,
-    json_connections: String
+    json_connections: String,
+    root_number: String
   },
   methods: {
     createConnection: function createConnection() {
@@ -209,7 +227,9 @@ __webpack_require__.r(__webpack_exports__);
         'episode_id': parseInt(self.episode_id)
       }).then(function (response) {
         console.log(response.data);
+        self.connections = response.data;
         self.modal = false;
+        self.drawConnections();
       })["catch"](function (error) {
         console.log(error);
         self.modal = false;
@@ -228,14 +248,75 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
         self.root = false;
       });
+    },
+    drawConnections: function drawConnections() {
+      var self = this;
+      this.meta.videos[this.rootNumber].layer = 1;
+
+      var recursiveSetLayer = function recursiveSetLayer(item) {
+        if (self.meta.videos[item.entry_id].hasOwnProperty('layer')) {
+          return self.meta.videos[item.entry_id].layer + 1;
+        } else {
+          return recursiveSetLayer(self.meta.videos[item.entry_id]);
+        }
+      };
+
+      this.connections.forEach(function (item) {
+        if (self.unPicked.hasOwnProperty(item.out_id)) {
+          delete self.unPicked[item.out_id];
+        }
+
+        self.meta.videos[item.out_id].layer = recursiveSetLayer(item);
+      });
+      this.meta.connections = [this.unPicked];
+      var maxLayer = 0;
+
+      for (var item in this.meta.videos) {
+        if (this.meta.videos[item].layer > maxLayer) {
+          maxLayer = this.meta.videos[item].layer;
+        }
+      }
+
+      ;
+
+      for (var i = 1; i <= maxLayer; i++) {
+        var currentLayer = [];
+
+        for (var _item in this.meta.videos) {
+          if (this.meta.videos[_item].layer == i) {
+            currentLayer.push(this.meta.videos[_item]);
+          }
+        }
+
+        this.meta.connections.push(currentLayer);
+        currentLayer = [];
+      }
+
+      ;
+      console.log(this.meta);
+      console.log(this.connections);
     }
   },
   mounted: function mounted() {
     this.videos = JSON.parse(this.json_videos);
     this.connections = JSON.parse(this.json_connections);
-    this.unPicked = this.videos;
-    console.log(this.videos);
-    console.log(this.connections);
+    this.rootNumber = parseInt(this.root_number);
+    console.log(this.rootNumber);
+    var videos = {};
+    this.videos.forEach(function (item) {
+      var id = item.id;
+      videos[id] = item;
+    });
+    this.meta = {
+      videos: videos
+    };
+    this.unPicked = JSON.parse(JSON.stringify(this.meta.videos));
+
+    if (this.rootNumber != 0) {
+      delete this.unPicked[this.rootNumber];
+    }
+
+    this.drawConnections();
   }
 });
 
@@ -356,7 +437,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n#manager-root[data-v-08416e43] {\r\n    display: -webkit-box;\r\n    display: flex;\r\n    -webkit-box-orient: vertical;\r\n    -webkit-box-direction: normal;\r\n            flex-flow: column wrap;\r\n    -webkit-box-pack: start;\r\n            justify-content: flex-start;\r\n    align-content: flex-start;\n}\n.controls[data-v-08416e43] {\r\n    position: fixed;\r\n    bottom: 1vh;\r\n    left: 50%;\r\n    height: 20px;\r\n    width: 300px;\r\n    border: 1px solid #000;\n}\n.video[data-v-08416e43] {\r\n    background: #f00;\r\n    width: 100px;\r\n    height: 50px;\r\n    margin-bottom: 20px;\r\n    margin-right: 20px;\n}\r\n", ""]);
+exports.push([module.i, "\n#manager-root[data-v-08416e43] {\r\n    display: -webkit-box;\r\n    display: flex;\r\n    -webkit-box-orient: vertical;\r\n    -webkit-box-direction: normal;\r\n            flex-flow: column wrap;\r\n    -webkit-box-pack: start;\r\n            justify-content: flex-start;\r\n    align-content: flex-start;\n}\n.controls[data-v-08416e43] {\r\n    position: fixed;\r\n    bottom: 1vh;\r\n    left: 50%;\r\n    height: 20px;\r\n    width: 300px;\r\n    border: 1px solid #000;\n}\n.parent[data-v-08416e43] {\r\n    display: -webkit-box;\r\n    display: flex;\r\n    -webkit-box-orient: horizontal;\r\n    -webkit-box-direction: normal;\r\n            flex-flow: row;\n}\n.layer[data-v-08416e43] {\r\n    display: -webkit-box;\r\n    display: flex;\r\n    -webkit-box-orient: vertical;\r\n    -webkit-box-direction: normal;\r\n            flex-flow: column;\n}\n.video[data-v-08416e43] {\r\n    background: #f00;\r\n    width: 100px;\r\n    height: 50px;\r\n    margin-bottom: 20px;\r\n    margin-right: 20px;\n}\r\n", ""]);
 
 // exports
 
@@ -1004,239 +1085,248 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { attrs: { id: "manager-root" } },
-    [
-      _c("div", { staticClass: "controls" }, [
+  return _c("div", { attrs: { id: "manager-root" } }, [
+    _c("div", { staticClass: "controls" }, [
+      _c(
+        "button",
+        {
+          on: {
+            click: function($event) {
+              _vm.modal = true
+            }
+          }
+        },
+        [_vm._v("\n            Add connection\n        ")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          on: {
+            click: function($event) {
+              _vm.root = true
+            }
+          }
+        },
+        [_vm._v("\n            Set root\n        ")]
+      )
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.root,
+            expression: "root"
+          }
+        ],
+        staticClass: "dialog"
+      },
+      [
         _c(
           "button",
           {
             on: {
               click: function($event) {
-                _vm.modal = true
+                _vm.root = false
               }
             }
           },
-          [_vm._v("\n            Add connection\n        ")]
+          [_vm._v("\n            Close dialog\n        ")]
         ),
         _vm._v(" "),
+        _c("h2", [_vm._v("\n            Set root\n        ")]),
+        _vm._v("\n        From: \n        "),
+        _c(
+          "select",
+          {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.chosenRoot,
+                expression: "chosenRoot"
+              }
+            ],
+            on: {
+              change: function($event) {
+                var $$selectedVal = Array.prototype.filter
+                  .call($event.target.options, function(o) {
+                    return o.selected
+                  })
+                  .map(function(o) {
+                    var val = "_value" in o ? o._value : o.value
+                    return val
+                  })
+                _vm.chosenRoot = $event.target.multiple
+                  ? $$selectedVal
+                  : $$selectedVal[0]
+              }
+            }
+          },
+          _vm._l(_vm.videos, function(video, index) {
+            return _c("option", { domProps: { value: index } }, [
+              _vm._v(
+                "\n                " +
+                  _vm._s(video.name) +
+                  " (" +
+                  _vm._s(video.filename) +
+                  ")\n            "
+              )
+            ])
+          }),
+          0
+        ),
+        _vm._v(" "),
+        _c("br"),
+        _vm._v(" "),
+        _c("button", { on: { click: _vm.setRoot } }, [
+          _vm._v("\n            Set root\n        ")
+        ])
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.modal,
+            expression: "modal"
+          }
+        ],
+        staticClass: "dialog"
+      },
+      [
         _c(
           "button",
           {
             on: {
               click: function($event) {
-                _vm.root = true
+                _vm.modal = false
               }
             }
           },
-          [_vm._v("\n            Set root\n        ")]
-        )
-      ]),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: _vm.root,
-              expression: "root"
+          [_vm._v("\n            Close dialog\n        ")]
+        ),
+        _vm._v(" "),
+        _c("h2", [_vm._v("\n            Connection\n        ")]),
+        _vm._v("\n        From: \n        "),
+        _c(
+          "select",
+          {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.origin,
+                expression: "origin"
+              }
+            ],
+            on: {
+              change: function($event) {
+                var $$selectedVal = Array.prototype.filter
+                  .call($event.target.options, function(o) {
+                    return o.selected
+                  })
+                  .map(function(o) {
+                    var val = "_value" in o ? o._value : o.value
+                    return val
+                  })
+                _vm.origin = $event.target.multiple
+                  ? $$selectedVal
+                  : $$selectedVal[0]
+              }
             }
-          ],
-          staticClass: "dialog"
-        },
-        [
-          _c(
-            "button",
-            {
-              on: {
-                click: function($event) {
-                  _vm.root = false
-                }
+          },
+          _vm._l(_vm.videos, function(video, index) {
+            return _c("option", { domProps: { value: index } }, [
+              _vm._v(
+                "\n                " +
+                  _vm._s(video.name) +
+                  " (" +
+                  _vm._s(video.filename) +
+                  ")\n            "
+              )
+            ])
+          }),
+          0
+        ),
+        _vm._v(" "),
+        _c("br"),
+        _vm._v("\n        To: \n        "),
+        _c(
+          "select",
+          {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.destination,
+                expression: "destination"
               }
-            },
-            [_vm._v("\n            Close dialog\n        ")]
-          ),
-          _vm._v(" "),
-          _c("h2", [_vm._v("\n            Set root\n        ")]),
-          _vm._v("\n        From: \n        "),
-          _c(
-            "select",
-            {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.chosenRoot,
-                  expression: "chosenRoot"
-                }
-              ],
-              on: {
-                change: function($event) {
-                  var $$selectedVal = Array.prototype.filter
-                    .call($event.target.options, function(o) {
-                      return o.selected
-                    })
-                    .map(function(o) {
-                      var val = "_value" in o ? o._value : o.value
-                      return val
-                    })
-                  _vm.chosenRoot = $event.target.multiple
-                    ? $$selectedVal
-                    : $$selectedVal[0]
-                }
+            ],
+            on: {
+              change: function($event) {
+                var $$selectedVal = Array.prototype.filter
+                  .call($event.target.options, function(o) {
+                    return o.selected
+                  })
+                  .map(function(o) {
+                    var val = "_value" in o ? o._value : o.value
+                    return val
+                  })
+                _vm.destination = $event.target.multiple
+                  ? $$selectedVal
+                  : $$selectedVal[0]
               }
-            },
-            _vm._l(_vm.videos, function(video, index) {
-              return _c("option", { domProps: { value: index } }, [
-                _vm._v(
-                  "\n                " +
-                    _vm._s(video.name) +
-                    " (" +
-                    _vm._s(video.filename) +
-                    ")\n            "
-                )
-              ])
-            }),
-            0
-          ),
-          _vm._v(" "),
-          _c("br"),
-          _vm._v(" "),
-          _c("button", { on: { click: _vm.setRoot } }, [
-            _vm._v("\n            Set root\n        ")
-          ])
-        ]
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: _vm.modal,
-              expression: "modal"
             }
-          ],
-          staticClass: "dialog"
-        },
-        [
-          _c(
-            "button",
-            {
-              on: {
-                click: function($event) {
-                  _vm.modal = false
-                }
-              }
-            },
-            [_vm._v("\n            Close dialog\n        ")]
-          ),
-          _vm._v(" "),
-          _c("h2", [_vm._v("\n            Connection\n        ")]),
-          _vm._v("\n        From: \n        "),
-          _c(
-            "select",
-            {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.origin,
-                  expression: "origin"
-                }
-              ],
-              on: {
-                change: function($event) {
-                  var $$selectedVal = Array.prototype.filter
-                    .call($event.target.options, function(o) {
-                      return o.selected
-                    })
-                    .map(function(o) {
-                      var val = "_value" in o ? o._value : o.value
-                      return val
-                    })
-                  _vm.origin = $event.target.multiple
-                    ? $$selectedVal
-                    : $$selectedVal[0]
-                }
-              }
-            },
-            _vm._l(_vm.videos, function(video, index) {
-              return _c("option", { domProps: { value: index } }, [
-                _vm._v(
-                  "\n                " +
-                    _vm._s(video.name) +
-                    " (" +
-                    _vm._s(video.filename) +
-                    ")\n            "
-                )
-              ])
-            }),
-            0
-          ),
-          _vm._v(" "),
-          _c("br"),
-          _vm._v("\n        To: \n        "),
-          _c(
-            "select",
-            {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.destination,
-                  expression: "destination"
-                }
-              ],
-              on: {
-                change: function($event) {
-                  var $$selectedVal = Array.prototype.filter
-                    .call($event.target.options, function(o) {
-                      return o.selected
-                    })
-                    .map(function(o) {
-                      var val = "_value" in o ? o._value : o.value
-                      return val
-                    })
-                  _vm.destination = $event.target.multiple
-                    ? $$selectedVal
-                    : $$selectedVal[0]
-                }
-              }
-            },
-            _vm._l(_vm.videos, function(video, index) {
-              return _c("option", { domProps: { value: index } }, [
-                _vm._v(
-                  "\n                " +
-                    _vm._s(video.name) +
-                    " (" +
-                    _vm._s(video.filename) +
-                    ")\n            "
-                )
-              ])
-            }),
-            0
-          ),
-          _vm._v(" "),
-          _c("button", { on: { click: _vm.createConnection } }, [
-            _vm._v("\n            Add connection\n        ")
-          ])
-        ]
-      ),
-      _vm._v(" "),
-      _vm._l(_vm.unPicked, function(video) {
-        return _c("div", { staticClass: "video" }, [
-          _vm._v("\n        " + _vm._s(video.name) + "\n    ")
+          },
+          _vm._l(_vm.videos, function(video, index) {
+            return _c("option", { domProps: { value: index } }, [
+              _vm._v(
+                "\n                " +
+                  _vm._s(video.name) +
+                  " (" +
+                  _vm._s(video.filename) +
+                  ")\n            "
+              )
+            ])
+          }),
+          0
+        ),
+        _vm._v(" "),
+        _c("button", { on: { click: _vm.createConnection } }, [
+          _vm._v("\n            Add connection\n        ")
         ])
-      })
-    ],
-    2
-  )
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "parent" },
+      _vm._l(this.meta.connections, function(layer) {
+        return _c(
+          "div",
+          { staticClass: "layer" },
+          _vm._l(layer, function(video) {
+            return _c("div", { staticClass: "video" }, [
+              _vm._v(
+                "\n                " + _vm._s(video.name) + "\n            "
+              )
+            ])
+          }),
+          0
+        )
+      }),
+      0
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true

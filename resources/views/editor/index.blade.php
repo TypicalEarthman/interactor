@@ -65,6 +65,7 @@
 			json_videos="{{ $videos }}"
 			json_connections="{{ $connections }}"
 			episode_id="{{$episode_id}}"
+			root_number="{{$root_video}}"
 			token="{{csrf_token()}}">
 		>
 		</connection-manager>

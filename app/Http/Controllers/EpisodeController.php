@@ -86,8 +86,10 @@ class EpisodeController extends Controller
             }
         }
         $videos = $episode->videos;
+        $root_video = $episode->root_video;
         $connections = $episode->connections;
         return view('editor/index',[
+            'root_video' => $root_video,
             'videos' => $videos,
             'connections' => $connections,
             'project' => $project,

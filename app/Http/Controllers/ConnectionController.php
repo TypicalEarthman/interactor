@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Connection;
 use Illuminate\Http\Request;
+use App\Episode;
 
 class ConnectionController extends Controller
 {
@@ -35,6 +36,7 @@ class ConnectionController extends Controller
         $connection->out_id = $request->get('out_id');
         $connection->meta = '{}';
         $connection->save();
+        $episode_id = $request->get('episode_id');
         $episode = Episode::where('id', $episode_id)->first();
         $connections = $episode->connections; 
         return $connections;
