@@ -51,7 +51,7 @@
             </button>
         </div>
         <div class="parent">
-            <canvas id="canvas" width="900" height="330">
+            <canvas id="canvas" width="5000" height="1000">
             </canvas>
             <!--
             <div
@@ -162,30 +162,86 @@ export default {
                 self.root = false;
             });
         },
+        findMax: function(item) {
+            let target = item
+            let targetConnections = []
+            let self = this
+            this.connections.forEach(function(item){
+                if (item.out_id == target) {
+                    targetConnections.push(item)
+                }
+            });
+            let max = 0;
+            targetConnections.forEach(function(item) {
+                console.log('surprise')
+                let current = self.setLayer(item.entry_id,0)
+                if(current > max) {
+                    max = current
+                }
+            });
+            return max
+        },
+        setLayer: function(item,layer) {
+            layer = layer + 1
+            console.log(layer)
+            let target = item
+            let targetConnections = []
+            let self = this
+            this.connections.forEach(function(item){
+                if (item.out_id == target) {
+                    targetConnections.push(item)
+                }
+            });
+            let trigger = false
+            console.log('---------')
+            console.log(targetConnections)
+            console.log(item)
+            console.log('---------')
+            targetConnections.forEach(function(item) {
+                if(self.meta.videos[item.entry_id].layer == 1) {
+                    trigger = true
+                }
+            });
+            if(trigger) {
+                return (layer + 1)
+            }
+            else {
+                let max = 0;
+                targetConnections.forEach(function(item) {
+                    console.log('surprise')
+                    console.log(layer)
+                    let current = self.setLayer(item.entry_id,layer)
+                    if(current > max) {
+                        max = current
+                    }
+                });
+            }
+        },
         drawConnections: function() {
             let self = this;  
             let canvas = document.getElementById("canvas");
             this.meta.videos[this.rootNumber].layer = 1;
-            let recursiveSetLayer = function(item) {
-                if(self.meta.videos[item.entry_id].hasOwnProperty('layer')) {
-                    return self.meta.videos[item.entry_id].layer + 1
-                }
-                else {
-                    return recursiveSetLayer(self.meta.videos[item.entry_id])
+            
+            /*for(let item in this.meta.videos) {
+                if (!this.meta.videos[item].hasOwnProperty('layer')) {
+                    this.meta.videos[item].layer = this.findMax(item);
                 }
             };
+            console.log(this.meta.videos)
+            */
+           /*
             this.connections.forEach(function(item){
                 if (self.unPicked.hasOwnProperty(item.out_id)) {
                     delete self.unPicked[item.out_id];
                 }
-                self.meta.videos[item.out_id].layer = recursiveSetLayer(item);
+                self.meta.videos[item.out_id].layer = self.setLayer(item,0);
             });
+            */
             this.meta.connections = [
                 this.unPicked
             ];
             let maxLayer = 0;
             for(let item in this.meta.videos){
-                
                 if(this.meta.videos[item].layer > maxLayer) {
                     maxLayer = this.meta.videos[item].layer;
                 }
@@ -198,12 +254,12 @@ export default {
                 let count = 0;
                 for(let item in this.meta.videos) {
                     if(this.meta.videos[item].layer == i) {
-                        y=count*100 + 10;
+                        y=count*60 + 10;
                         count++;
 
                         let rectangle = canvas.getContext("2d");
                         rectangle.fillStyle = "red";
-                        rectangle.fillRect(x, y, 100, 60);
+                        rectangle.fillRect(x, y, 100, 30);
                         rectangle.fillStyle = "white";
                         rectangle.fillText(this.meta.videos[item].name, x+10, y+10);
 
@@ -217,30 +273,30 @@ export default {
                 this.meta.connections.push(currentLayer);
                 currentLayer = [];
             };
-            console.log(this.meta);
-            console.log(this.rectangles);
             this.connections.forEach(function(item) {
                 let context = canvas.getContext('2d');
                 let origin = self.rectangles[item.entry_id];
+                console.log('xxxxxxxxxxxxxxxxxxx')
+                console.log(item)
+                console.log(self.rectangles)
+                console.log('xxxxxxxxxxxxxxxxxxx')
                 let destination = self.rectangles[item.out_id];
                 // Reset the current path
                 context.beginPath(); 
                 // Staring point (10,45)
-                context.moveTo(origin.x + 100,origin.y + 30);
+                context.moveTo(origin.x + 100,origin.y + 15);
                 // End point (180,47)
-                context.lineTo(destination.x,destination.y+30);
+                context.lineTo(destination.x,destination.y+15);
                 // Make the line visible
                 context.stroke();
 
             });
-            console.log(this.connections);
         }
     },
     mounted() {
         this.videos = JSON.parse(this.json_videos);
         this.connections = JSON.parse(this.json_connections);
         this.rootNumber = parseInt(this.root_number);
-        console.log(this.rootNumber);
         let videos = {};
         this.videos.forEach(function(item) {
             let id = item.id;
@@ -253,7 +309,7 @@ export default {
         if (this.rootNumber != 0) {
             delete this.unPicked[this.rootNumber];
         }
-        this.drawConnections();
+        // this.drawConnections();
     }
 }
 </script>

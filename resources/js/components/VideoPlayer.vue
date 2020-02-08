@@ -24,7 +24,7 @@
         methods: {
             onEnd: function() {
                 if(this.counter <= this.maxVideos) {
-                    this.counter +=1
+                    this.counter+=1
                     this.src = this.videosList[this.counter].url
                 }
                 else {

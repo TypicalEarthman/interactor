@@ -6,7 +6,12 @@
 		
 	</div>
 	<div id="preview">
-		
+		<editor-preview
+			json_videos=" {{ $videos }} "
+			json_connections="{{ $connections }}"
+			root_number="{{$root_video}}"
+		>
+		</editor-preview>
 	</div>
 	<div id="episodes" class="editor-base-block">
 		<h3>
