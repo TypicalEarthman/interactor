@@ -96,7 +96,7 @@ video {
                     document.querySelector("#video").pause();
                     this.cover = true
                 }
-                console.log();
+                console.log("click!");
             },
             onEnd: function() {
                 console.log('Film ended')
@@ -112,6 +112,7 @@ video {
                 })
                 this.options = options
                 this.show_options = true
+                this.cover = true
                 console.log(options)
             },
             rebuild: function() {
@@ -134,6 +135,7 @@ video {
                 this.src = video.url
                 this.id = video.id
                 this.options = []
+                this.show_options = false
             }
         },
         mounted() {

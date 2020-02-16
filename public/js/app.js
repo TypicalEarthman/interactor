@@ -664,7 +664,7 @@ __webpack_require__.r(__webpack_exports__);
         this.cover = true;
       }
 
-      console.log();
+      console.log("click!");
     },
     onEnd: function onEnd() {
       console.log('Film ended');
@@ -682,6 +682,7 @@ __webpack_require__.r(__webpack_exports__);
       });
       this.options = options;
       this.show_options = true;
+      this.cover = true;
       console.log(options);
     },
     rebuild: function rebuild() {
@@ -703,6 +704,7 @@ __webpack_require__.r(__webpack_exports__);
       this.src = video.url;
       this.id = video.id;
       this.options = [];
+      this.show_options = false;
     }
   },
   mounted: function mounted() {
