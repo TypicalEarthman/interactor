@@ -105,7 +105,7 @@ mix = {
 			api: 'http://interactor'
 		@else
 			@if(App::environment('local'))
-			api:  'http://127.0.0.1/',
+			api:  'http://127.0.0.1:8000/',
 			@else
 			api:  'http://interactor.su/',
 			@endif
