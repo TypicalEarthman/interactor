@@ -27,60 +27,68 @@
 	
 	<div id="episodes" class="col-md-2 editor-base-block pl-0">
 		<div class="ebb-content">
-		<h3>
-			Episodes:
-		</h3>
-		<button @click="addEpisode"> 
-			Add episode
-		</button>
-		@foreach ($episodes as $episode)
-			<div>
-				
-					<a href="{{ route('episode.show', [
-					'project_id' => $project_id,
-					'episode_id' => $episode->id
-				]) }}">{{ $episode->name }}</a>
-				
-			</div>
-		@endforeach
+			<h3>
+				Episodes:
+			</h3>
+			<ol>
+			@foreach ($episodes as $episode)
+				<li class="mb-3"> 
+					
+						<a href="{{ route('episode.show', [
+						'project_id' => $project_id,
+						'episode_id' => $episode->id
+					]) }}">{{ $episode->name }}</a>
+					
+				</li>
+			@endforeach
+			</ol>
+
+			<button class="btn btn-primary btn-block btn-sm mt-5" @click="addEpisode"> 
+				Add episode
+			</button>
 		</div>
 	</div>
 	<div id="files" class="col-md-2 editor-base-block pr-0 pt-0">
 		<div class="ebb-content">
 		<h3>
-			Assets:
+			Videos:
 		</h3>
-		<button @click="addVideo"> 
+		<ol>
+		@foreach ($videos as $video)
+			<li class="mb-3"> 
+				<p class="mb-0">Action: {{ $video->name }}</p>
+				<p class="mb-0">Filename: {{$video->filename }}</p>
+			</li>
+
+			<!--
+				
+				<video src="{{ asset("{$video->url}") }}" width="400" controls="controls">
+				</video>
+				<form method="POST" action="{{ route('video.update') }}" method="POST" enctype="multipart/form-data">
+					@csrf
+					Заменить видео
+					<br />
+					New name:
+					<br /><br />
+					<input type="text" name="name" />
+					<br /><br />
+					<input type="file" name="video" />
+					<br /><br />
+					<button type="submit" class="btn btn-sm btn-default">Обновить</button>
+					<input type="hidden" name="id" value="{{$video->id}}" />
+					<input type="hidden" name="project_id" value="{{$project_id}}" />
+				</form>
+			-->
+		@endforeach
+		</ol>
+		<button class="btn btn-primary btn-block btn-sm mt-5" @click="addVideo"> 
 			Add video
 		</button>
+		{{-- 
 		<button @click="addPage"> 
 			Add page
 		</button>
-		@foreach ($videos as $video)
-			<div>
-				<p> {{ $video->name }} ({{$video->filename }}) </p>
-				<!--
-					
-					<video src="{{ asset("{$video->url}") }}" width="400" controls="controls">
-					</video>
-					<form method="POST" action="{{ route('video.update') }}" method="POST" enctype="multipart/form-data">
-						@csrf
-						Заменить видео
-						<br />
-						New name:
-						<br /><br />
-						<input type="text" name="name" />
-						<br /><br />
-						<input type="file" name="video" />
-						<br /><br />
-						<button type="submit" class="btn btn-sm btn-default">Обновить</button>
-						<input type="hidden" name="id" value="{{$video->id}}" />
-						<input type="hidden" name="project_id" value="{{$project_id}}" />
-					</form>
-				-->
-				
-			</div>
-		@endforeach
+		--}}
 		</div>
 	</div>
 	<div id="manager" class="col-md-10 editor-base-block pt-0">
@@ -96,18 +104,25 @@
 			</connection-manager>
 		</div>
 	</div>
+	<transition name="fade">
 	<div class="dialog" v-show="modal">
-		<button @click="modal=false">
-			Close dialog
-		</button>
-		<custom-form 
-			:option="option" 
-			episode_id="{{$episode_id}}" 
-			project_id="{{$project_id}}" 
-			:route="route" 
-			token="{{csrf_token()}}">
-		</custom-form>
-	</div>
+			<button @click="modal=false">
+				Close dialog
+			</button>
+			<custom-form 
+				:option="option" 
+				episode_id="{{$episode_id}}" 
+				project_id="{{$project_id}}" 
+				:route="route" 
+				token="{{csrf_token()}}">
+			</custom-form>
+		</div>
+	</transition>
+
+	<transition name="fade">
+		<div class="blacker" v-if="modal" @click="modal=false"></div>
+
+	</transition>
 	
 </div>
 @endsection

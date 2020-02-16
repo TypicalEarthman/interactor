@@ -10,7 +10,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
     -->
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>interactor</title>
 
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap&subset=cyrillic" rel="stylesheet">
 

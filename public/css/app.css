@@ -5,19 +5,32 @@ body {
 }
 
 a {
-  color: #fff;
+  color: #212121;
   text-decoration: underline;
   -webkit-transition: color 0.3s;
   transition: color 0.3s;
 }
 
+ol {
+  padding-left: 1rem;
+}
+
 a:hover {
-  color: #ccc;
+  color: #227dc7;
   text-decoration: none;
 }
 
 body {
   font-family: "Open Sans", sans-serif;
+}
+
+.btn {
+  border-radius: 0;
+  border: none;
+}
+
+.btn-primary {
+  background: #212121;
 }
 
 #editor-root {
@@ -30,6 +43,10 @@ body {
   */
 }
 
+#files {
+  overflow: auto;
+}
+
 .editor-base-block {
   height: 50vh;
   padding: 1rem;
@@ -37,10 +54,10 @@ body {
 
 .ebb-content {
   padding: 1rem;
-  background: #AB99DB;
+  background: #EBEBEB;
   height: 100%;
   overflow: hidden;
-  color: #fff;
+  color: #212121;
 }
 
 #preview .embed-responsive {
@@ -56,5 +73,26 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
+  z-index: 10;
+}
+
+.blacker {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  -webkit-transition: opacity 0.3s;
+  transition: opacity 0.3s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 
