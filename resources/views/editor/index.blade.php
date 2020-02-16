@@ -12,6 +12,7 @@
 			json_videos=" {{ $videos }} "
 			json_connections="{{ $connections }}"
 			root_number="{{$root_video}}"
+			:project_preview="false"
 			ref="editor_preview"
 		>
 		</editor-preview>
