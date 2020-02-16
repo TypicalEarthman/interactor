@@ -1,41 +1,36 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Open Sans", sans-serif;
+}
+
 #editor-root {
-  width: 98vw;
-  height: 98vh;
-  margin: 1vh auto;
-  display: -webkit-box;
+  height: 100%;
+  /*
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-          flex-flow: row wrap;
-  -webkit-box-pack: justify;
-          justify-content: space-between;
+  flex-flow: row wrap;
+  justify-content: space-between;
   align-content: space-between;
+  */
 }
 
 #manager {
-  overflow: scroll;
-}
-
-#files {
   overflow: scroll;
 }
 
 .editor-base-block {
-  width: 17vw;
-  height: 48vh;
-  border: 1px solid #000;
+  height: 50vh;
+  padding: 1rem;
 }
 
-#preview {
-  width: 60vw;
-  height: 48vh;
-  border: 1px solid #000;
-}
-
-#manager {
-  width: 79vw;
-  height: 48vh;
-  border: 1px solid #000;
+.ebb-content {
+  padding: 1rem;
+  background: red;
+  height: 100%;
 }
 
 .dialog {

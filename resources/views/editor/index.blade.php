@@ -1,13 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
-<div id="editor-root">
-	<div id="settings" class="editor-base-block">
-		<a href="{{ route('project.show', [
-			"project" => $project_id,
-		]) }}" target="_blank">Ссылка на проект</a>
+<div id="editor-root" class="row mx-0">
+	
+	<div id="settings" class="col-md-2 editor-base-block p-3">
+		<div class="ebb-content">
+			<h2 class="display-5">Settings</h2>
+			<a href="{{ route('project.show', [
+				"project" => $project_id,
+			]) }}" target="_blank">Project link</a>
+		</div>
+		
 	</div>
-	<div id="preview">
+
+	<div id="preview" class="col-md-8 editor-base-block">
 		<editor-preview
 			json_videos=" {{ $videos }} "
 			json_connections="{{ $connections }}"
@@ -16,7 +22,8 @@
 		>
 		</editor-preview>
 	</div>
-	<div id="episodes" class="editor-base-block">
+	
+	<div id="episodes" class="col-md-2 editor-base-block">
 		<h3>
 			Episodes:
 		</h3>
@@ -35,7 +42,7 @@
 		@endforeach
 		
 	</div>
-	<div id="files" class="editor-base-block">
+	<div id="files" class="col-md-2 editor-base-block">
 		<h3>
 			Assets:
 		</h3>
@@ -72,7 +79,7 @@
 		@endforeach
 		
 	</div>
-	<div id="manager">
+	<div id="manager" class="col-md-10 editor-base-block">
 		<connection-manager
 			json_videos="{{ $videos }}"
 			json_connections="{{ $connections }}"
@@ -95,6 +102,7 @@
 			token="{{csrf_token()}}">
 		</custom-form>
 	</div>
+	
 </div>
 @endsection
 
