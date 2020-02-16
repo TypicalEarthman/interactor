@@ -6,13 +6,14 @@ use App\Video;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Services\VideoService;
 
 class VideoController extends Controller
 
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        //$this->middleware('auth');
     }
     /**
      * Display a listing of the resource.
@@ -40,22 +41,16 @@ class VideoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, VideoService $videoService)
     {
-        $id = Auth::user()->id;
-        $episode_id = $request->get('episode_id');
-        $project_id = $request->get('project_id');
-        $video = new Video();
-        $video->name = $request->get('name');
-        $video->user_id = $id;
-        $filename = $request->video->getClientOriginalName();
-        $video->filename = $filename;
-        $video->episode_id = $episode_id;
-        $video->project_id = $project_id;
-        $video->meta = '{}';
-        $video->url = "/storage/users/{$id}/project/{$project_id}/episode/{$episode_id}/{$filename}";
-        $request->video->storeAs("users/{$id}/project/{$project_id}/episode/{$episode_id}", $filename);
-        $video->save();
+        $videoService->store([
+            "episode_id" => $request->get('episode_id'),
+            "project_id" => $request->get('project_id'),
+            "name" => $request->get('name'),
+            "video" => $request->video,
+            "filename" => $request->video->getClientOriginalName(),
+        ]);
+
         return redirect()->back();
     }
 

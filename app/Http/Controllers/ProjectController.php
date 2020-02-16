@@ -6,11 +6,10 @@ use App\Project;
 use Auth;
 use Illuminate\Http\Request;
 use App\Services\ProjectService;
+use App\Services\VideoService;
 
 class ProjectController extends Controller
 {
-    use \App\Traits\CreateEpisode;
-
     public function __construct()
     {
         //$this->middleware('auth');
@@ -62,9 +61,17 @@ class ProjectController extends Controller
 
 
     // custom
-    public function generate(ProjectService $projectService) {
+    public function generate(ProjectService $projectService, VideoService $videoService) {
         $data = $projectService->store([
             "name" => "Привет!",
+        ]);
+
+        $videoService->store([
+            "episode_id" => $data["episode"]->id,
+            "project_id" => $data["project"]->id,
+            "name" => "Кекушка",
+            "filename" => "kek.mp4",
+            "url" => "starter/kek.mp4"
         ]);
 
         return redirect()->route('episode.show', [

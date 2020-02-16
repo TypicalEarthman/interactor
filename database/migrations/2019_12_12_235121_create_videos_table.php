@@ -20,7 +20,7 @@ class CreateVideosTable extends Migration
             $table->string('name');
             $table->string('filename');
             $table->string('url');
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->json('meta');
             $table->timestamps();
 
