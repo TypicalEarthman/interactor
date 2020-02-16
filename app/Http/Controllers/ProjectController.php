@@ -74,6 +74,14 @@ class ProjectController extends Controller
             "url" => "starter/kek.mp4"
         ]);
 
+        $videoService->store([
+            "episode_id" => $data["episode"]->id,
+            "project_id" => $data["project"]->id,
+            "name" => "Кекуasdasdasdшка",
+            "filename" => "kek.mp4",
+            "url" => "starter/kek.mp4"
+        ]);
+
         return redirect()->route('episode.show', [
             'project_id' => $data["project"]->id,
             'episode_id' => $data["episode"]->id,
