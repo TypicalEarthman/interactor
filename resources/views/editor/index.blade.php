@@ -10,6 +10,7 @@
 			json_videos=" {{ $videos }} "
 			json_connections="{{ $connections }}"
 			root_number="{{$root_video}}"
+			ref="editor_preview"
 		>
 		</editor-preview>
 	</div>
@@ -75,7 +76,8 @@
 			json_connections="{{ $connections }}"
 			episode_id="{{$episode_id}}"
 			root_number="{{$root_video}}"
-			token="{{csrf_token()}}">
+			token="{{csrf_token()}}"
+			v-on:redraw_connections="redraw_connections">
 		>
 		</connection-manager>
 	</div>
@@ -107,7 +109,8 @@ mix = {
 		episode_id: '',
 		project_id: '',
 		option: '',
-		route: ''
+		route: '',
+		editor_preview: null,
 	},
 	methods: {
 		addVideo: function() {
@@ -124,9 +127,14 @@ mix = {
 			this.option = 'page';
 			this.route = '?';
 			this.modal = true;
+		},
+		redraw_connections(connections) {
+			console.log(connections);
+			this.editor_preview.json_connections = connections;
 		}
 	},
 	mounted: function() {
+		this.editor_preview = this.$refs.editor_preview;
 	}
 };
 
