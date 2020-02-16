@@ -536,6 +536,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -681,7 +686,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.preview[data-v-02862bc0] {\r\n    position: relative;\n}\n.chooseOptions[data-v-02862bc0] {\r\n    position: absolute;\r\n    top: 0;\r\n    left: 0;\r\n    display: -webkit-box;\r\n    display: flex;\r\n    -webkit-box-orient: horizontal;\r\n    -webkit-box-direction: normal;\r\n            flex-flow: row wrap;\r\n    justify-content: space-around;\n}\n.option[data-v-02862bc0] {\r\n    width: 100px;\r\n    height: 50px;\r\n    background: red;\n}\r\n", ""]);
+exports.push([module.i, "\nvideo[data-v-02862bc0] {\r\n    height: 100%;\r\n    width: auto;\n}\n.preview[data-v-02862bc0] {\r\n    position: relative;\r\n    height: 48vh;\n}\n.chooseOptions[data-v-02862bc0] {\r\n    position: absolute;\r\n    top: 0;\r\n    left: 0;\r\n    display: -webkit-box;\r\n    display: flex;\r\n    -webkit-box-orient: horizontal;\r\n    -webkit-box-direction: normal;\r\n            flex-flow: row wrap;\r\n    justify-content: space-around;\n}\n.option[data-v-02862bc0] {\r\n    width: 100px;\r\n    height: 50px;\r\n    background: red;\n}\r\n", ""]);
 
 // exports
 
@@ -1751,7 +1756,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "preview" }, [
     _c("video", {
-      attrs: { src: _vm.src, width: "600", controls: "controls", id: "video" },
+      attrs: { src: _vm.src, controls: "controls", id: "video" },
       on: { ended: _vm.onEnd }
     }),
     _vm._v(" "),
