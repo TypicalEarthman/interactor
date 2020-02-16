@@ -83,25 +83,25 @@ class ProjectController extends Controller
         $root = $videoService->store([
             "episode_id" => $data["episode"]->id,
             "project_id" => $data["project"]->id,
-            "name" => "Кекушка",
-            "filename" => "kek.mp4",
-            "url" => "starter/kek.mp4"
+            "name" => "Main",
+            "filename" => "1.mp4",
+            "url" => "starter/1.mp4"
         ]);
 
         $root_1 = $videoService->store([
             "episode_id" => $data["episode"]->id,
             "project_id" => $data["project"]->id,
-            "name" => "Кекуasdasdasdшка",
-            "filename" => "kek2.mp4",
-            "url" => "starter/kek2.mp4"
+            "name" => "I want to view result",
+            "filename" => "1_1.mp4",
+            "url" => "starter/1_1.mp4"
         ]);
 
         $root_2 = $videoService->store([
             "episode_id" => $data["episode"]->id,
             "project_id" => $data["project"]->id,
-            "name" => "Кеasdasdsaddшка",
-            "filename" => "kek2.mp4",
-            "url" => "starter/kek2.mp4"
+            "name" => "I want to upload my video",
+            "filename" => "1_2.mp4",
+            "url" => "starter/1_2.mp4"
         ]);
 
         $connectionService->store([
