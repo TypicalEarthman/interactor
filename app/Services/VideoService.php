@@ -7,6 +7,7 @@ use Auth;
 use Illuminate\Http\Request;
 use App\Video;
 use Illuminate\Support\Facades\Storage;
+use App\Services\EpisodeService;
 
 class VideoService {
 	public function store($data) {
@@ -45,8 +46,14 @@ class VideoService {
                 
                 $episode = Episode::where('id', $episode_id)->first();
                 $episode_videos = $episode->videos;
+
                 if(count($episode_videos) == 1) {
-                        //вставить set_root и передать туды  $episode_videos->first()->id
+                        $episodeService = new EpisodeService;
+                        $episodeService->set_root([
+                                "id" => $episode_videos->first()->id,
+                                "episode_id" => $episode_id,
+                        ]);
+                       
                 }
                 return $video;
                 
