@@ -167,7 +167,7 @@ export default {
                 console.log(response.data);
                 self.connections = response.data;
                 self.modal = false;
-                self.drawConnections('mount');
+                self.drawConnections('update');
 
                 self.$emit("redraw_connections", response.data);
             })
