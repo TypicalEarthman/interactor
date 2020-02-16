@@ -3,7 +3,9 @@
 @section('content')
 <div id="editor-root">
 	<div id="settings" class="editor-base-block">
-		
+		<a href="{{ route('project.show', [
+			"project" => $project_id,
+		]) }}" target="_blank">Ссылка на проект</a>
 	</div>
 	<div id="preview">
 		<editor-preview
