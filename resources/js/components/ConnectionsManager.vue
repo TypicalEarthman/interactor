@@ -146,7 +146,7 @@ export default {
                 console.log(response.data);
                 self.connections = response.data;
                 self.modal = false;
-                self.drawConnections();
+                self.drawConnections('mount');
             })
             .catch(function (error) {
                 console.log(error);
@@ -171,6 +171,7 @@ export default {
         },
         
         updatePosition: function(data) {
+            let self = this
             axios.post('/video/edit', data)
                 .then(function (response) {
                     console.log(response);
@@ -251,20 +252,24 @@ export default {
             // by the distance the mouse has moved
             // since the last mousemove
             for(let i in this.rectangles) {
-                var r=this.rectangles[i];
-                if(r.isDragging){
-                    r.x+=dx;
-                    r.y+=dy;
+                if(this.rectangles[i].isDragging){
+                    console.log(this.rectangles[i])
+                    this.rectangles[i].x+=dx;
+                    this.rectangles[i].y+=dy;
                 }
             }
             // reset the starting mouse position for the next mousemove
             this.startX=this.mx;
             this.startY=this.my;
-
+            if(this.dragok) {
+                this.drawConnections('update');
+            }
         },
-        drawConnections: function() {
+        drawConnections: function(type) {
             let self = this;  
             let canvas = document.getElementById("canvas");
+            let box = canvas.getContext("2d");
+            box.clearRect(0, 0, 5000, 1000);
             var BB=canvas.getBoundingClientRect();
             this.offsetX=BB.left;
             this.offsetY=BB.top;
@@ -276,39 +281,60 @@ export default {
             let count = 0;
             this.videos.forEach(function(item) {
                 let meta = JSON.parse(item.meta)
-                console.log(meta.x)
                 let rectangle = canvas.getContext("2d");
                 if(meta.x == undefined) {
-                    y=count*60 + 10;
-                    count++;
-                    rectangle.fillStyle = "red";
-                    rectangle.fillRect(x, y, 100, 30);
-                    rectangle.fillStyle = "white";
-                    rectangle.fillText(item.name, x+10, y+10);
-                    self.rectangles[item.id] = {
-                        isDragging: false,
-                        x: x,
-                        y: y,
-                        width: 100,
-                        height: 30
-                    };
+                    
+                    if(type == 'update') {
+                        y=count*60 + 10;
+                        count++;
+                        rectangle.fillStyle = "red";
+                        rectangle.fillRect(self.rectangles[item.id].x, self.rectangles[item.id].y, 100, 30);
+                        rectangle.fillStyle = "white";
+                        rectangle.fillText(self.rectangles[item.id].name, self.rectangles[item.id].x+10, self.rectangles[item.id].y+10);
+                        
+                    }
+                    else {
+                        y=count*60 + 10;
+                        count++;
+                        rectangle.fillStyle = "red";
+                        rectangle.fillRect(x, y, 100, 30);
+                        rectangle.fillStyle = "white";
+                        rectangle.fillText(item.name, x+10, y+10);
+                        self.rectangles[item.id] = {
+                            isDragging: false,
+                            x: x,
+                            y: y,
+                            name: item.name,
+                            width: 100,
+                            height: 30
+                        };
+                    }
                 }
                 else {
-                    rectangle.fillStyle = "red";
-                    rectangle.fillRect(meta.x, meta.y, 100, 30);
-                    rectangle.fillStyle = "white";
-                    rectangle.fillText(item.name, meta.x+10, meta.y+10);
-                    console.log(rectangle)
-                    self.rectangles[item.id] = {
-                        isDragging: false,
-                        x: meta.x,
-                        y: meta.y,
-                        width: 100,
-                        height: 30
-                    };
+                    if(type == 'update') {
+                        y=count*60 + 10;
+                        count++;
+                        rectangle.fillStyle = "red";
+                        rectangle.fillRect(self.rectangles[item.id].x, self.rectangles[item.id].y, 100, 30);
+                        rectangle.fillStyle = "white";
+                        rectangle.fillText(self.rectangles[item.id].name, self.rectangles[item.id].x+10, self.rectangles[item.id].y+10);
+                        
+                    }
+                    else {
+                        rectangle.fillStyle = "red";
+                        rectangle.fillRect(meta.x, meta.y, 100, 30);
+                        rectangle.fillStyle = "white";
+                        rectangle.fillText(item.name, meta.x+10, meta.y+10);
+                        self.rectangles[item.id] = {
+                            isDragging: false,
+                            x: meta.x,
+                            y: meta.y,
+                            name: item.name,
+                            width: 100,
+                            height: 30
+                        };
+                    }
                 }
-
-                //rectangle.fillStyle = "white";
 
             });
             this.connections.forEach(function(item) {
@@ -351,7 +377,7 @@ export default {
         if (this.rootNumber != 0) {
             delete this.unPicked[this.rootNumber];
         }
-         this.drawConnections();
+         this.drawConnections('mount');
     }
 }
 </script>
