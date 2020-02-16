@@ -7,6 +7,7 @@ use Auth;
 use Illuminate\Http\Request;
 use App\Services\ProjectService;
 use App\Services\VideoService;
+use App\Services\ConnectionService;
 
 class ProjectController extends Controller
 {
@@ -61,12 +62,16 @@ class ProjectController extends Controller
 
 
     // custom
-    public function generate(ProjectService $projectService, VideoService $videoService) {
+    public function generate(
+        ProjectService $projectService, 
+        VideoService $videoService,
+        ConnectionService $connectionService) {
+
         $data = $projectService->store([
             "name" => "Привет!",
         ]);
 
-        $videoService->store([
+        $root = $videoService->store([
             "episode_id" => $data["episode"]->id,
             "project_id" => $data["project"]->id,
             "name" => "Кекушка",
@@ -74,12 +79,32 @@ class ProjectController extends Controller
             "url" => "starter/kek.mp4"
         ]);
 
-        $videoService->store([
+        $root_1 = $videoService->store([
             "episode_id" => $data["episode"]->id,
             "project_id" => $data["project"]->id,
             "name" => "Кекуasdasdasdшка",
             "filename" => "kek2.mp4",
             "url" => "starter/kek2.mp4"
+        ]);
+
+        $root_2 = $videoService->store([
+            "episode_id" => $data["episode"]->id,
+            "project_id" => $data["project"]->id,
+            "name" => "Кеasdasdsaddшка",
+            "filename" => "kek2.mp4",
+            "url" => "starter/kek2.mp4"
+        ]);
+
+        $connectionService->store([
+            "episode_id" => $data["episode"]->id,
+            "entry_id" => $root->id,
+            "out_id" => $root_1->id,
+        ]);
+
+        $connectionService->store([
+            "episode_id" => $data["episode"]->id,
+            "entry_id" => $root->id,
+            "out_id" => $root_2->id,
         ]);
 
         return redirect()->route('episode.show', [
