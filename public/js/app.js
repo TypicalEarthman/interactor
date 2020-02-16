@@ -710,7 +710,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\nvideo[data-v-02862bc0] {\r\n    height: 100%;\r\n    width: auto;\n}\n.preview[data-v-02862bc0] {\r\n    position: relative;\r\n    height: 48vh;\n}\n.chooseOptions[data-v-02862bc0] {\r\n    position: absolute;\r\n    top: 0;\r\n    left: 0;\r\n    display: -webkit-box;\r\n    display: flex;\r\n    -webkit-box-orient: horizontal;\r\n    -webkit-box-direction: normal;\r\n            flex-flow: row wrap;\r\n    justify-content: space-around;\n}\n.option[data-v-02862bc0] {\r\n    width: 100px;\r\n    height: 50px;\r\n    background: red;\n}\r\n", ""]);
+exports.push([module.i, "\nvideo[data-v-02862bc0] {\n    height: 100%;\n    width: auto;\n}\n.preview[data-v-02862bc0] {\n    position: relative;\n    height: 48vh;\n}\n.chooseOptions[data-v-02862bc0] {\n    position: absolute;\n    top: 0;\n    left: 0;\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: horizontal;\n    -webkit-box-direction: normal;\n            flex-flow: row wrap;\n    justify-content: space-around;\n}\n.option[data-v-02862bc0] {\n    width: 100px;\n    height: 50px;\n    background: red;\n}\n", ""]);
 
 // exports
 
@@ -2310,9 +2310,9 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\OSPanel\domains\interactor\resources\js\app.js */"./resources/js/app.js");
-__webpack_require__(/*! D:\OSPanel\domains\interactor\resources\sass\app.scss */"./resources/sass/app.scss");
-module.exports = __webpack_require__(/*! D:\OSPanel\domains\interactor\resources\sass\vendor.scss */"./resources/sass/vendor.scss");
+__webpack_require__(/*! C:\interactor\interactor\resources\js\app.js */"./resources/js/app.js");
+__webpack_require__(/*! C:\interactor\interactor\resources\sass\app.scss */"./resources/sass/app.scss");
+module.exports = __webpack_require__(/*! C:\interactor\interactor\resources\sass\vendor.scss */"./resources/sass/vendor.scss");
 
 
 /***/ })
