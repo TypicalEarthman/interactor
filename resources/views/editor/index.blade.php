@@ -99,7 +99,7 @@ mix = {
 	data: {
 		modal: false,
 		@if(App::environment('local'))
-		api:  'http://127.0.0.1:8000/',
+		api:  'http://interactor/',
 		@else
 		api:  'http://interactor.su/',
 		@endif
