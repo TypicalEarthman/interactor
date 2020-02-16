@@ -14,6 +14,7 @@
 video {
     height: 100%;
     width: auto;
+    max-width: 100%;
 }
 .preview {
     position: relative;
@@ -54,7 +55,9 @@ video {
         methods: {
             onEnd: function() {
                 console.log('Film ended')
-                this.rebuild()
+                if(Array.isArray(this.connections)) {
+                    this.rebuild()
+                }
                 let id = this.id
                 let connections = this.connections[id]     
                 let options = []   
