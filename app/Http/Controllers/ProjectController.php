@@ -39,7 +39,7 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
-        return $project;
+        return view('projects.show');
     }
 
     public function edit(Project $project)
