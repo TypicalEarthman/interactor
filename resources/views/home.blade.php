@@ -43,6 +43,10 @@
                         @endforeach
                     </div>
                 </div>
+                <form action="/logout" method="POST">
+                    <button class="btn btn-primary">Logout</button>
+                    @csrf
+                </form>
             </div>
         </div>
     </div>

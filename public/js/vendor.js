@@ -95153,7 +95153,7 @@ window.PIXI = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pix
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\interactor\interactor\resources\js\vendor.js */"./resources/js/vendor.js");
+module.exports = __webpack_require__(/*! D:\interactor\resources\js\vendor.js */"./resources/js/vendor.js");
 
 
 /***/ })
