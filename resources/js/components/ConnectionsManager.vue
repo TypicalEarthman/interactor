@@ -115,7 +115,14 @@ export default {
             chosenRoot: '',
             rootNumber: Number,
             meta: '',
-            rectangles: {}
+            rectangles: {},
+            mx: '',
+            my: '',
+            dragok: '',
+            startX: '',
+            startY: '',
+            offsetX: '',
+            offsetY: ''
         }
     },
     props: {
@@ -162,135 +169,170 @@ export default {
                 self.root = false;
             });
         },
-        findMax: function(item) {
-            let target = item
-            let targetConnections = []
-            let self = this
-            this.connections.forEach(function(item){
-                if (item.out_id == target) {
-                    targetConnections.push(item)
-                }
-            });
-            let max = 0;
-            targetConnections.forEach(function(item) {
-                console.log('surprise')
-                let current = self.setLayer(item.entry_id,0)
-                if(current > max) {
-                    max = current
-                }
-            });
-            return max
+        
+        updatePosition: function(data) {
+            axios.post('/video/edit', data)
+                .then(function (response) {
+                    console.log(response);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
         },
-        setLayer: function(item,layer) {
-            layer = layer + 1
-            console.log(layer)
-            let target = item
-            let targetConnections = []
-            let self = this
-            this.connections.forEach(function(item){
-                if (item.out_id == target) {
-                    targetConnections.push(item)
+        myDown: function(e) {
+
+            // tell the browser we're handling this mouse event
+            e.preventDefault();
+            e.stopPropagation();
+
+            // get the current mouse position
+            this.mx=parseInt(e.clientX-this.offsetX);
+            this.my=parseInt(e.clientY-this.offsetY);
+            console.log(this.rectangles)
+
+            // test each rect to see if mouse is inside
+            this.dragok=false;
+            
+            for(let i in this.rectangles) {
+                var r=this.rectangles[i];
+                    // if yes, set that rects isDragging=true
+                if(this.mx>r.x && this.mx<r.x+r.width && this.my>r.y && this.my<r.y+r.height){
+                    this.dragok=true
+                    r.isDragging=true;
                 }
-            });
-            let trigger = false
-            console.log('---------')
-            console.log(targetConnections)
-            console.log(item)
-            console.log('---------')
-            targetConnections.forEach(function(item) {
-                if(self.meta.videos[item.entry_id].layer == 1) {
-                    trigger = true
-                }
-            });
-            if(trigger) {
-                return (layer + 1)
             }
-            else {
-                let max = 0;
-                targetConnections.forEach(function(item) {
-                    console.log('surprise')
-                    console.log(layer)
-                    let current = self.setLayer(item.entry_id,layer)
-                    if(current > max) {
-                        max = current
+            // save the current mouse position
+            this.startX=this.mx;
+            this.startY=this.my;
+
+        },
+        myUp: function(e) {
+            // tell the browser we're handling this mouse event
+            e.preventDefault();
+            e.stopPropagation();
+
+            // clear all the dragging flags
+            this.dragok = false;
+            for(let i in this.rectangles) {
+                if(this.rectangles[i].isDragging) {
+                    this.rectangles[i].isDragging=false;
+                    
+                    let position = {
+                        x: this.rectangles[i].x,
+                        y: this.rectangles[i].y
+                    };
+                    position = JSON.stringify(position);
+                    let request = {
+                        meta: position,
+                        id: i
                     }
-                });
+                    this.updatePosition(request);
+                }
             }
+            console.log(this.rectangles)
+
+        },
+        myMove: function(e) {
+
+            // tell the browser we're handling this mouse event
+            e.preventDefault();
+            e.stopPropagation();
+
+            // get the current mouse position
+            this.mx=parseInt(e.clientX-this.offsetX);
+            this.my=parseInt(e.clientY-this.offsetY);
+
+            // calculate the distance the mouse has moved
+            // since the last mousemove
+            var dx=this.mx-this.startX;
+            var dy=this.my-this.startY;
+
+            // move each rect that isDragging 
+            // by the distance the mouse has moved
+            // since the last mousemove
+            for(let i in this.rectangles) {
+                var r=this.rectangles[i];
+                if(r.isDragging){
+                    r.x+=dx;
+                    r.y+=dy;
+                }
+            }
+            // reset the starting mouse position for the next mousemove
+            this.startX=this.mx;
+            this.startY=this.my;
+
         },
         drawConnections: function() {
             let self = this;  
             let canvas = document.getElementById("canvas");
-            this.meta.videos[this.rootNumber].layer = 1;
-            
-            /*for(let item in this.meta.videos) {
-                if (!this.meta.videos[item].hasOwnProperty('layer')) {
-                    this.meta.videos[item].layer = this.findMax(item);
-                }
-            };
-            console.log(this.meta.videos)
-            */
-           /*
-            this.connections.forEach(function(item){
-                if (self.unPicked.hasOwnProperty(item.out_id)) {
-                    delete self.unPicked[item.out_id];
-                }
-                self.meta.videos[item.out_id].layer = self.setLayer(item,0);
-            });
-            */
+            var BB=canvas.getBoundingClientRect();
+            this.offsetX=BB.left;
+            this.offsetY=BB.top;
             this.meta.connections = [
                 this.unPicked
             ];
-            let maxLayer = 0;
-            for(let item in this.meta.videos){
-                if(this.meta.videos[item].layer > maxLayer) {
-                    maxLayer = this.meta.videos[item].layer;
+            let x = 20;
+            let y = 0;
+            let count = 0;
+            this.videos.forEach(function(item) {
+                let meta = JSON.parse(item.meta)
+                console.log(meta.x)
+                let rectangle = canvas.getContext("2d");
+                if(meta.x == undefined) {
+                    y=count*60 + 10;
+                    count++;
+                    rectangle.fillStyle = "red";
+                    rectangle.fillRect(x, y, 100, 30);
+                    rectangle.fillStyle = "white";
+                    rectangle.fillText(item.name, x+10, y+10);
+                    self.rectangles[item.id] = {
+                        isDragging: false,
+                        x: x,
+                        y: y,
+                        width: 100,
+                        height: 30
+                    };
                 }
-            };
-            let x = 0;
-            for(let i = 1; i <= maxLayer; i++){
-                x = (i-1)*150 + 10;
-                let currentLayer = [];
-                let y = 0;
-                let count = 0;
-                for(let item in this.meta.videos) {
-                    if(this.meta.videos[item].layer == i) {
-                        y=count*60 + 10;
-                        count++;
-
-                        let rectangle = canvas.getContext("2d");
-                        rectangle.fillStyle = "red";
-                        rectangle.fillRect(x, y, 100, 30);
-                        rectangle.fillStyle = "white";
-                        rectangle.fillText(this.meta.videos[item].name, x+10, y+10);
-
-                        this.rectangles[this.meta.videos[item].id] = {
-                            x: x,
-                            y: y
-                        };
-                        currentLayer.push(this.meta.videos[item]);
-                    }          
+                else {
+                    rectangle.fillStyle = "red";
+                    rectangle.fillRect(meta.x, meta.y, 100, 30);
+                    rectangle.fillStyle = "white";
+                    rectangle.fillText(item.name, meta.x+10, meta.y+10);
+                    console.log(rectangle)
+                    self.rectangles[item.id] = {
+                        isDragging: false,
+                        x: meta.x,
+                        y: meta.y,
+                        width: 100,
+                        height: 30
+                    };
                 }
-                this.meta.connections.push(currentLayer);
-                currentLayer = [];
-            };
+
+                //rectangle.fillStyle = "white";
+
+            });
             this.connections.forEach(function(item) {
                 let context = canvas.getContext('2d');
                 let origin = self.rectangles[item.entry_id];
-                console.log('xxxxxxxxxxxxxxxxxxx')
-                console.log(item)
-                console.log(self.rectangles)
-                console.log('xxxxxxxxxxxxxxxxxxx')
                 let destination = self.rectangles[item.out_id];
-                // Reset the current path
                 context.beginPath(); 
-                // Staring point (10,45)
-                context.moveTo(origin.x + 100,origin.y + 15);
-                // End point (180,47)
-                context.lineTo(destination.x,destination.y+15);
-                // Make the line visible
+                let headlen = 10; // length of head in pixels
+                let dx = destination.x - origin.x;
+                let dy = destination.y+15 - origin.y + 15;    
+                let angle = Math.atan2(dy, dx);
+                context.moveTo(origin.x+ 50, origin.y + 15);
+                context.lineTo(destination.x + 50, destination.y+15);
+                context.lineTo(destination.x + 50 - headlen * Math.cos(angle - Math.PI / 6), destination.y+15 - headlen * Math.sin(angle - Math.PI / 6));
+                context.moveTo(destination.x +50, destination.y+15);
+                context.lineTo(destination.x + 50- headlen * Math.cos(angle + Math.PI / 6), destination.y+15 - headlen * Math.sin(angle + Math.PI / 6));
                 context.stroke();
 
             });
+            
+            canvas.onmousedown = this.myDown;
+            canvas.onmouseup = this.myUp;
+            canvas.onmousemove = this.myMove;
+
         }
     },
     mounted() {
@@ -309,7 +351,7 @@ export default {
         if (this.rootNumber != 0) {
             delete this.unPicked[this.rootNumber];
         }
-        // this.drawConnections();
+         this.drawConnections();
     }
 }
 </script>

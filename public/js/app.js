@@ -211,7 +211,14 @@ __webpack_require__.r(__webpack_exports__);
       chosenRoot: '',
       rootNumber: Number,
       meta: '',
-      rectangles: {}
+      rectangles: {},
+      mx: '',
+      my: '',
+      dragok: '',
+      startX: '',
+      startY: '',
+      offsetX: '',
+      offsetY: ''
     };
   },
   props: {
@@ -254,141 +261,154 @@ __webpack_require__.r(__webpack_exports__);
         self.root = false;
       });
     },
-    findMax: function findMax(item) {
-      var target = item;
-      var targetConnections = [];
-      var self = this;
-      this.connections.forEach(function (item) {
-        if (item.out_id == target) {
-          targetConnections.push(item);
-        }
+    updatePosition: function updatePosition(data) {
+      axios.post('/video/edit', data).then(function (response) {
+        console.log(response);
+      })["catch"](function (error) {
+        console.log(error);
       });
-      var max = 0;
-      targetConnections.forEach(function (item) {
-        console.log('surprise');
-        var current = self.setLayer(item.entry_id, 0);
-
-        if (current > max) {
-          max = current;
-        }
-      });
-      return max;
     },
-    setLayer: function setLayer(item, layer) {
-      layer = layer + 1;
-      console.log(layer);
-      var target = item;
-      var targetConnections = [];
-      var self = this;
-      this.connections.forEach(function (item) {
-        if (item.out_id == target) {
-          targetConnections.push(item);
-        }
-      });
-      var trigger = false;
-      console.log('---------');
-      console.log(targetConnections);
-      console.log(item);
-      console.log('---------');
-      targetConnections.forEach(function (item) {
-        if (self.meta.videos[item.entry_id].layer == 1) {
-          trigger = true;
-        }
-      });
+    myDown: function myDown(e) {
+      // tell the browser we're handling this mouse event
+      e.preventDefault();
+      e.stopPropagation(); // get the current mouse position
 
-      if (trigger) {
-        return layer + 1;
-      } else {
-        var max = 0;
-        targetConnections.forEach(function (item) {
-          console.log('surprise');
-          console.log(layer);
-          var current = self.setLayer(item.entry_id, layer);
+      this.mx = parseInt(e.clientX - this.offsetX);
+      this.my = parseInt(e.clientY - this.offsetY);
+      console.log(this.rectangles); // test each rect to see if mouse is inside
 
-          if (current > max) {
-            max = current;
-          }
-        });
+      this.dragok = false;
+
+      for (var i in this.rectangles) {
+        var r = this.rectangles[i]; // if yes, set that rects isDragging=true
+
+        if (this.mx > r.x && this.mx < r.x + r.width && this.my > r.y && this.my < r.y + r.height) {
+          this.dragok = true;
+          r.isDragging = true;
+        }
+      } // save the current mouse position
+
+
+      this.startX = this.mx;
+      this.startY = this.my;
+    },
+    myUp: function myUp(e) {
+      // tell the browser we're handling this mouse event
+      e.preventDefault();
+      e.stopPropagation(); // clear all the dragging flags
+
+      this.dragok = false;
+
+      for (var i in this.rectangles) {
+        if (this.rectangles[i].isDragging) {
+          this.rectangles[i].isDragging = false;
+          var position = {
+            x: this.rectangles[i].x,
+            y: this.rectangles[i].y
+          };
+          position = JSON.stringify(position);
+          var request = {
+            meta: position,
+            id: i
+          };
+          this.updatePosition(request);
+        }
       }
+
+      console.log(this.rectangles);
+    },
+    myMove: function myMove(e) {
+      // tell the browser we're handling this mouse event
+      e.preventDefault();
+      e.stopPropagation(); // get the current mouse position
+
+      this.mx = parseInt(e.clientX - this.offsetX);
+      this.my = parseInt(e.clientY - this.offsetY); // calculate the distance the mouse has moved
+      // since the last mousemove
+
+      var dx = this.mx - this.startX;
+      var dy = this.my - this.startY; // move each rect that isDragging 
+      // by the distance the mouse has moved
+      // since the last mousemove
+
+      for (var i in this.rectangles) {
+        var r = this.rectangles[i];
+
+        if (r.isDragging) {
+          r.x += dx;
+          r.y += dy;
+        }
+      } // reset the starting mouse position for the next mousemove
+
+
+      this.startX = this.mx;
+      this.startY = this.my;
     },
     drawConnections: function drawConnections() {
       var self = this;
       var canvas = document.getElementById("canvas");
-      this.meta.videos[this.rootNumber].layer = 1;
-      /*for(let item in this.meta.videos) {
-          if (!this.meta.videos[item].hasOwnProperty('layer')) {
-              this.meta.videos[item].layer = this.findMax(item);
-          }
-      };
-      console.log(this.meta.videos)
-      */
-
-      /*
-       this.connections.forEach(function(item){
-           if (self.unPicked.hasOwnProperty(item.out_id)) {
-               delete self.unPicked[item.out_id];
-           }
-           self.meta.videos[item.out_id].layer = self.setLayer(item,0);
-       });
-       */
-
+      var BB = canvas.getBoundingClientRect();
+      this.offsetX = BB.left;
+      this.offsetY = BB.top;
       this.meta.connections = [this.unPicked];
-      var maxLayer = 0;
+      var x = 20;
+      var y = 0;
+      var count = 0;
+      this.videos.forEach(function (item) {
+        var meta = JSON.parse(item.meta);
+        console.log(meta.x);
+        var rectangle = canvas.getContext("2d");
 
-      for (var item in this.meta.videos) {
-        if (this.meta.videos[item].layer > maxLayer) {
-          maxLayer = this.meta.videos[item].layer;
-        }
-      }
+        if (meta.x == undefined) {
+          y = count * 60 + 10;
+          count++;
+          rectangle.fillStyle = "red";
+          rectangle.fillRect(x, y, 100, 30);
+          rectangle.fillStyle = "white";
+          rectangle.fillText(item.name, x + 10, y + 10);
+          self.rectangles[item.id] = {
+            isDragging: false,
+            x: x,
+            y: y,
+            width: 100,
+            height: 30
+          };
+        } else {
+          rectangle.fillStyle = "red";
+          rectangle.fillRect(meta.x, meta.y, 100, 30);
+          rectangle.fillStyle = "white";
+          rectangle.fillText(item.name, meta.x + 10, meta.y + 10);
+          console.log(rectangle);
+          self.rectangles[item.id] = {
+            isDragging: false,
+            x: meta.x,
+            y: meta.y,
+            width: 100,
+            height: 30
+          };
+        } //rectangle.fillStyle = "white";
 
-      ;
-      var x = 0;
-
-      for (var i = 1; i <= maxLayer; i++) {
-        x = (i - 1) * 150 + 10;
-        var currentLayer = [];
-        var y = 0;
-        var count = 0;
-
-        for (var _item in this.meta.videos) {
-          if (this.meta.videos[_item].layer == i) {
-            y = count * 60 + 10;
-            count++;
-            var rectangle = canvas.getContext("2d");
-            rectangle.fillStyle = "red";
-            rectangle.fillRect(x, y, 100, 30);
-            rectangle.fillStyle = "white";
-            rectangle.fillText(this.meta.videos[_item].name, x + 10, y + 10);
-            this.rectangles[this.meta.videos[_item].id] = {
-              x: x,
-              y: y
-            };
-            currentLayer.push(this.meta.videos[_item]);
-          }
-        }
-
-        this.meta.connections.push(currentLayer);
-        currentLayer = [];
-      }
-
-      ;
+      });
       this.connections.forEach(function (item) {
         var context = canvas.getContext('2d');
         var origin = self.rectangles[item.entry_id];
-        console.log('xxxxxxxxxxxxxxxxxxx');
-        console.log(item);
-        console.log(self.rectangles);
-        console.log('xxxxxxxxxxxxxxxxxxx');
-        var destination = self.rectangles[item.out_id]; // Reset the current path
+        var destination = self.rectangles[item.out_id];
+        context.beginPath();
+        var headlen = 10; // length of head in pixels
 
-        context.beginPath(); // Staring point (10,45)
-
-        context.moveTo(origin.x + 100, origin.y + 15); // End point (180,47)
-
-        context.lineTo(destination.x, destination.y + 15); // Make the line visible
-
+        var dx = destination.x - origin.x;
+        var dy = destination.y + 15 - origin.y + 15;
+        var angle = Math.atan2(dy, dx);
+        context.moveTo(origin.x + 50, origin.y + 15);
+        context.lineTo(destination.x + 50, destination.y + 15);
+        context.lineTo(destination.x + 50 - headlen * Math.cos(angle - Math.PI / 6), destination.y + 15 - headlen * Math.sin(angle - Math.PI / 6));
+        context.moveTo(destination.x + 50, destination.y + 15);
+        context.lineTo(destination.x + 50 - headlen * Math.cos(angle + Math.PI / 6), destination.y + 15 - headlen * Math.sin(angle + Math.PI / 6));
         context.stroke();
       });
+      canvas.onmousedown = this.myDown;
+      canvas.onmouseup = this.myUp;
+      canvas.onmousemove = this.myMove;
     }
   },
   mounted: function mounted() {
@@ -407,8 +427,9 @@ __webpack_require__.r(__webpack_exports__);
 
     if (this.rootNumber != 0) {
       delete this.unPicked[this.rootNumber];
-    } // this.drawConnections();
+    }
 
+    this.drawConnections();
   }
 });
 
