@@ -612,6 +612,28 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -622,7 +644,8 @@ __webpack_require__.r(__webpack_exports__);
       id: Number,
       options: Array,
       height: "48vh%",
-      cover: true
+      cover: true,
+      show_options: false
     };
   },
   props: {
@@ -658,6 +681,7 @@ __webpack_require__.r(__webpack_exports__);
         options.push(self.videos[item.out_id]);
       });
       this.options = options;
+      this.show_options = true;
       console.log(options);
     },
     rebuild: function rebuild() {
@@ -784,7 +808,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\nvideo[data-v-02862bc0] {\n    height: 100%;\n    width: auto;\n    max-width: 100%;\n}\n.preview[data-v-02862bc0] {\n    position: relative;\n    height: 100%;\n}\n.chooseOptions[data-v-02862bc0] {\n    position: absolute;\n    top: 0;\n    left: 0;\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: horizontal;\n    -webkit-box-direction: normal;\n            flex-flow: row wrap;\n    z-index: 500;\n    justify-content: space-around;\n}\n.option[data-v-02862bc0] {\n    width: 100px;\n    height: 50px;\n    background: red;\n}\n", ""]);
+exports.push([module.i, "\nvideo[data-v-02862bc0] {\n    height: 100%;\n    width: auto;\n    max-width: 100%;\n}\n.preview[data-v-02862bc0] {\n    position: relative;\n    height: 100%;\n}\n.chooseOptions[data-v-02862bc0] {\n    position: absolute;\n    width: 100%;\n    top: 0;\n    left: 0;\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: horizontal;\n    -webkit-box-direction: normal;\n            flex-flow: row wrap;\n    z-index: 500;\n    justify-content: space-around;\n    height: 100%;\n    z-index: 1000;\n}\n.option[data-v-02862bc0] {\n    \n    position: relative;\n}\n.option-background[data-v-02862bc0] {\n    display: -webkit-box;\n    display: flex;\n    width: 100%;\n    height: 100%;\n    -webkit-box-pack: center;\n            justify-content: center;\n    -webkit-box-align: center;\n            align-items: center;\n    background: rgba(155,0,0,0.7);\n    cursor: pointer;\n    border-radius: 10px;\n    -webkit-transition: background .3s, -webkit-transform .3s;\n    transition: background .3s, -webkit-transform .3s;\n    transition: background .3s, transform .3s;\n    transition: background .3s, transform .3s, -webkit-transform .3s;\n}\n.option-background[data-v-02862bc0]:hover {\n    -webkit-transform: scale(1.05);\n            transform: scale(1.05);\n    background: rgba(155,0,0,0.8);\n}\n", ""]);
 
 // exports
 
@@ -1964,25 +1988,35 @@ var render = function() {
       )
     ]),
     _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "chooseOptions" },
-      _vm._l(_vm.options, function(option) {
-        return _c(
+    _vm.show_options
+      ? _c(
           "div",
-          {
-            staticClass: "option",
-            on: {
-              click: function($event) {
-                return _vm.choose(option)
-              }
-            }
-          },
-          [_vm._v("\n            " + _vm._s(option.name) + "\n        ")]
+          { staticClass: "chooseOptions row" },
+          _vm._l(_vm.options, function(option) {
+            return _c(
+              "div",
+              {
+                staticClass: "col-md-6 option p-3",
+                on: {
+                  click: function($event) {
+                    return _vm.choose(option)
+                  }
+                }
+              },
+              [
+                _c("div", { staticClass: "option-background" }, [
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(option.name) +
+                      "\n            "
+                  )
+                ])
+              ]
+            )
+          }),
+          0
         )
-      }),
-      0
-    )
+      : _vm._e()
   ])
 }
 var staticRenderFns = []

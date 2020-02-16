@@ -9,9 +9,12 @@
                 <polygon points="70, 55 70, 145 145, 100" fill="#fff"/>
             </svg>
         </div>
-        <div class="chooseOptions">
-            <div class="option" v-for="option in options" @click="choose(option)">
-                {{ option.name }}
+        <div class="chooseOptions row" v-if="show_options">
+            <div class="col-md-6 option p-3" v-for="option in options" @click="choose(option)">
+                <div class="option-background">
+                    {{ option.name }}
+                </div>
+                
             </div>
         </div>
     </div>
@@ -29,17 +32,36 @@ video {
 }
 .chooseOptions {
     position: absolute;
+    width: 100%;
     top: 0;
     left: 0;
     display: flex;
     flex-flow: row wrap;
     z-index: 500;
     justify-content: space-around;
+    height: 100%;
+    z-index: 1000;
 }
 .option {
-    width: 100px;
-    height: 50px;
-    background: red;
+    
+    position: relative;
+}
+
+.option-background {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    background: rgba(155,0,0,0.7);
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background .3s, transform .3s;
+}
+
+.option-background:hover {
+    transform: scale(1.05);
+    background: rgba(155,0,0,0.8);
 }
 </style>
 
@@ -54,7 +76,8 @@ video {
                 id: Number,
                 options: Array,
                 height: "48vh%",
-                cover: true
+                cover: true,
+                show_options: false,
             }
         },
         props: {
@@ -88,6 +111,7 @@ video {
                     options.push(self.videos[item.out_id])
                 })
                 this.options = options
+                this.show_options = true
                 console.log(options)
             },
             rebuild: function() {
