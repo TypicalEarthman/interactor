@@ -101,10 +101,14 @@
 mix = {
 	data: {
 		modal: false,
-		@if(App::environment('local'))
-		api:  'http://127.0.0.1:8000/',
+		@if(env('APP_ALEX'))
+			api: 'http://interactor'
 		@else
-		api:  'http://interactor.su/',
+			@if(App::environment('local'))
+			api:  'http://127.0.0.1:8000/',
+			@else
+			api:  'http://interactor.su/',
+			@endif
 		@endif
 		episode_id: '',
 		project_id: '',
