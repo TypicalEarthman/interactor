@@ -8,7 +8,6 @@ use App\Services\EpisodeService;
 
 class EpisodeController extends Controller
 {
-    use \App\Traits\CreateEpisode;
     /**
      * Display a listing of the resource.
      *
