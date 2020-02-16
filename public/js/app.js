@@ -588,6 +588,15 @@ __webpack_require__.r(__webpack_exports__);
     project_preview: Boolean
   },
   methods: {
+    playpause: function playpause() {
+      if (document.querySelector("#video").paused) {
+        document.querySelector("#video").play();
+      } else {
+        document.querySelector("#video").pause();
+      }
+
+      console.log();
+    },
     onEnd: function onEnd() {
       console.log('Film ended');
 
@@ -1800,8 +1809,8 @@ var render = function() {
   return _c("div", { staticClass: "preview", style: { height: _vm.height } }, [
     _c("div", { staticClass: "embed-responsive embed-responsive-16by9" }, [
       _c("video", {
-        attrs: { src: _vm.src, controls: "controls", id: "video" },
-        on: { ended: _vm.onEnd }
+        attrs: { src: _vm.src, id: "video" },
+        on: { ended: _vm.onEnd, click: _vm.playpause }
       })
     ]),
     _vm._v(" "),

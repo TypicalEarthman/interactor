@@ -1,7 +1,7 @@
 <template>
     <div class="preview" v-bind:style="{ height: height}">
         <div class="embed-responsive embed-responsive-16by9">
-                <video :src="src" controls="controls" id="video" @ended="onEnd"
+                <video :src="src" id="video" @ended="onEnd" @click="playpause"
                 >
                 </video>
         </div>
@@ -58,6 +58,15 @@ video {
             project_preview: Boolean
         },
         methods: {
+            playpause: function() {
+                if(document.querySelector("#video").paused) {
+                    document.querySelector("#video").play();
+                }
+                else {
+                    document.querySelector("#video").pause();
+                }
+                console.log();
+            },
             onEnd: function() {
                 console.log('Film ended')
                 if(Array.isArray(this.connections)) {
