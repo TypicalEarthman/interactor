@@ -1,12 +1,14 @@
 <template>
     <div id="manager-root">
         <div class="controls">
-            <button @click="modal=true">
+            <button class="btn btn-primary btn-sm" @click="modal=true">
                 Add connection
             </button>
+            <!--
             <button @click="root=true">
                 Set root
             </button>
+        -->
         </div>
         <div class="dialog" v-show="root">
             <button @click="root=false">
@@ -27,26 +29,46 @@
             </button>
         </div>  
         <div class="dialog" v-show="modal">
-            <button @click="modal=false">
-                Close dialog
-            </button>
+            <!--
+            
+        -->
             <h2>
                 Connection
             </h2>
-            From: 
-            <select v-model="origin">
-                <option v-bind:value="index" v-for="(video,index) in videos">
-                    {{ video.name }} ({{video.filename}})
-                </option>
-            </select>
-            <br/>
-            To: 
-            <select v-model="destination">
-                <option v-bind:value="index" v-for="(video,index) in videos">
-                    {{ video.name }} ({{video.filename}})
-                </option>
-            </select>
-            <button @click="createConnection">
+
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <label class="col-form-label">From:</label>
+                </div>
+                <div class="col-md-9">
+                    <select v-model="origin" class="form-control">
+                        <option v-bind:value="index" v-for="(video,index) in videos">
+                            {{ video.name }} ({{video.filename}})
+                        </option>
+                    </select>
+                </div>
+                
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <label class="col-form-label">To:</label>
+                </div>
+                <div class="col-md-9">
+                    <select v-model="destination" class="form-control">
+                        <option v-bind:value="index" v-for="(video,index) in videos">
+                            {{ video.name }} ({{video.filename}})
+                        </option>
+                    </select>
+                </div>
+                
+            </div>
+
+           <button @click="modal=false" class="btn btn-primary btn-block btn-sm" style="position: absolute; left: 20px; bottom: 20px; right: 20px; width: auto">
+                Close
+            </button>
+            
+            <button @click="createConnection" class="btn btn-primary btn-block btn-sm">
                 Add connection
             </button>
         </div>
@@ -77,12 +99,11 @@
     align-content: flex-start;
 }
 .controls {
-    position: fixed;
-    bottom: 1vh;
+    position: absolute;
+    bottom: 0px;
     left: 50%;
-    height: 20px;
     width: 300px;
-    border: 1px solid #000;
+    margin: 0 0 0 -150px;
 }
 .parent {
     display: flex;
