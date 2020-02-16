@@ -33,6 +33,7 @@ video {
     left: 0;
     display: flex;
     flex-flow: row wrap;
+    z-index: 500;
     justify-content: space-around;
 }
 .option {

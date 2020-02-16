@@ -21,12 +21,6 @@
 	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
-<!-- непонел -->
-<!--
-<div class="embed-responsive embed-responsive-16by9">
-	
-</div>
--->
 
 <div id="app">
 	<editor-preview
