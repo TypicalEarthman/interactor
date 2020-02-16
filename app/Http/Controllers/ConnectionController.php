@@ -37,7 +37,7 @@ class ConnectionController extends Controller
 			"out_id" => $request->out_id,
 		]);
 	}
-
+	
 	/**
 	 * Store a newly created resource in storage.
 	 *
