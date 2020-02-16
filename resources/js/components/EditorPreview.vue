@@ -1,6 +1,6 @@
 <template>
     <div class="preview">
-        <video :src="src" width="600" controls="controls" id="video" @ended="onEnd">
+        <video :src="src" controls="controls" id="video" @ended="onEnd">
         </video>
         <div class="chooseOptions">
             <div class="option" v-for="option in options" @click="choose(option)">
@@ -11,8 +11,13 @@
 </template>
 
 <style scoped>
+video {
+    height: 100%;
+    width: auto;
+}
 .preview {
     position: relative;
+    height: 48vh;
 }
 .chooseOptions {
     position: absolute;
