@@ -1,27 +1,44 @@
 <template>
     <div>
 		<form :action="route" method="POST" enctype="multipart/form-data" v-if="option == 'video'">
-			Name:
-			<br />
-			<input type="text" name="name" />
-			<br /><br />
-			File
-			<br />
-			<input type="file" name="video" />
-			<br /><br />
+			<div class="form-group row">
+				<div class="col-md-3">
+					<label class="col-form-label">Name:</label>
+				</div>
+				<div class="col-md-9">
+					<input type="text" class="form-control" required name="name" />
+				</div>
+				
+			</div>
+
+			<div class="form-group row">
+				<div class="col-md-3">
+					<label class="col-form-label">File:</label>
+				</div>
+				<div class="col-md-9">
+					<input type="file" name="video" required class="form-control" />
+				</div>
+				
+			</div>
 			<input type="hidden" name="project_id" :value="project_id"/>
 			<input type="hidden" name="episode_id" :value="episode_id"/>
 			<input type="hidden" name="_token" :value="token"/>
-			<input type="submit" value="Upload video" />
+			<input type="submit" class="btn btn-primary btn-block btn-sm" value="Upload" />
 		</form>
 		<form :action="route" method="POST" enctype="multipart/form-data" v-if="option == 'episode'">
-			Name:
-			<br />
-			<input type="text" name="name" />
-			<br /><br />
+			<div class="form-group row">
+				<div class="col-md-3">
+					<label class="col-form-label">Name:</label>
+				</div>
+				<div class="col-md-9">
+					<input type="text" class="form-control" required name="name" />
+				</div>
+				
+			</div>
+
 			<input type="hidden" name="project_id" :value="project_id"/>
 			<input type="hidden" name="_token" :value="token"/>
-			<input type="submit" value="Create episode" />
+			<input type="submit" class="btn btn-primary btn-block btn-sm" value="Create episode" />
 		</form>
 		<form :action="route" method="POST" enctype="multipart/form-data" v-if="option == 'page'">
 			Вот здесь тебе нужно всякое сделать Витя

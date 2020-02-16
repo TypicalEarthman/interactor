@@ -1,7 +1,7 @@
 html, body { margin: 0; padding: 0; }
 
 a {
-    color: #212121;
+    color: #e1e1e1;
     text-decoration: underline;
     transition: color .3s;
 }
@@ -11,12 +11,20 @@ ol {
 }
 
 a:hover {
-    color: #227dc7;
     text-decoration: none;
+    color: #ff3a3a;
 }
 
 body {
     font-family: 'Open Sans', sans-serif;
+    background: #111111;
+    color: #e1e1e1;
+    font-size: 16px;
+}
+
+h2 {
+    color: #a3a3a3;
+    font-size: 1.5em;
 }
 
 .btn {
@@ -26,7 +34,11 @@ body {
 
 
 .btn-primary {
-    background: #212121;
+    background: #353535;
+}
+
+.btn-primary:hover {
+    background: #ff3a3a;
 }
 
 #editor-root {
@@ -53,11 +65,12 @@ body {
 
 .ebb-content {
     padding: 1rem;
-    background: #EBEBEB;
+    background: #1e1e1e;
     height: 100%;
     //border-radius: 30px;
     overflow: auto;
-    color: #212121;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(1,1,1,0.75);
 }
 .video-overlay-play-button {
     box-sizing: border-box;
@@ -107,6 +120,10 @@ body {
     top: 50%;
     left: 50%;
     z-index: 1010;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    color: #131313;
 }
 
 

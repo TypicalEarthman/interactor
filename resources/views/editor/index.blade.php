@@ -5,11 +5,16 @@
 	
 	<div id="settings" class="col-md-2 editor-base-block pr-0">
 		<div class="ebb-content">
-			<h2 class="display-5">Settings:</h2>
-			<a href="{{ route('project.show', [
-				"project" => $project_id,
-			]) }}" target="_blank">Project link</a>
-			project name
+			<h2>Settings:</h2>
+			<ol>
+				<li>
+					Link to your project:<br />
+					<a href="{{ route('project.show', [
+						"project" => $project_id,
+					]) }}" target="_blank">interactor.su/{{ $project->id }}</a>
+				</li>
+			</ol>
+			{{-- project name --}}
 		</div>
 		
 	</div>
@@ -27,9 +32,9 @@
 	
 	<div id="episodes" class="col-md-2 editor-base-block pl-0">
 		<div class="ebb-content">
-			<h3>
+			<h2>
 				Episodes:
-			</h3>
+			</h2>
 			<ol>
 			@foreach ($episodes as $episode)
 				<li class="mb-3"> 
@@ -50,9 +55,9 @@
 	</div>
 	<div id="files" class="col-md-2 editor-base-block pr-0 pt-0">
 		<div class="ebb-content">
-		<h3>
+		<h2>
 			Videos:
-		</h3>
+		</h2>
 		<ol>
 		@foreach ($videos as $video)
 			<li class="mb-3"> 
@@ -92,7 +97,7 @@
 		</div>
 	</div>
 	<div id="manager" class="col-md-10 editor-base-block pt-0">
-		<div class="ebb-content">
+		<div class="ebb-content" style="overflow: hidden; position: relative">
 			<connection-manager
 				json_videos="{{ $videos }}"
 				json_connections="{{ $connections }}"
@@ -106,9 +111,11 @@
 	</div>
 	<transition name="fade">
 	<div class="dialog" v-show="modal">
+		{{-- 
 			<button @click="modal=false">
 				Close dialog
 			</button>
+			--}}
 			<custom-form 
 				:option="option" 
 				episode_id="{{$episode_id}}" 
@@ -133,7 +140,7 @@ mix = {
 	data: {
 		modal: false,
 		@if(env('APP_ALEX'))
-			api: 'http://interactor',
+			api: 'http://interactor/',
 		@else
 			@if(App::environment('local'))
 			api:  'http://127.0.0.1:8000/',
