@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Episode;
 use Illuminate\Http\Request;
+use App\Services\EpisodeService;
 
 class EpisodeController extends Controller
 {
@@ -15,7 +16,7 @@ class EpisodeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        //$this->middleware('auth');
     }
     
     public function index()
@@ -28,11 +29,14 @@ class EpisodeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create(Request $request, EpisodeService $episodeService)
     {
         $project_id = $request->get('project_id');
         $name = $request->get('name');
-        $this->createEpisode($project_id,$name);
+        $episodeService->store([
+            "project_id" => $project_id,
+            "episode_name" => $name,
+        ]);
         return redirect()->back();
     }
 
@@ -64,10 +68,8 @@ class EpisodeController extends Controller
         $episode = Episode::where('id', $episode_id)->first();
         return $episode;
     }
-    public function show(Request $request)
+    public function show(Request $request, $project_id, $episode_id)
     {
-        $project_id = $request->project_id;
-        $episode_id = $request->episode_id;
         $project = \App\Project::where('id', $project_id)->first();
         $episodes = $project->episodes;
         $episode;

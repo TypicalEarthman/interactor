@@ -22,11 +22,12 @@
 		</button>
 		@foreach ($episodes as $episode)
 			<div>
-				<form action="{{ route('episode.show') }}" method="GET" enctype="multipart/form-data">
-					<input type="hidden" name="project_id" value="{{$project_id}}"/>
-					<input type="hidden" name="episode_id" value="{{$episode->id}}"/>
-					<input type="submit" value="{{ $episode->name }}" />
-				</form>
+				
+					<a href="{{ route('episode.show', [
+					'project_id' => $project_id,
+					'episode_id' => $episode->id
+				]) }}">{{ $episode->name }}</a>
+				
 			</div>
 		@endforeach
 		

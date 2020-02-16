@@ -81,7 +81,9 @@ video {
                 videos[id] = item;
             })
             this.videos = videos
+            console.log(this.videos)
             this.src = this.videos[this.rootNumber].url
+
             let connections = {}
             this.connections.forEach(function(item) {
                 let id = item.entry_id

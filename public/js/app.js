@@ -587,6 +587,7 @@ __webpack_require__.r(__webpack_exports__);
       videos[id] = item;
     });
     this.videos = videos;
+    console.log(this.videos);
     this.src = this.videos[this.rootNumber].url;
     var connections = {};
     this.connections.forEach(function (item) {
@@ -2286,9 +2287,9 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\interactor\resources\js\app.js */"./resources/js/app.js");
-__webpack_require__(/*! D:\interactor\resources\sass\app.scss */"./resources/sass/app.scss");
-module.exports = __webpack_require__(/*! D:\interactor\resources\sass\vendor.scss */"./resources/sass/vendor.scss");
+__webpack_require__(/*! D:\OSPanel\domains\interactor\resources\js\app.js */"./resources/js/app.js");
+__webpack_require__(/*! D:\OSPanel\domains\interactor\resources\sass\app.scss */"./resources/sass/app.scss");
+module.exports = __webpack_require__(/*! D:\OSPanel\domains\interactor\resources\sass\vendor.scss */"./resources/sass/vendor.scss");
 
 
 /***/ })
