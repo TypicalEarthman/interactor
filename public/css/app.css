@@ -34,6 +34,10 @@ body {
   border-radius: 20px;
 }
 
+#preview .embed-responsive {
+  max-height: 50vh;
+}
+
 .dialog {
   background: #fff;
   width: 600px;
