@@ -21,8 +21,33 @@
 	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
+<!-- непонел -->
+<!--
 <div class="embed-responsive embed-responsive-16by9">
-	<video src="/storage/starter/kek.mp4" class="embed-responsive-item" autoplay muted></iframe>
+	
 </div>
+-->
+
+<div id="app">
+	<editor-preview
+		json_videos=" {{ $videos }}"
+		json_connections="{{ $connections }}"
+		root_number="{{$root_video}}"
+		:project_preview="true"
+	>
+</div>
+<script>
+if(!window.mix) var mix = {};
+const app_vue = new Vue({
+	el: '#app',
+	mixins: [mix],
+	mounted() {
+	},
+	data : {
+	},
+	methods: {
+	},
+});
+</script>
 </body>
 </html>

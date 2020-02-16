@@ -39,7 +39,16 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
-        return view('projects.show');
+        $episode = $project->episodes->first();
+        
+        $videos = $episode->videos;
+        $root_video = $episode->root_video;
+        $connections = $episode->connections;
+        return view('projects.show',[
+            'root_video' => $root_video,
+            'videos' => $videos,
+            'connections' => $connections
+        ]);
     }
 
     public function edit(Project $project)

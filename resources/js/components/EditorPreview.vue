@@ -1,7 +1,10 @@
 <template>
-    <div class="preview">
-        <video :src="src" controls="controls" id="video" @ended="onEnd">
-        </video>
+    <div class="preview" v-bind:style="{ height: height}">
+        <div class="embed-responsive embed-responsive-16by9">
+                <video :src="src" controls="controls" id="video" @ended="onEnd"
+                >
+                </video>
+        </div>
         <div class="chooseOptions">
             <div class="option" v-for="option in options" @click="choose(option)">
                 {{ option.name }}
@@ -44,13 +47,15 @@ video {
                 connections: Object,
                 rootNumber: Number,
                 id: Number,
-                options: Array
+                options: Array,
+                height: "48vh%",
             }
         },
         props: {
             json_videos: String,
             root_number: String,
-            json_connections: String
+            json_connections: String,
+            project_preview: Boolean
         },
         methods: {
             onEnd: function() {
@@ -91,6 +96,9 @@ video {
             }
         },
         mounted() {
+            if(this.project_preview) {
+                this.height = "100vh";
+            }
             this.videos = JSON.parse(this.json_videos)
             this.connections = JSON.parse(this.json_connections)
             this.rootNumber = parseInt(this.root_number)
