@@ -54,6 +54,7 @@ video {
         methods: {
             onEnd: function() {
                 console.log('Film ended')
+                this.rebuild()
                 let id = this.id
                 let connections = this.connections[id]     
                 let options = []   
@@ -63,6 +64,22 @@ video {
                 })
                 this.options = options
                 console.log(options)
+            },
+            rebuild: function() {
+                let connections = {}
+                this.connections.forEach(function(item) {
+                    let id = item.entry_id
+                    if (connections.hasOwnProperty(item.entry_id)) {
+                    connections[item.entry_id].push(item)
+                    }
+                    else {
+                        let layer = []
+                        layer.push(item)
+                        connections[item.entry_id] = layer
+                    }
+                })
+                this.connections = connections
+
             },
             choose: function(video) {
                 this.src = video.url
@@ -84,19 +101,7 @@ video {
             console.log(this.videos)
             this.src = this.videos[this.rootNumber].url
 
-            let connections = {}
-            this.connections.forEach(function(item) {
-                let id = item.entry_id
-                if (connections.hasOwnProperty(item.entry_id)) {
-                   connections[item.entry_id].push(item)
-                }
-                else {
-                    let layer = []
-                    layer.push(item)
-                    connections[item.entry_id] = layer
-                }
-            })
-            this.connections = connections
+            this.rebuild()
         }
     }
 </script>
