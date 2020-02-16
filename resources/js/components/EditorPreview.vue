@@ -1,9 +1,13 @@
 <template>
     <div class="preview" v-bind:style="{ height: height}">
         <div class="embed-responsive embed-responsive-16by9">
-                <video :src="src" id="video" @ended="onEnd" @click="playpause"
-                >
-                </video>
+            <video :src="src" id="video" @ended="onEnd" @click="playpause"
+            >
+            </video>
+            <svg class="video-overlay-play-button" viewBox="0 0 200 200" alt="Play video" @click="playpause" v-show="cover">
+                <circle cx="100" cy="100" r="90" fill="none" stroke-width="15" stroke="#fff"/>
+                <polygon points="70, 55 70, 145 145, 100" fill="#fff"/>
+            </svg>
         </div>
         <div class="chooseOptions">
             <div class="option" v-for="option in options" @click="choose(option)">
@@ -49,6 +53,7 @@ video {
                 id: Number,
                 options: Array,
                 height: "48vh%",
+                cover: true
             }
         },
         props: {
@@ -61,9 +66,11 @@ video {
             playpause: function() {
                 if(document.querySelector("#video").paused) {
                     document.querySelector("#video").play();
+                    this.cover = false
                 }
                 else {
                     document.querySelector("#video").pause();
+                    this.cover = true
                 }
                 console.log();
             },
