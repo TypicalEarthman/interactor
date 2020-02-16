@@ -16,10 +16,5 @@ class EpisodeService {
         $episode->save(); 
         return $episode;
 	}
-
-	public function kek() {
-		return "kek";
-	}
-	
 }
 ?>

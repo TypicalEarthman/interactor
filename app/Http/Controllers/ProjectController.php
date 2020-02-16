@@ -78,8 +78,8 @@ class ProjectController extends Controller
             "episode_id" => $data["episode"]->id,
             "project_id" => $data["project"]->id,
             "name" => "Кекуasdasdasdшка",
-            "filename" => "kek.mp4",
-            "url" => "starter/kek.mp4"
+            "filename" => "kek2.mp4",
+            "url" => "starter/kek2.mp4"
         ]);
 
         return redirect()->route('episode.show', [

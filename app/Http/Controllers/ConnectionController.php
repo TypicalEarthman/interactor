@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Connection;
 use Illuminate\Http\Request;
 use App\Episode;
+use App\Services\ConnectionService;
 
 class ConnectionController extends Controller
 {
@@ -28,18 +29,13 @@ class ConnectionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create(Request $request, ConnectionService $connectionService)
     {
-        $connection = new Connection();
-        $connection->episode_id = $request->get('episode_id');
-        $connection->entry_id = $request->get('entry_id');
-        $connection->out_id = $request->get('out_id');
-        $connection->meta = '{}';
-        $connection->save();
-        $episode_id = $request->get('episode_id');
-        $episode = Episode::where('id', $episode_id)->first();
-        $connections = $episode->connections; 
-        return $connections;
+        return $connectionService->store([
+            "episode_id" => $request->get('episode_id'),
+            "entry_id" => $request->get('entry_id'),
+            "out_id" => $request->get('out_id'),
+        ]);
     }
 
     /**
