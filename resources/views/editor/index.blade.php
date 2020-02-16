@@ -129,8 +129,7 @@ mix = {
 			this.modal = true;
 		},
 		redraw_connections(connections) {
-			console.log(connections);
-			this.editor_preview.json_connections = connections;
+			this.editor_preview.connections = connections;
 		}
 	},
 	mounted: function() {

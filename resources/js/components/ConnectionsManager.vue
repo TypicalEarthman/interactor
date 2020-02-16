@@ -148,7 +148,7 @@ export default {
                 self.modal = false;
                 self.drawConnections('mount');
 
-                this.$emit("redraw_connections", response.data);
+                self.$emit("redraw_connections", response.data);
             })
             .catch(function (error) {
                 console.log(error);

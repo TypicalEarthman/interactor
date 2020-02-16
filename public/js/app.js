@@ -242,7 +242,7 @@ __webpack_require__.r(__webpack_exports__);
         self.connections = response.data;
         self.modal = false;
         self.drawConnections('mount');
-        this.$emit("redraw_connections", response.data);
+        self.$emit("redraw_connections", response.data);
       })["catch"](function (error) {
         console.log(error);
         self.modal = false;
@@ -584,6 +584,7 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     onEnd: function onEnd() {
       console.log('Film ended');
+      this.rebuild();
       var id = this.id;
       var connections = this.connections[id];
       var options = [];
@@ -593,6 +594,21 @@ __webpack_require__.r(__webpack_exports__);
       });
       this.options = options;
       console.log(options);
+    },
+    rebuild: function rebuild() {
+      var connections = {};
+      this.connections.forEach(function (item) {
+        var id = item.entry_id;
+
+        if (connections.hasOwnProperty(item.entry_id)) {
+          connections[item.entry_id].push(item);
+        } else {
+          var layer = [];
+          layer.push(item);
+          connections[item.entry_id] = layer;
+        }
+      });
+      this.connections = connections;
     },
     choose: function choose(video) {
       this.src = video.url;
@@ -613,19 +629,7 @@ __webpack_require__.r(__webpack_exports__);
     this.videos = videos;
     console.log(this.videos);
     this.src = this.videos[this.rootNumber].url;
-    var connections = {};
-    this.connections.forEach(function (item) {
-      var id = item.entry_id;
-
-      if (connections.hasOwnProperty(item.entry_id)) {
-        connections[item.entry_id].push(item);
-      } else {
-        var layer = [];
-        layer.push(item);
-        connections[item.entry_id] = layer;
-      }
-    });
-    this.connections = connections;
+    this.rebuild();
   }
 });
 
@@ -692,7 +696,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n#manager-root[data-v-08416e43] {\r\n    display: -webkit-box;\r\n    display: flex;\r\n    -webkit-box-orient: vertical;\r\n    -webkit-box-direction: normal;\r\n            flex-flow: column wrap;\r\n    -webkit-box-pack: start;\r\n            justify-content: flex-start;\r\n    align-content: flex-start;\n}\n.controls[data-v-08416e43] {\r\n    position: fixed;\r\n    bottom: 1vh;\r\n    left: 50%;\r\n    height: 20px;\r\n    width: 300px;\r\n    border: 1px solid #000;\n}\n.parent[data-v-08416e43] {\r\n    display: -webkit-box;\r\n    display: flex;\r\n    -webkit-box-orient: horizontal;\r\n    -webkit-box-direction: normal;\r\n            flex-flow: row;\n}\n.layer[data-v-08416e43] {\r\n    display: -webkit-box;\r\n    display: flex;\r\n    -webkit-box-orient: vertical;\r\n    -webkit-box-direction: normal;\r\n            flex-flow: column;\n}\n.video[data-v-08416e43] {\r\n    background: #f00;\r\n    width: 100px;\r\n    height: 50px;\r\n    margin-bottom: 20px;\r\n    margin-right: 20px;\n}\r\n", ""]);
+exports.push([module.i, "\n#manager-root[data-v-08416e43] {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n            flex-flow: column wrap;\n    -webkit-box-pack: start;\n            justify-content: flex-start;\n    align-content: flex-start;\n}\n.controls[data-v-08416e43] {\n    position: fixed;\n    bottom: 1vh;\n    left: 50%;\n    height: 20px;\n    width: 300px;\n    border: 1px solid #000;\n}\n.parent[data-v-08416e43] {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: horizontal;\n    -webkit-box-direction: normal;\n            flex-flow: row;\n}\n.layer[data-v-08416e43] {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n            flex-flow: column;\n}\n.video[data-v-08416e43] {\n    background: #f00;\n    width: 100px;\n    height: 50px;\n    margin-bottom: 20px;\n    margin-right: 20px;\n}\n", ""]);
 
 // exports
 
@@ -711,7 +715,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\nvideo[data-v-02862bc0] {\r\n    height: 100%;\r\n    width: auto;\n}\n.preview[data-v-02862bc0] {\r\n    position: relative;\r\n    height: 48vh;\n}\n.chooseOptions[data-v-02862bc0] {\r\n    position: absolute;\r\n    top: 0;\r\n    left: 0;\r\n    display: -webkit-box;\r\n    display: flex;\r\n    -webkit-box-orient: horizontal;\r\n    -webkit-box-direction: normal;\r\n            flex-flow: row wrap;\r\n    justify-content: space-around;\n}\n.option[data-v-02862bc0] {\r\n    width: 100px;\r\n    height: 50px;\r\n    background: red;\n}\r\n", ""]);
+exports.push([module.i, "\nvideo[data-v-02862bc0] {\n    height: 100%;\n    width: auto;\n}\n.preview[data-v-02862bc0] {\n    position: relative;\n    height: 48vh;\n}\n.chooseOptions[data-v-02862bc0] {\n    position: absolute;\n    top: 0;\n    left: 0;\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: horizontal;\n    -webkit-box-direction: normal;\n            flex-flow: row wrap;\n    justify-content: space-around;\n}\n.option[data-v-02862bc0] {\n    width: 100px;\n    height: 50px;\n    background: red;\n}\n", ""]);
 
 // exports
 
@@ -2311,9 +2315,9 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\OSPanel\domains\interactor\resources\js\app.js */"./resources/js/app.js");
-__webpack_require__(/*! D:\OSPanel\domains\interactor\resources\sass\app.scss */"./resources/sass/app.scss");
-module.exports = __webpack_require__(/*! D:\OSPanel\domains\interactor\resources\sass\vendor.scss */"./resources/sass/vendor.scss");
+__webpack_require__(/*! C:\interactor\interactor\resources\js\app.js */"./resources/js/app.js");
+__webpack_require__(/*! C:\interactor\interactor\resources\sass\app.scss */"./resources/sass/app.scss");
+module.exports = __webpack_require__(/*! C:\interactor\interactor\resources\sass\vendor.scss */"./resources/sass/vendor.scss");
 
 
 /***/ })
