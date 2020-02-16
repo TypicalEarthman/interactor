@@ -33,6 +33,10 @@ body {
   height: 100%;
 }
 
+#preview .embed-responsive {
+  max-height: 50vh;
+}
+
 .dialog {
   background: #fff;
   width: 600px;
