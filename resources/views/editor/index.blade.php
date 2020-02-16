@@ -3,7 +3,7 @@
 @section('content')
 <div id="editor-root" class="row mx-0">
 	
-	<div id="settings" class="col-md-2 editor-base-block p-3">
+	<div id="settings" class="col-md-2 editor-base-block pr-0">
 		<div class="ebb-content">
 			<h2 class="display-5">Settings</h2>
 			<a href="{{ route('project.show', [
@@ -24,7 +24,8 @@
 		</editor-preview>
 	</div>
 	
-	<div id="episodes" class="col-md-2 editor-base-block">
+	<div id="episodes" class="col-md-2 editor-base-block pl-0">
+		<div class="ebb-content">
 		<h3>
 			Episodes:
 		</h3>
@@ -41,9 +42,10 @@
 				
 			</div>
 		@endforeach
-		
+		</div>
 	</div>
-	<div id="files" class="col-md-2 editor-base-block">
+	<div id="files" class="col-md-2 editor-base-block pr-0">
+		<div class="ebb-content">
 		<h3>
 			Assets:
 		</h3>
@@ -78,18 +80,20 @@
 				
 			</div>
 		@endforeach
-		
+		</div>
 	</div>
-	<div id="manager" class="col-md-10 editor-base-block">
-		<connection-manager
-			json_videos="{{ $videos }}"
-			json_connections="{{ $connections }}"
-			episode_id="{{$episode_id}}"
-			root_number="{{$root_video}}"
-			token="{{csrf_token()}}"
-			v-on:redraw_connections="redraw_connections">
-		>
-		</connection-manager>
+	<div id="manager" class="col-md-10 editor-base-block pr-0">
+		<div class="ebb-content">
+			<connection-manager
+				json_videos="{{ $videos }}"
+				json_connections="{{ $connections }}"
+				episode_id="{{$episode_id}}"
+				root_number="{{$root_video}}"
+				token="{{csrf_token()}}"
+				v-on:redraw_connections="redraw_connections">
+			>
+			</connection-manager>
+		</div>
 	</div>
 	<div class="dialog" v-show="modal">
 		<button @click="modal=false">
