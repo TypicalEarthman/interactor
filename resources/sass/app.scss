@@ -1,5 +1,16 @@
 html, body { margin: 0; padding: 0; }
 
+a {
+    color: #fff;
+    text-decoration: underline;
+    transition: color .3s;
+}
+
+a:hover {
+    color: #ccc;
+    text-decoration: none;
+}
+
 body {
     font-family: 'Open Sans', sans-serif;
 }
@@ -15,7 +26,7 @@ body {
     */
 }
 #manager {
-    overflow: scroll;
+   // overflow: scroll;
 }
 #files {
     //overflow: scroll;
@@ -28,15 +39,17 @@ body {
 
 .ebb-content {
     padding: 1rem;
-    background: red;
+    background: #AB99DB;
     height: 100%;
-    border-radius: 20px;
+    //border-radius: 30px;
+    overflow: hidden;
+    color: #fff;
 }
 #preview {
     
 }
 #preview .embed-responsive {
-    max-height: 50vh;
+    max-height: 100%;
 }
 #manager {
    

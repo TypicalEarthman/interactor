@@ -21,7 +21,7 @@ video {
 }
 .preview {
     position: relative;
-    height: 48vh;
+    height: 100%;
 }
 .chooseOptions {
     position: absolute;

@@ -5,10 +5,11 @@
 	
 	<div id="settings" class="col-md-2 editor-base-block pr-0">
 		<div class="ebb-content">
-			<h2 class="display-5">Settings</h2>
+			<h2 class="display-5">Settings:</h2>
 			<a href="{{ route('project.show', [
 				"project" => $project_id,
 			]) }}" target="_blank">Project link</a>
+			project name
 		</div>
 		
 	</div>
@@ -44,7 +45,7 @@
 		@endforeach
 		</div>
 	</div>
-	<div id="files" class="col-md-2 editor-base-block pr-0">
+	<div id="files" class="col-md-2 editor-base-block pr-0 pt-0">
 		<div class="ebb-content">
 		<h3>
 			Assets:
@@ -82,7 +83,7 @@
 		@endforeach
 		</div>
 	</div>
-	<div id="manager" class="col-md-10 editor-base-block pr-0">
+	<div id="manager" class="col-md-10 editor-base-block pt-0">
 		<div class="ebb-content">
 			<connection-manager
 				json_videos="{{ $videos }}"
