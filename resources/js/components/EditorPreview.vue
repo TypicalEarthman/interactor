@@ -1,9 +1,11 @@
 <template>
     <div class="preview" v-bind:style="{ height: height}">
         <div class="embed-responsive embed-responsive-16by9">
-            <video :src="src" id="video" @ended="onEnd" @click="playpause"
+            <video :src="src" id="video" @ended="onEnd" @click="playpause" @timeupdate="onTimeUpdate()" ref="videoElement"
             >
             </video>
+            <progress-bar :value="completion">
+            </progress-bar>
             <svg class="video-overlay-play-button" viewBox="0 0 200 200" alt="Play video" @click="playpause" v-show="cover">
                 <circle cx="100" cy="100" r="90" fill="none" stroke-width="15" stroke="#fff"/>
                 <polygon points="70, 55 70, 145 145, 100" fill="#fff"/>
@@ -78,6 +80,7 @@ video {
                 height: "48vh%",
                 cover: true,
                 show_options: false,
+                completion: 0
             }
         },
         props: {
@@ -97,6 +100,13 @@ video {
                     this.cover = true
                 }
                 console.log("click!");
+            },
+            onTimeUpdate: function() {
+                let video = this.$refs.videoElement
+                if(!isNaN(video.duration)) {
+                    let percent_complete = video.currentTime / video.duration;
+                    this.completion = percent_complete
+                }
             },
             onEnd: function() {
                 console.log('Film ended')

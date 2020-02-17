@@ -342,7 +342,6 @@ export default {
                         else {
                             rectangle.fillStyle = "red";
                         }
-                        rectangle.fillStyle = "red";
                         rectangle.fillRect(self.rectangles[item.id].x, self.rectangles[item.id].y, 100, 30);
                         rectangle.fillStyle = "white";
                         rectangle.fillText(self.rectangles[item.id].name, self.rectangles[item.id].x+10, self.rectangles[item.id].y+10);
