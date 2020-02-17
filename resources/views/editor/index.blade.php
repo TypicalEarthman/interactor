@@ -104,6 +104,7 @@
 				episode_id="{{$episode_id}}"
 				root_number="{{$root_video}}"
 				token="{{csrf_token()}}"
+				v-on:change_target="change_target"
 				v-on:redraw_connections="redraw_connections">
 			>
 			</connection-manager>
@@ -172,6 +173,13 @@ mix = {
 		},
 		redraw_connections(connections) {
 			this.editor_preview.connections = connections;
+		},
+		change_target(video) {
+			this.editor_preview.src = video.url;
+			this.editor_preview.id = video.id;
+			this.editor_preview.options = [];
+			this.editor_preview.show_options = false;
+			this.editor_preview.cover = true;
 		}
 	},
 	mounted: function() {

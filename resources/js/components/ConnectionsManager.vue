@@ -197,11 +197,41 @@ export default {
             let self = this
             axios.post('/video/edit', data)
                 .then(function (response) {
-                    console.log(response);
+                    let info = response.data;
                 })
                 .catch(function (error) {
                     console.log(error);
                 })
+        },
+        select: function(e) {
+            // tell the browser we're handling this mouse event
+            e.preventDefault();
+            e.stopPropagation();
+
+            // get the current mouse position
+            let mx=parseInt(e.clientX-this.offsetX);
+            let my=parseInt(e.clientY-this.offsetY);
+
+            // test each rect to see if mouse is inside
+            
+            for(let i in this.rectangles) {
+                var r=this.rectangles[i];
+                    // if yes, navigate preview to this rectangle
+                if(mx>r.x && mx<r.x+r.width && my>r.y && my<r.y+r.height){
+                    r.isActive=true;
+                    let target;
+                    this.videos.forEach(function(item) {
+                        if(item.id == i) {
+                            target = item;
+                        };
+                    });
+                    this.$emit("change_target", target);
+                }
+                else {
+                    r.isActive=false;
+                }
+            }
+            this.drawConnections('update');
         },
         myDown: function(e) {
 
@@ -212,7 +242,6 @@ export default {
             // get the current mouse position
             this.mx=parseInt(e.clientX-this.offsetX);
             this.my=parseInt(e.clientY-this.offsetY);
-            console.log(this.rectangles)
 
             // test each rect to see if mouse is inside
             this.dragok=false;
@@ -253,7 +282,6 @@ export default {
                     this.updatePosition(request);
                 }
             }
-            console.log(this.rectangles)
 
         },
         myMove: function(e) {
@@ -308,8 +336,12 @@ export default {
                 if(meta.x == undefined) {
                     
                     if(type == 'update') {
-                        y=count*60 + 10;
-                        count++;
+                        if(self.rectangles[item.id].isActive) {
+                            rectangle.fillStyle = "black";
+                        }
+                        else {
+                            rectangle.fillStyle = "red";
+                        }
                         rectangle.fillStyle = "red";
                         rectangle.fillRect(self.rectangles[item.id].x, self.rectangles[item.id].y, 100, 30);
                         rectangle.fillStyle = "white";
@@ -319,12 +351,18 @@ export default {
                     else {
                         y=count*60 + 10;
                         count++;
-                        rectangle.fillStyle = "red";
+                        if(item.id == self.rootNumber) {
+                            rectangle.fillStyle = "black";
+                        }
+                        else {
+                            rectangle.fillStyle = "red";
+                        }
                         rectangle.fillRect(x, y, 100, 30);
                         rectangle.fillStyle = "white";
                         rectangle.fillText(item.name, x+10, y+10);
                         self.rectangles[item.id] = {
                             isDragging: false,
+                            isActive: false,
                             x: x,
                             y: y,
                             name: item.name,
@@ -335,21 +373,30 @@ export default {
                 }
                 else {
                     if(type == 'update') {
-                        y=count*60 + 10;
-                        count++;
-                        rectangle.fillStyle = "red";
+                        if(self.rectangles[item.id].isActive) {
+                            rectangle.fillStyle = "black";
+                        }
+                        else {
+                            rectangle.fillStyle = "red";
+                        }
                         rectangle.fillRect(self.rectangles[item.id].x, self.rectangles[item.id].y, 100, 30);
                         rectangle.fillStyle = "white";
                         rectangle.fillText(self.rectangles[item.id].name, self.rectangles[item.id].x+10, self.rectangles[item.id].y+10);
                         
                     }
                     else {
-                        rectangle.fillStyle = "red";
+                        if(item.id == self.rootNumber) {
+                            rectangle.fillStyle = "black";
+                        }
+                        else {
+                            rectangle.fillStyle = "red";
+                        }
                         rectangle.fillRect(meta.x, meta.y, 100, 30);
                         rectangle.fillStyle = "white";
                         rectangle.fillText(item.name, meta.x+10, meta.y+10);
                         self.rectangles[item.id] = {
                             isDragging: false,
+                            isActive: false,
                             x: meta.x,
                             y: meta.y,
                             name: item.name,
@@ -381,7 +428,7 @@ export default {
             canvas.onmousedown = this.myDown;
             canvas.onmouseup = this.myUp;
             canvas.onmousemove = this.myMove;
-
+            canvas.ondblclick = this.select;
         }
     },
     mounted() {

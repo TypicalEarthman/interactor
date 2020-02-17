@@ -286,10 +286,49 @@ __webpack_require__.r(__webpack_exports__);
     updatePosition: function updatePosition(data) {
       var self = this;
       axios.post('/video/edit', data).then(function (response) {
-        console.log(response);
+        var info = response.data;
       })["catch"](function (error) {
         console.log(error);
       });
+    },
+    select: function select(e) {
+      var _this = this;
+
+      // tell the browser we're handling this mouse event
+      e.preventDefault();
+      e.stopPropagation(); // get the current mouse position
+
+      var mx = parseInt(e.clientX - this.offsetX);
+      var my = parseInt(e.clientY - this.offsetY); // test each rect to see if mouse is inside
+
+      var _loop = function _loop(i) {
+        r = _this.rectangles[i]; // if yes, navigate preview to this rectangle
+
+        if (mx > r.x && mx < r.x + r.width && my > r.y && my < r.y + r.height) {
+          r.isActive = true;
+          var target;
+
+          _this.videos.forEach(function (item) {
+            if (item.id == i) {
+              target = item;
+            }
+
+            ;
+          });
+
+          _this.$emit("change_target", target);
+        } else {
+          r.isActive = false;
+        }
+      };
+
+      for (var i in this.rectangles) {
+        var r;
+
+        _loop(i);
+      }
+
+      this.drawConnections('update');
     },
     myDown: function myDown(e) {
       // tell the browser we're handling this mouse event
@@ -297,8 +336,7 @@ __webpack_require__.r(__webpack_exports__);
       e.stopPropagation(); // get the current mouse position
 
       this.mx = parseInt(e.clientX - this.offsetX);
-      this.my = parseInt(e.clientY - this.offsetY);
-      console.log(this.rectangles); // test each rect to see if mouse is inside
+      this.my = parseInt(e.clientY - this.offsetY); // test each rect to see if mouse is inside
 
       this.dragok = false;
 
@@ -337,8 +375,6 @@ __webpack_require__.r(__webpack_exports__);
           this.updatePosition(request);
         }
       }
-
-      console.log(this.rectangles);
     },
     myMove: function myMove(e) {
       // tell the browser we're handling this mouse event
@@ -388,8 +424,12 @@ __webpack_require__.r(__webpack_exports__);
 
         if (meta.x == undefined) {
           if (type == 'update') {
-            y = count * 60 + 10;
-            count++;
+            if (self.rectangles[item.id].isActive) {
+              rectangle.fillStyle = "black";
+            } else {
+              rectangle.fillStyle = "red";
+            }
+
             rectangle.fillStyle = "red";
             rectangle.fillRect(self.rectangles[item.id].x, self.rectangles[item.id].y, 100, 30);
             rectangle.fillStyle = "white";
@@ -397,12 +437,19 @@ __webpack_require__.r(__webpack_exports__);
           } else {
             y = count * 60 + 10;
             count++;
-            rectangle.fillStyle = "red";
+
+            if (item.id == self.rootNumber) {
+              rectangle.fillStyle = "black";
+            } else {
+              rectangle.fillStyle = "red";
+            }
+
             rectangle.fillRect(x, y, 100, 30);
             rectangle.fillStyle = "white";
             rectangle.fillText(item.name, x + 10, y + 10);
             self.rectangles[item.id] = {
               isDragging: false,
+              isActive: false,
               x: x,
               y: y,
               name: item.name,
@@ -412,19 +459,28 @@ __webpack_require__.r(__webpack_exports__);
           }
         } else {
           if (type == 'update') {
-            y = count * 60 + 10;
-            count++;
-            rectangle.fillStyle = "red";
+            if (self.rectangles[item.id].isActive) {
+              rectangle.fillStyle = "black";
+            } else {
+              rectangle.fillStyle = "red";
+            }
+
             rectangle.fillRect(self.rectangles[item.id].x, self.rectangles[item.id].y, 100, 30);
             rectangle.fillStyle = "white";
             rectangle.fillText(self.rectangles[item.id].name, self.rectangles[item.id].x + 10, self.rectangles[item.id].y + 10);
           } else {
-            rectangle.fillStyle = "red";
+            if (item.id == self.rootNumber) {
+              rectangle.fillStyle = "black";
+            } else {
+              rectangle.fillStyle = "red";
+            }
+
             rectangle.fillRect(meta.x, meta.y, 100, 30);
             rectangle.fillStyle = "white";
             rectangle.fillText(item.name, meta.x + 10, meta.y + 10);
             self.rectangles[item.id] = {
               isDragging: false,
+              isActive: false,
               x: meta.x,
               y: meta.y,
               name: item.name,
@@ -454,6 +510,7 @@ __webpack_require__.r(__webpack_exports__);
       canvas.onmousedown = this.myDown;
       canvas.onmouseup = this.myUp;
       canvas.onmousemove = this.myMove;
+      canvas.ondblclick = this.select;
     }
   },
   mounted: function mounted() {
