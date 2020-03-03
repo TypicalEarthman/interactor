@@ -218,6 +218,48 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+function roundRect(ctx, x, y, width, height, radius, fill, text) {
+  if (typeof radius === 'undefined') {
+    radius = 5;
+  }
+
+  if (typeof radius === 'number') {
+    radius = {
+      tl: radius,
+      tr: radius,
+      br: radius,
+      bl: radius
+    };
+  } else {
+    var defaultRadius = {
+      tl: 0,
+      tr: 0,
+      br: 0,
+      bl: 0
+    };
+
+    for (var side in defaultRadius) {
+      radius[side] = radius[side] || defaultRadius[side];
+    }
+  }
+
+  ctx.beginPath();
+  ctx.moveTo(x + radius.tl, y);
+  ctx.lineTo(x + width - radius.tr, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + radius.tr);
+  ctx.lineTo(x + width, y + height - radius.br);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - radius.br, y + height);
+  ctx.lineTo(x + radius.bl, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - radius.bl);
+  ctx.lineTo(x, y + radius.tl);
+  ctx.quadraticCurveTo(x, y, x + radius.tl, y);
+  ctx.closePath();
+  ctx.fillStyle = fill;
+  ctx.fill();
+  ctx.fillStyle = "white";
+  ctx.fillText(text, x + 10, y + 35);
+}
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -239,7 +281,8 @@ __webpack_require__.r(__webpack_exports__);
       startX: '',
       startY: '',
       offsetX: '',
-      offsetY: ''
+      offsetY: '',
+      dragCanvas: ''
     };
   },
   props: {
@@ -302,7 +345,7 @@ __webpack_require__.r(__webpack_exports__);
       var my = parseInt(e.clientY - this.offsetY); // test each rect to see if mouse is inside
 
       var _loop = function _loop(i) {
-        r = _this.rectangles[i]; // if yes, navigate preview to this rectangle
+        var r = _this.rectangles[i]; // if yes, navigate preview to this rectangle
 
         if (mx > r.x && mx < r.x + r.width && my > r.y && my < r.y + r.height) {
           r.isActive = true;
@@ -323,8 +366,6 @@ __webpack_require__.r(__webpack_exports__);
       };
 
       for (var i in this.rectangles) {
-        var r;
-
         _loop(i);
       }
 
@@ -335,6 +376,7 @@ __webpack_require__.r(__webpack_exports__);
       e.preventDefault();
       e.stopPropagation(); // get the current mouse position
 
+      var parent = document.querySelector('.parent');
       this.mx = parseInt(e.clientX - this.offsetX);
       this.my = parseInt(e.clientY - this.offsetY); // test each rect to see if mouse is inside
 
@@ -347,11 +389,16 @@ __webpack_require__.r(__webpack_exports__);
           this.dragok = true;
           r.isDragging = true;
         }
+      }
+
+      if (!this.dragok) {
+        this.dragCanvas = true;
       } // save the current mouse position
 
 
       this.startX = this.mx;
       this.startY = this.my;
+      console.log(parent.scrollLeft, this.mx);
     },
     myUp: function myUp(e) {
       // tell the browser we're handling this mouse event
@@ -359,6 +406,8 @@ __webpack_require__.r(__webpack_exports__);
       e.stopPropagation(); // clear all the dragging flags
 
       this.dragok = false;
+      this.dragCanvas = false;
+      var parent = document.querySelector('.parent');
 
       for (var i in this.rectangles) {
         if (this.rectangles[i].isDragging) {
@@ -381,29 +430,38 @@ __webpack_require__.r(__webpack_exports__);
       e.preventDefault();
       e.stopPropagation(); // get the current mouse position
 
+      var parent = document.querySelector('.parent');
       this.mx = parseInt(e.clientX - this.offsetX);
-      this.my = parseInt(e.clientY - this.offsetY); // calculate the distance the mouse has moved
-      // since the last mousemove
+      this.my = parseInt(e.clientY - this.offsetY);
 
-      var dx = this.mx - this.startX;
-      var dy = this.my - this.startY; // move each rect that isDragging 
-      // by the distance the mouse has moved
-      // since the last mousemove
+      if (this.dragCanvas) {
+        var dx = this.mx - this.startX;
+        var dy = this.my - this.startY; //document.querySelector('.parent').scrollTo(-dx, -dy);
+      } else {
+        // calculate the distance the mouse has moved
+        // since the last mousemove
+        var _dx = this.mx - this.startX; // + parent.scrollLeft;
 
-      for (var i in this.rectangles) {
-        if (this.rectangles[i].isDragging) {
-          console.log(this.rectangles[i]);
-          this.rectangles[i].x += dx;
-          this.rectangles[i].y += dy;
+
+        var _dy = this.my - this.startY; // move each rect that isDragging 
+        // by the distance the mouse has moved
+        // since the last mousemove
+
+
+        for (var i in this.rectangles) {
+          if (this.rectangles[i].isDragging) {
+            this.rectangles[i].x += _dx;
+            this.rectangles[i].y += _dy;
+          }
+        } // reset the starting mouse position for the next mousemove
+
+
+        this.startX = this.mx;
+        this.startY = this.my;
+
+        if (this.dragok) {
+          this.drawConnections('update');
         }
-      } // reset the starting mouse position for the next mousemove
-
-
-      this.startX = this.mx;
-      this.startY = this.my;
-
-      if (this.dragok) {
-        this.drawConnections('update');
       }
     },
     drawConnections: function drawConnections(type) {
@@ -421,94 +479,106 @@ __webpack_require__.r(__webpack_exports__);
       this.videos.forEach(function (item) {
         var meta = JSON.parse(item.meta);
         var rectangle = canvas.getContext("2d");
+        rectangle.font = "15px Arial";
 
         if (meta.x == undefined) {
           if (type == 'update') {
             if (self.rectangles[item.id].isActive) {
-              rectangle.fillStyle = "black";
+              roundRect(rectangle, self.rectangles[item.id].x, self.rectangles[item.id].y, 190, 70, 30, "#FFC300", item.name);
             } else {
-              rectangle.fillStyle = "red";
+              roundRect(rectangle, self.rectangles[item.id].x, self.rectangles[item.id].y, 190, 70, 30, "#BD4E4E", item.name);
             }
-
-            rectangle.fillRect(self.rectangles[item.id].x, self.rectangles[item.id].y, 100, 30);
-            rectangle.fillStyle = "white";
-            rectangle.fillText(self.rectangles[item.id].name, self.rectangles[item.id].x + 10, self.rectangles[item.id].y + 10);
           } else {
             y = count * 60 + 10;
             count++;
 
             if (item.id == self.rootNumber) {
-              rectangle.fillStyle = "black";
+              roundRect(rectangle, x, y, 190, 70, 30, "#FFC300", item.name);
             } else {
-              rectangle.fillStyle = "red";
+              roundRect(rectangle, x, y, 190, 70, 30, "#BD4E4E", item.name);
             }
 
-            rectangle.fillRect(x, y, 100, 30);
-            rectangle.fillStyle = "white";
-            rectangle.fillText(item.name, x + 10, y + 10);
-            self.rectangles[item.id] = {
-              isDragging: false,
-              isActive: false,
-              x: x,
-              y: y,
-              name: item.name,
-              width: 100,
-              height: 30
-            };
+            if (item.id == self.rootNumber) {
+              self.rectangles[item.id] = {
+                isDragging: false,
+                isActive: true,
+                x: x,
+                y: y,
+                name: item.name,
+                width: 190,
+                height: 70
+              };
+            } else {
+              self.rectangles[item.id] = {
+                isDragging: false,
+                isActive: false,
+                x: x,
+                y: y,
+                name: item.name,
+                width: 190,
+                height: 70
+              };
+            }
           }
         } else {
           if (type == 'update') {
             if (self.rectangles[item.id].isActive) {
-              rectangle.fillStyle = "black";
+              roundRect(rectangle, self.rectangles[item.id].x, self.rectangles[item.id].y, 190, 70, 30, "#FFC300", item.name);
             } else {
-              rectangle.fillStyle = "red";
+              roundRect(rectangle, self.rectangles[item.id].x, self.rectangles[item.id].y, 190, 70, 30, "#BD4E4E", item.name);
             }
-
-            rectangle.fillRect(self.rectangles[item.id].x, self.rectangles[item.id].y, 100, 30);
-            rectangle.fillStyle = "white";
-            rectangle.fillText(self.rectangles[item.id].name, self.rectangles[item.id].x + 10, self.rectangles[item.id].y + 10);
           } else {
             if (item.id == self.rootNumber) {
-              rectangle.fillStyle = "black";
+              roundRect(rectangle, meta.x, meta.y, 190, 70, 30, "#FFC300", item.name);
             } else {
-              rectangle.fillStyle = "red";
+              roundRect(rectangle, meta.x, meta.y, 190, 70, 30, "#BD4E4E", item.name);
             }
 
-            rectangle.fillRect(meta.x, meta.y, 100, 30);
-            rectangle.fillStyle = "white";
-            rectangle.fillText(item.name, meta.x + 10, meta.y + 10);
-            self.rectangles[item.id] = {
-              isDragging: false,
-              isActive: false,
-              x: meta.x,
-              y: meta.y,
-              name: item.name,
-              width: 100,
-              height: 30
-            };
+            if (item.id == self.rootNumber) {
+              self.rectangles[item.id] = {
+                isDragging: false,
+                isActive: true,
+                x: meta.x,
+                y: meta.y,
+                name: item.name,
+                width: 190,
+                height: 70
+              };
+            } else {
+              self.rectangles[item.id] = {
+                isDragging: false,
+                isActive: false,
+                x: meta.x,
+                y: meta.y,
+                name: item.name,
+                width: 190,
+                height: 70
+              };
+            }
           }
         }
       });
       this.connections.forEach(function (item) {
         var context = canvas.getContext('2d');
+        context.strokeStyle = "#CCC4C6";
         var origin = self.rectangles[item.entry_id];
         var destination = self.rectangles[item.out_id];
         context.beginPath();
-        var headlen = 10; // length of head in pixels
+        var headlen = 20; // length of head in pixels
 
         var dx = destination.x - origin.x;
-        var dy = destination.y + 15 - origin.y + 15;
+        var dy = destination.y + 35 - origin.y + 35;
         var angle = Math.atan2(dy, dx);
 
         if (origin.x <= destination.x) {
           if (origin.y >= destination.y) {
-            context.moveTo(origin.x + 100, origin.y + 15);
-            context.lineTo(destination.x, destination.y + 30);
-            context.lineTo(destination.x - headlen * Math.cos(angle - Math.PI / 6), destination.y + 30 - headlen * Math.sin(angle - Math.PI / 6));
-            context.moveTo(destination.x, destination.y + 30);
-            context.lineTo(destination.x - headlen * Math.cos(angle + Math.PI / 6), destination.y + 30 - headlen * Math.sin(angle + Math.PI / 6));
+            context.moveTo(origin.x + 190, origin.y + 35);
+            context.lineTo(destination.x, destination.y + 70);
+            context.lineTo(destination.x - headlen * Math.cos(angle - Math.PI / 6), destination.y + 70 - headlen * Math.sin(angle - Math.PI / 6));
+            context.moveTo(destination.x, destination.y + 70);
+            context.lineTo(destination.x - headlen * Math.cos(angle + Math.PI / 6), destination.y + 70 - headlen * Math.sin(angle + Math.PI / 6));
           } else {
-            context.moveTo(origin.x + 100, origin.y + 15);
+            context.moveTo(origin.x + 190, origin.y + 35);
             context.lineTo(destination.x, destination.y);
             context.lineTo(destination.x - headlen * Math.cos(angle - Math.PI / 6), destination.y - headlen * Math.sin(angle - Math.PI / 6));
             context.moveTo(destination.x, destination.y);
@@ -516,17 +586,17 @@ __webpack_require__.r(__webpack_exports__);
           }
         } else {
           if (origin.y >= destination.y) {
-            context.moveTo(origin.x, origin.y + 15);
-            context.lineTo(destination.x + 100, destination.y + 30);
-            context.lineTo(destination.x + 100 - headlen * Math.cos(angle - Math.PI / 6), destination.y + 30 - headlen * Math.sin(angle - Math.PI / 6));
-            context.moveTo(destination.x + 100, destination.y + 30);
-            context.lineTo(destination.x + 100 - headlen * Math.cos(angle + Math.PI / 6), destination.y + 30 - headlen * Math.sin(angle + Math.PI / 6));
+            context.moveTo(origin.x, origin.y + 35);
+            context.lineTo(destination.x + 190, destination.y + 70);
+            context.lineTo(destination.x + 190 - headlen * Math.cos(angle - Math.PI / 6), destination.y + 70 - headlen * Math.sin(angle - Math.PI / 6));
+            context.moveTo(destination.x + 190, destination.y + 70);
+            context.lineTo(destination.x + 190 - headlen * Math.cos(angle + Math.PI / 6), destination.y + 70 - headlen * Math.sin(angle + Math.PI / 6));
           } else {
-            context.moveTo(origin.x, origin.y + 15);
-            context.lineTo(destination.x + 100, destination.y);
-            context.lineTo(destination.x + 100 - headlen * Math.cos(angle - Math.PI / 6), destination.y - headlen * Math.sin(angle - Math.PI / 6));
-            context.moveTo(destination.x + 100, destination.y);
-            context.lineTo(destination.x + 100 - headlen * Math.cos(angle + Math.PI / 6), destination.y - headlen * Math.sin(angle + Math.PI / 6));
+            context.moveTo(origin.x, origin.y + 35);
+            context.lineTo(destination.x + 190, destination.y);
+            context.lineTo(destination.x + 190 - headlen * Math.cos(angle - Math.PI / 6), destination.y - headlen * Math.sin(angle - Math.PI / 6));
+            context.moveTo(destination.x + 190, destination.y);
+            context.lineTo(destination.x + 190 - headlen * Math.cos(angle + Math.PI / 6), destination.y - headlen * Math.sin(angle + Math.PI / 6));
           }
         }
 
@@ -557,6 +627,7 @@ __webpack_require__.r(__webpack_exports__);
     }
 
     this.drawConnections('mount');
+    document.querySelector('.parent').scrollTo(0, 0);
   }
 });
 
@@ -1687,13 +1758,14 @@ var render = function() {
         "button",
         {
           staticClass: "btn btn-primary btn-sm",
+          staticStyle: { position: "fixed", bottom: "10px", left: "45%" },
           on: {
             click: function($event) {
               _vm.modal = true
             }
           }
         },
-        [_vm._v("\n            Add connection\n        ")]
+        [_vm._v(" \n            Add connection\n        ")]
       )
     ]),
     _vm._v(" "),
@@ -1941,9 +2013,18 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "parent" }, [
-      _c("canvas", { attrs: { id: "canvas", width: "5000", height: "1000" } })
-    ])
+    return _c(
+      "div",
+      {
+        staticClass: "parent ebb-content",
+        staticStyle: {
+          position: "overflow: hidden",
+          width: "100%",
+          height: "100%"
+        }
+      },
+      [_c("canvas", { attrs: { id: "canvas", width: "5000", height: "1000" } })]
+    )
   }
 ]
 render._withStripped = true
