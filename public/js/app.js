@@ -499,11 +499,37 @@ __webpack_require__.r(__webpack_exports__);
         var dx = destination.x - origin.x;
         var dy = destination.y + 15 - origin.y + 15;
         var angle = Math.atan2(dy, dx);
-        context.moveTo(origin.x + 50, origin.y + 15);
-        context.lineTo(destination.x + 50, destination.y + 15);
-        context.lineTo(destination.x + 50 - headlen * Math.cos(angle - Math.PI / 6), destination.y + 15 - headlen * Math.sin(angle - Math.PI / 6));
-        context.moveTo(destination.x + 50, destination.y + 15);
-        context.lineTo(destination.x + 50 - headlen * Math.cos(angle + Math.PI / 6), destination.y + 15 - headlen * Math.sin(angle + Math.PI / 6));
+
+        if (origin.x <= destination.x) {
+          if (origin.y >= destination.y) {
+            context.moveTo(origin.x + 100, origin.y + 15);
+            context.lineTo(destination.x, destination.y + 30);
+            context.lineTo(destination.x - headlen * Math.cos(angle - Math.PI / 6), destination.y + 30 - headlen * Math.sin(angle - Math.PI / 6));
+            context.moveTo(destination.x, destination.y + 30);
+            context.lineTo(destination.x - headlen * Math.cos(angle + Math.PI / 6), destination.y + 30 - headlen * Math.sin(angle + Math.PI / 6));
+          } else {
+            context.moveTo(origin.x + 100, origin.y + 15);
+            context.lineTo(destination.x, destination.y);
+            context.lineTo(destination.x - headlen * Math.cos(angle - Math.PI / 6), destination.y - headlen * Math.sin(angle - Math.PI / 6));
+            context.moveTo(destination.x, destination.y);
+            context.lineTo(destination.x - headlen * Math.cos(angle + Math.PI / 6), destination.y - headlen * Math.sin(angle + Math.PI / 6));
+          }
+        } else {
+          if (origin.y >= destination.y) {
+            context.moveTo(origin.x, origin.y + 15);
+            context.lineTo(destination.x + 100, destination.y + 30);
+            context.lineTo(destination.x + 100 - headlen * Math.cos(angle - Math.PI / 6), destination.y + 30 - headlen * Math.sin(angle - Math.PI / 6));
+            context.moveTo(destination.x + 100, destination.y + 30);
+            context.lineTo(destination.x + 100 - headlen * Math.cos(angle + Math.PI / 6), destination.y + 30 - headlen * Math.sin(angle + Math.PI / 6));
+          } else {
+            context.moveTo(origin.x, origin.y + 15);
+            context.lineTo(destination.x + 100, destination.y);
+            context.lineTo(destination.x + 100 - headlen * Math.cos(angle - Math.PI / 6), destination.y - headlen * Math.sin(angle - Math.PI / 6));
+            context.moveTo(destination.x + 100, destination.y);
+            context.lineTo(destination.x + 100 - headlen * Math.cos(angle + Math.PI / 6), destination.y - headlen * Math.sin(angle + Math.PI / 6));
+          }
+        }
+
         context.stroke();
       });
       canvas.onmousedown = this.myDown;
