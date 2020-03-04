@@ -99,7 +99,6 @@ video {
                     document.querySelector("#video").pause();
                     this.cover = true
                 }
-                console.log("click!");
             },
             onTimeUpdate: function() {
                 let video = this.$refs.videoElement
@@ -123,7 +122,6 @@ video {
                 this.options = options
                 this.show_options = true
                 this.cover = true
-                console.log(options)
             },
             rebuild: function() {
                 let connections = {}
@@ -146,6 +144,8 @@ video {
                 this.id = video.id
                 this.options = []
                 this.show_options = false
+                let target = this.id
+                this.$emit("change_target_preview", target);
             }
         },
         mounted() {
@@ -162,7 +162,6 @@ video {
                 videos[id] = item;
             })
             this.videos = videos
-            console.log(this.videos)
             this.src = this.videos[this.rootNumber].url
 
             this.rebuild()

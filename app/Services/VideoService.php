@@ -28,7 +28,7 @@ class VideoService {
                 $video->filename = $filename;
                 $video->episode_id = $episode_id;
                 $video->project_id = $project_id;
-                $video->meta = '{}';
+                $video->meta = $data['meta'];
                 
                 if(isset($data["video"])) {
                         $path = Storage::putFileAs("project/{$project_id}/episode/{$episode_id}", $data["video"], $filename);

@@ -173,7 +173,8 @@ export default {
             startX: '',
             startY: '',
             offsetX: '',
-            offsetY: ''
+            offsetY: '',
+            activeVideo: ''
         }
     },
     props: {
@@ -182,6 +183,23 @@ export default {
         token: String,
         json_connections: String,
         root_number: String
+    },
+    watch: {
+        activeVideo: function(id) {
+            console.log('wow');
+            if (id) {
+                for(let i in this.rectangles) {
+                    let r=this.rectangles[i];
+                    if(r.isActive){
+                        r.isActive=false;
+                    }
+                    if( i == id) {
+                        r.isActive=true;
+                    }
+                }
+                this.drawConnections('update');
+            }
+        }
     },
     methods: {
         createConnection: function() {

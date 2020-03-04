@@ -85,7 +85,8 @@ class ProjectController extends Controller
             "project_id" => $data["project"]->id,
             "name" => "Main",
             "filename" => "1.mp4",
-            "url" => "starter/1.mp4"
+            "url" => "starter/1.mp4",
+            "meta" => '{"x":34.599998474121094,"y":101}'
         ]);
 
         $root_1 = $videoService->store([
@@ -93,7 +94,8 @@ class ProjectController extends Controller
             "project_id" => $data["project"]->id,
             "name" => "I want to view result",
             "filename" => "1_1.mp4",
-            "url" => "starter/1_1.mp4"
+            "url" => "starter/1_1.mp4",
+            "meta" => '{"x":363.5999984741211,"y":28}'
         ]);
 
         $root_2 = $videoService->store([
@@ -101,7 +103,8 @@ class ProjectController extends Controller
             "project_id" => $data["project"]->id,
             "name" => "I want to upload my video",
             "filename" => "1_2.mp4",
-            "url" => "starter/1_2.mp4"
+            "url" => "starter/1_2.mp4",
+            "meta" => '{"x":368.5999984741211,"y":212}'
         ]);
 
         $connectionService->store([

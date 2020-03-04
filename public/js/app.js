@@ -281,7 +281,8 @@ function roundRect(ctx, x, y, width, height, radius, fill, text) {
       startX: '',
       startY: '',
       offsetX: '',
-      offsetY: ''
+      offsetY: '',
+      activeVideo: ''
     };
   },
   props: {
@@ -290,6 +291,27 @@ function roundRect(ctx, x, y, width, height, radius, fill, text) {
     token: String,
     json_connections: String,
     root_number: String
+  },
+  watch: {
+    activeVideo: function activeVideo(id) {
+      console.log('wow');
+
+      if (id) {
+        for (var i in this.rectangles) {
+          var r = this.rectangles[i];
+
+          if (r.isActive) {
+            r.isActive = false;
+          }
+
+          if (i == id) {
+            r.isActive = true;
+          }
+        }
+
+        this.drawConnections('update');
+      }
+    }
   },
   methods: {
     createConnection: function createConnection() {
@@ -834,8 +856,6 @@ __webpack_require__.r(__webpack_exports__);
         document.querySelector("#video").pause();
         this.cover = true;
       }
-
-      console.log("click!");
     },
     onTimeUpdate: function onTimeUpdate() {
       var video = this.$refs.videoElement;
@@ -862,7 +882,6 @@ __webpack_require__.r(__webpack_exports__);
       this.options = options;
       this.show_options = true;
       this.cover = true;
-      console.log(options);
     },
     rebuild: function rebuild() {
       var connections = {};
@@ -884,6 +903,8 @@ __webpack_require__.r(__webpack_exports__);
       this.id = video.id;
       this.options = [];
       this.show_options = false;
+      var target = this.id;
+      this.$emit("change_target_preview", target);
     }
   },
   mounted: function mounted() {
@@ -901,7 +922,6 @@ __webpack_require__.r(__webpack_exports__);
       videos[id] = item;
     });
     this.videos = videos;
-    console.log(this.videos);
     this.src = this.videos[this.rootNumber].url;
     this.rebuild();
   }

@@ -26,6 +26,7 @@
 			root_number="{{$root_video}}"
 			:project_preview="false"
 			ref="editor_preview"
+			v-on:change_target_preview="change_target_preview"
 		>
 		</editor-preview>
 	</div>
@@ -104,6 +105,7 @@
 				episode_id="{{$episode_id}}"
 				root_number="{{$root_video}}"
 				token="{{csrf_token()}}"
+				ref="manager"
 				v-on:change_target="change_target"
 				v-on:redraw_connections="redraw_connections">
 			>
@@ -154,6 +156,8 @@ mix = {
 		option: '',
 		route: '',
 		editor_preview: null,
+		target_id: '',
+		manager: null
 	},
 	methods: {
 		addVideo: function() {
@@ -180,10 +184,14 @@ mix = {
 			this.editor_preview.options = [];
 			this.editor_preview.show_options = false;
 			this.editor_preview.cover = true;
+		},
+		change_target_preview(id) {
+			this.manager.activeVideo = id ;
 		}
 	},
 	mounted: function() {
 		this.editor_preview = this.$refs.editor_preview;
+		this.manager = this.$refs.manager;
 	}
 };
 
