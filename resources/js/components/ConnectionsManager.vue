@@ -1,5 +1,5 @@
 <template>
-    <div id="manager-root">
+    <div id="manager-root" style='height:100%;'>
         <div class="controls">
             <button class="btn btn-primary btn-sm" @click="modal=true" style="position: fixed; bottom:10px;left:45%;"> 
                 Add connection
@@ -106,8 +106,8 @@
     margin: 0 0 0 -150px;
 }
 .parent {
-    display: flex;
-    flex-flow: row;
+    padding: 0;
+    overflow: hidden;
 }
 .layer {
     display: flex;
@@ -173,8 +173,7 @@ export default {
             startX: '',
             startY: '',
             offsetX: '',
-            offsetY: '',
-            dragCanvas: ''
+            offsetY: ''
         }
     },
     props: {
@@ -244,12 +243,13 @@ export default {
             let my=parseInt(e.clientY-this.offsetY);
 
             // test each rect to see if mouse is inside
-            
+            let flag = true;
             for(let i in this.rectangles) {
                 let r=this.rectangles[i];
                     // if yes, navigate preview to this rectangle
                 if(mx>r.x && mx<r.x+r.width && my>r.y && my<r.y+r.height){
                     r.isActive=true;
+                    flag = false;
                     let target;
                     this.videos.forEach(function(item) {
                         if(item.id == i) {
@@ -262,6 +262,10 @@ export default {
                     r.isActive=false;
                 }
             }
+            if(flag) {
+                let parent = document.querySelector('.parent');
+                parent.scrollTo(mx, my);
+            }
             this.drawConnections('update');
         },
         myDown: function(e) {
@@ -272,8 +276,11 @@ export default {
 
             // get the current mouse position
             let parent = document.querySelector('.parent');
+            this.px = parent.scrollLeft;
+            this.py = parent.scrollTop;
             this.mx=parseInt(e.clientX-this.offsetX );
             this.my=parseInt(e.clientY-this.offsetY );
+            parent.style.cursor = "grabbing";
 
             // test each rect to see if mouse is inside
             this.dragok=false;
@@ -292,18 +299,22 @@ export default {
             // save the current mouse position
             this.startX=this.mx;
             this.startY=this.my;
-            console.log(parent.scrollLeft, this.mx);
 
         },
         myUp: function(e) {
             // tell the browser we're handling this mouse event
             e.preventDefault();
             e.stopPropagation();
+            let canvas = document.getElementById("canvas");
+            let BB=canvas.getBoundingClientRect();
+            this.offsetX=BB.left;
+            this.offsetY=BB.top;
+            let parent = document.querySelector('.parent');
+            parent.style.cursor = "auto";
 
             // clear all the dragging flags
             this.dragok = false;
             this.dragCanvas = false;
-            let parent = document.querySelector('.parent');
             for(let i in this.rectangles) {
                 if(this.rectangles[i].isDragging) {
                     this.rectangles[i].isDragging=false;
@@ -322,40 +333,42 @@ export default {
             }
 
         },
+        canvasMove(dx,dy) {
+            let parent = document.querySelector('.parent');
+            let x = parent.scrollLeft;
+            let y = parent.scrollTop;
+            parent.scrollTo(x-dx, y-dy);
+        },
         myMove: function(e) {
 
             // tell the browser we're handling this mouse event
             e.preventDefault();
             e.stopPropagation();
             // get the current mouse position
-            let parent = document.querySelector('.parent');
             this.mx=parseInt(e.clientX-this.offsetX );
             this.my=parseInt(e.clientY-this.offsetY );
+            // calculate the distance the mouse has moved
+            // since the last mousemove
+            let dx=this.mx-this.startX;
+            let dy=this.my-this.startY;
             if(this.dragCanvas) {
-                let dx=this.mx-this.startX;
-                let dy=this.my-this.startY;
-                //document.querySelector('.parent').scrollTo(-dx, -dy);
-            } else {
-                // calculate the distance the mouse has moved
-                // since the last mousemove
-                let dx=this.mx-this.startX;// + parent.scrollLeft;
-                let dy=this.my-this.startY;
+                this.canvasMove(dx,dy);
+            }
 
-                // move each rect that isDragging 
-                // by the distance the mouse has moved
-                // since the last mousemove
-                for(let i in this.rectangles) {
-                    if(this.rectangles[i].isDragging){
-                        this.rectangles[i].x+= dx;
-                        this.rectangles[i].y+=dy;
-                    }
+            // move each rect that isDragging 
+            // by the distance the mouse has moved
+            // since the last mousemove
+            for(let i in this.rectangles) {
+                if(this.rectangles[i].isDragging){
+                    this.rectangles[i].x+= dx;
+                    this.rectangles[i].y+=dy;
                 }
-                // reset the starting mouse position for the next mousemove
-                this.startX=this.mx;
-                this.startY=this.my;
-                if(this.dragok) {
-                    this.drawConnections('update');
-                }
+            }
+            // reset the starting mouse position for the next mousemove
+            this.startX=this.mx;
+            this.startY=this.my;
+            if(this.dragok) {
+                this.drawConnections('update');
             }
         },
         drawConnections: function(type) {

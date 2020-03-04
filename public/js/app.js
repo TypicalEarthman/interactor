@@ -281,8 +281,7 @@ function roundRect(ctx, x, y, width, height, radius, fill, text) {
       startX: '',
       startY: '',
       offsetX: '',
-      offsetY: '',
-      dragCanvas: ''
+      offsetY: ''
     };
   },
   props: {
@@ -344,11 +343,14 @@ function roundRect(ctx, x, y, width, height, radius, fill, text) {
       var mx = parseInt(e.clientX - this.offsetX);
       var my = parseInt(e.clientY - this.offsetY); // test each rect to see if mouse is inside
 
+      var flag = true;
+
       var _loop = function _loop(i) {
         var r = _this.rectangles[i]; // if yes, navigate preview to this rectangle
 
         if (mx > r.x && mx < r.x + r.width && my > r.y && my < r.y + r.height) {
           r.isActive = true;
+          flag = false;
           var target;
 
           _this.videos.forEach(function (item) {
@@ -369,6 +371,11 @@ function roundRect(ctx, x, y, width, height, radius, fill, text) {
         _loop(i);
       }
 
+      if (flag) {
+        var parent = document.querySelector('.parent');
+        parent.scrollTo(mx, my);
+      }
+
       this.drawConnections('update');
     },
     myDown: function myDown(e) {
@@ -377,8 +384,11 @@ function roundRect(ctx, x, y, width, height, radius, fill, text) {
       e.stopPropagation(); // get the current mouse position
 
       var parent = document.querySelector('.parent');
+      this.px = parent.scrollLeft;
+      this.py = parent.scrollTop;
       this.mx = parseInt(e.clientX - this.offsetX);
-      this.my = parseInt(e.clientY - this.offsetY); // test each rect to see if mouse is inside
+      this.my = parseInt(e.clientY - this.offsetY);
+      parent.style.cursor = "grabbing"; // test each rect to see if mouse is inside
 
       this.dragok = false;
 
@@ -398,16 +408,20 @@ function roundRect(ctx, x, y, width, height, radius, fill, text) {
 
       this.startX = this.mx;
       this.startY = this.my;
-      console.log(parent.scrollLeft, this.mx);
     },
     myUp: function myUp(e) {
       // tell the browser we're handling this mouse event
       e.preventDefault();
-      e.stopPropagation(); // clear all the dragging flags
+      e.stopPropagation();
+      var canvas = document.getElementById("canvas");
+      var BB = canvas.getBoundingClientRect();
+      this.offsetX = BB.left;
+      this.offsetY = BB.top;
+      var parent = document.querySelector('.parent');
+      parent.style.cursor = "auto"; // clear all the dragging flags
 
       this.dragok = false;
       this.dragCanvas = false;
-      var parent = document.querySelector('.parent');
 
       for (var i in this.rectangles) {
         if (this.rectangles[i].isDragging) {
@@ -425,43 +439,44 @@ function roundRect(ctx, x, y, width, height, radius, fill, text) {
         }
       }
     },
+    canvasMove: function canvasMove(dx, dy) {
+      var parent = document.querySelector('.parent');
+      var x = parent.scrollLeft;
+      var y = parent.scrollTop;
+      parent.scrollTo(x - dx, y - dy);
+    },
     myMove: function myMove(e) {
       // tell the browser we're handling this mouse event
       e.preventDefault();
       e.stopPropagation(); // get the current mouse position
 
-      var parent = document.querySelector('.parent');
       this.mx = parseInt(e.clientX - this.offsetX);
-      this.my = parseInt(e.clientY - this.offsetY);
+      this.my = parseInt(e.clientY - this.offsetY); // calculate the distance the mouse has moved
+      // since the last mousemove
+
+      var dx = this.mx - this.startX;
+      var dy = this.my - this.startY;
 
       if (this.dragCanvas) {
-        var dx = this.mx - this.startX;
-        var dy = this.my - this.startY; //document.querySelector('.parent').scrollTo(-dx, -dy);
-      } else {
-        // calculate the distance the mouse has moved
-        // since the last mousemove
-        var _dx = this.mx - this.startX; // + parent.scrollLeft;
+        this.canvasMove(dx, dy);
+      } // move each rect that isDragging 
+      // by the distance the mouse has moved
+      // since the last mousemove
 
 
-        var _dy = this.my - this.startY; // move each rect that isDragging 
-        // by the distance the mouse has moved
-        // since the last mousemove
-
-
-        for (var i in this.rectangles) {
-          if (this.rectangles[i].isDragging) {
-            this.rectangles[i].x += _dx;
-            this.rectangles[i].y += _dy;
-          }
-        } // reset the starting mouse position for the next mousemove
-
-
-        this.startX = this.mx;
-        this.startY = this.my;
-
-        if (this.dragok) {
-          this.drawConnections('update');
+      for (var i in this.rectangles) {
+        if (this.rectangles[i].isDragging) {
+          this.rectangles[i].x += dx;
+          this.rectangles[i].y += dy;
         }
+      } // reset the starting mouse position for the next mousemove
+
+
+      this.startX = this.mx;
+      this.startY = this.my;
+
+      if (this.dragok) {
+        this.drawConnections('update');
       }
     },
     drawConnections: function drawConnections(type) {
@@ -1006,7 +1021,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n#manager-root[data-v-08416e43] {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n            flex-flow: column wrap;\n    -webkit-box-pack: start;\n            justify-content: flex-start;\n    align-content: flex-start;\n}\n.controls[data-v-08416e43] {\n    position: absolute;\n    bottom: 0px;\n    left: 50%;\n    width: 300px;\n    margin: 0 0 0 -150px;\n}\n.parent[data-v-08416e43] {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: horizontal;\n    -webkit-box-direction: normal;\n            flex-flow: row;\n}\n.layer[data-v-08416e43] {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n            flex-flow: column;\n}\n.video[data-v-08416e43] {\n    background: #f00;\n    width: 100px;\n    height: 50px;\n    margin-bottom: 20px;\n    margin-right: 20px;\n}\n", ""]);
+exports.push([module.i, "\n#manager-root[data-v-08416e43] {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n            flex-flow: column wrap;\n    -webkit-box-pack: start;\n            justify-content: flex-start;\n    align-content: flex-start;\n}\n.controls[data-v-08416e43] {\n    position: absolute;\n    bottom: 0px;\n    left: 50%;\n    width: 300px;\n    margin: 0 0 0 -150px;\n}\n.parent[data-v-08416e43] {\n    padding: 0;\n    overflow: hidden;\n}\n.layer[data-v-08416e43] {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n            flex-flow: column;\n}\n.video[data-v-08416e43] {\n    background: #f00;\n    width: 100px;\n    height: 50px;\n    margin-bottom: 20px;\n    margin-right: 20px;\n}\n", ""]);
 
 // exports
 
@@ -1752,245 +1767,249 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { attrs: { id: "manager-root" } }, [
-    _c("div", { staticClass: "controls" }, [
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-primary btn-sm",
-          staticStyle: { position: "fixed", bottom: "10px", left: "45%" },
-          on: {
-            click: function($event) {
-              _vm.modal = true
-            }
-          }
-        },
-        [_vm._v(" \n            Add connection\n        ")]
-      )
-    ]),
-    _vm._v(" "),
-    _c(
-      "div",
-      {
-        directives: [
-          {
-            name: "show",
-            rawName: "v-show",
-            value: _vm.root,
-            expression: "root"
-          }
-        ],
-        staticClass: "dialog"
-      },
-      [
+  return _c(
+    "div",
+    { staticStyle: { height: "100%" }, attrs: { id: "manager-root" } },
+    [
+      _c("div", { staticClass: "controls" }, [
         _c(
           "button",
           {
+            staticClass: "btn btn-primary btn-sm",
+            staticStyle: { position: "fixed", bottom: "10px", left: "45%" },
             on: {
               click: function($event) {
-                _vm.root = false
+                _vm.modal = true
               }
             }
           },
-          [_vm._v("\n            Close dialog\n        ")]
-        ),
-        _vm._v(" "),
-        _c("h2", [_vm._v("\n            Set root\n        ")]),
-        _vm._v("\n        From: \n        "),
-        _c(
-          "select",
-          {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.chosenRoot,
-                expression: "chosenRoot"
-              }
-            ],
-            on: {
-              change: function($event) {
-                var $$selectedVal = Array.prototype.filter
-                  .call($event.target.options, function(o) {
-                    return o.selected
-                  })
-                  .map(function(o) {
-                    var val = "_value" in o ? o._value : o.value
-                    return val
-                  })
-                _vm.chosenRoot = $event.target.multiple
-                  ? $$selectedVal
-                  : $$selectedVal[0]
-              }
+          [_vm._v(" \n            Add connection\n        ")]
+        )
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.root,
+              expression: "root"
             }
-          },
-          _vm._l(_vm.videos, function(video, index) {
-            return _c("option", { domProps: { value: index } }, [
-              _vm._v(
-                "\n                " +
-                  _vm._s(video.name) +
-                  " (" +
-                  _vm._s(video.filename) +
-                  ")\n            "
+          ],
+          staticClass: "dialog"
+        },
+        [
+          _c(
+            "button",
+            {
+              on: {
+                click: function($event) {
+                  _vm.root = false
+                }
+              }
+            },
+            [_vm._v("\n            Close dialog\n        ")]
+          ),
+          _vm._v(" "),
+          _c("h2", [_vm._v("\n            Set root\n        ")]),
+          _vm._v("\n        From: \n        "),
+          _c(
+            "select",
+            {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.chosenRoot,
+                  expression: "chosenRoot"
+                }
+              ],
+              on: {
+                change: function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.chosenRoot = $event.target.multiple
+                    ? $$selectedVal
+                    : $$selectedVal[0]
+                }
+              }
+            },
+            _vm._l(_vm.videos, function(video, index) {
+              return _c("option", { domProps: { value: index } }, [
+                _vm._v(
+                  "\n                " +
+                    _vm._s(video.name) +
+                    " (" +
+                    _vm._s(video.filename) +
+                    ")\n            "
+                )
+              ])
+            }),
+            0
+          ),
+          _vm._v(" "),
+          _c("br"),
+          _vm._v(" "),
+          _c("button", { on: { click: _vm.setRoot } }, [
+            _vm._v("\n            Set root\n        ")
+          ])
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.modal,
+              expression: "modal"
+            }
+          ],
+          staticClass: "dialog"
+        },
+        [
+          _c("h2", [_vm._v("\n            Connection\n        ")]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group row" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-9" }, [
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.origin,
+                      expression: "origin"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  on: {
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.origin = $event.target.multiple
+                        ? $$selectedVal
+                        : $$selectedVal[0]
+                    }
+                  }
+                },
+                _vm._l(_vm.videos, function(video, index) {
+                  return _c("option", { domProps: { value: index } }, [
+                    _vm._v(
+                      "\n                        " +
+                        _vm._s(video.name) +
+                        " (" +
+                        _vm._s(video.filename) +
+                        ")\n                    "
+                    )
+                  ])
+                }),
+                0
               )
             ])
-          }),
-          0
-        ),
-        _vm._v(" "),
-        _c("br"),
-        _vm._v(" "),
-        _c("button", { on: { click: _vm.setRoot } }, [
-          _vm._v("\n            Set root\n        ")
-        ])
-      ]
-    ),
-    _vm._v(" "),
-    _c(
-      "div",
-      {
-        directives: [
-          {
-            name: "show",
-            rawName: "v-show",
-            value: _vm.modal,
-            expression: "modal"
-          }
-        ],
-        staticClass: "dialog"
-      },
-      [
-        _c("h2", [_vm._v("\n            Connection\n        ")]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form-group row" }, [
-          _vm._m(0),
+          ]),
           _vm._v(" "),
-          _c("div", { staticClass: "col-md-9" }, [
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.origin,
-                    expression: "origin"
+          _c("div", { staticClass: "form-group row" }, [
+            _vm._m(1),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-9" }, [
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.destination,
+                      expression: "destination"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  on: {
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.destination = $event.target.multiple
+                        ? $$selectedVal
+                        : $$selectedVal[0]
+                    }
                   }
-                ],
-                staticClass: "form-control",
-                on: {
-                  change: function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
-                      })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value
-                        return val
-                      })
-                    _vm.origin = $event.target.multiple
-                      ? $$selectedVal
-                      : $$selectedVal[0]
-                  }
-                }
-              },
-              _vm._l(_vm.videos, function(video, index) {
-                return _c("option", { domProps: { value: index } }, [
-                  _vm._v(
-                    "\n                        " +
-                      _vm._s(video.name) +
-                      " (" +
-                      _vm._s(video.filename) +
-                      ")\n                    "
-                  )
-                ])
-              }),
-              0
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form-group row" }, [
-          _vm._m(1),
+                },
+                _vm._l(_vm.videos, function(video, index) {
+                  return _c("option", { domProps: { value: index } }, [
+                    _vm._v(
+                      "\n                        " +
+                        _vm._s(video.name) +
+                        " (" +
+                        _vm._s(video.filename) +
+                        ")\n                    "
+                    )
+                  ])
+                }),
+                0
+              )
+            ])
+          ]),
           _vm._v(" "),
-          _c("div", { staticClass: "col-md-9" }, [
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.destination,
-                    expression: "destination"
-                  }
-                ],
-                staticClass: "form-control",
-                on: {
-                  change: function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
-                      })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value
-                        return val
-                      })
-                    _vm.destination = $event.target.multiple
-                      ? $$selectedVal
-                      : $$selectedVal[0]
-                  }
-                }
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-primary btn-block btn-sm",
+              staticStyle: {
+                position: "absolute",
+                left: "20px",
+                bottom: "20px",
+                right: "20px",
+                width: "auto"
               },
-              _vm._l(_vm.videos, function(video, index) {
-                return _c("option", { domProps: { value: index } }, [
-                  _vm._v(
-                    "\n                        " +
-                      _vm._s(video.name) +
-                      " (" +
-                      _vm._s(video.filename) +
-                      ")\n                    "
-                  )
-                ])
-              }),
-              0
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-primary btn-block btn-sm",
-            staticStyle: {
-              position: "absolute",
-              left: "20px",
-              bottom: "20px",
-              right: "20px",
-              width: "auto"
-            },
-            on: {
-              click: function($event) {
-                _vm.modal = false
+              on: {
+                click: function($event) {
+                  _vm.modal = false
+                }
               }
-            }
-          },
-          [_vm._v("\n            Close\n        ")]
-        ),
-        _vm._v(" "),
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-primary btn-block btn-sm",
-            on: { click: _vm.createConnection }
-          },
-          [_vm._v("\n            Add connection\n        ")]
-        )
-      ]
-    ),
-    _vm._v(" "),
-    _vm._m(2)
-  ])
+            },
+            [_vm._v("\n            Close\n        ")]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-primary btn-block btn-sm",
+              on: { click: _vm.createConnection }
+            },
+            [_vm._v("\n            Add connection\n        ")]
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _vm._m(2)
+    ]
+  )
 }
 var staticRenderFns = [
   function() {
