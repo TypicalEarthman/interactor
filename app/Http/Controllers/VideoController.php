@@ -114,8 +114,14 @@ class VideoController extends Controller
      * @param  \App\Video  $video
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Video $video)
+    public function destroy(Request $request, VideoService $videoService)
     {
-        //
+        
+        $videoService->destroy([
+            "episode_id" => $request->get('episode_id'),
+            "id" => $request->get('id'),
+        ]);
+
+        return redirect()->back();
     }
 }

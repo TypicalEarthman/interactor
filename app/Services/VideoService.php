@@ -11,9 +11,6 @@ use App\Services\EpisodeService;
 
 class VideoService {
 	public function store($data) {
-                
-        
-		
                 $episode_id = $data["episode_id"];
                 $project_id = $data['project_id'];
                 $video = new Video();
@@ -56,6 +53,18 @@ class VideoService {
                        
                 }
                 return $video;
+                
+	}
+	public function destroy($data) {
+                
+                $episode_id = $data["episode_id"];
+                $video_id = $data['id'];
+                
+                Video::destroy($data['id']);
+                $episode = Episode::where('id', $episode_id)->first();
+                $episode_videos = $episode->videos;
+
+                return $episode_videos;
                 
 	}
 	

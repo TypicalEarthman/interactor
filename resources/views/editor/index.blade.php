@@ -87,8 +87,11 @@
 			-->
 		@endforeach
 		</ol>
-		<button class="btn btn-primary btn-block btn-sm mt-5" @click="addVideo"> 
+		<button class="btn btn-primary btn-block btn-sm mt-5" @click="addVideo" style="position: fixed; left: 30px; bottom: 35px; width: auto;"> 
 			Add video
+		</button>
+		<button class="btn btn-primary btn-block btn-sm mt-5" @click="delete_video = true" style="position: fixed; left: 130px; bottom: 35px; width: auto;"> 
+			Delete video
 		</button>
 		{{-- 
 		<button @click="addPage"> 
@@ -113,7 +116,38 @@
 		</div>
 	</div>
 	<transition name="fade">
-	<div class="dialog" v-show="modal">
+		<div class="dialog" v-show="delete_video">
+            <h2>
+                Delete video
+            </h2>
+
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <label class="col-form-label">Video:</label>
+                </div>
+                <div class="col-md-9">
+                    <select v-model="videoDeleteId" class="form-control">
+						@foreach ($videos as $video)
+							<option v-bind:value="{'id': {{ $video->id }}, 'episode_id':{{$episode_id}}}"> 
+								{{ $video->name }}
+							</option>
+						@endforeach
+                    </select>
+                </div>
+                
+            </div>
+
+           <button @click="delete_video=false" class="btn btn-primary btn-block btn-sm" style="position: absolute; left: 20px; bottom: 20px; right: 20px; width: auto">
+                Close
+            </button>
+            
+            <button @click="deleteVideo" class="btn btn-primary btn-block btn-sm">
+                Delete video
+            </button>
+		</div>
+	</transition>
+	<transition name="fade">
+		<div class="dialog" v-show="modal">
 		{{-- 
 			<button @click="modal=false">
 				Close dialog
@@ -155,6 +189,8 @@ mix = {
 		project_id: '',
 		option: '',
 		route: '',
+		videoDeleteId: '',
+		delete_video: false,
 		editor_preview: null,
 		target_id: '',
 		manager: null
@@ -164,6 +200,25 @@ mix = {
 			this.option = 'video';
 			this.route = this.api + 'video/store';
 			this.modal = true;
+		},
+		deleteVideo: function() {
+            let id = this.videoDeleteId.id;
+            let episode_id = this.videoDeleteId.episode_id;
+            let self = this;
+            axios.post('/video/destroy', {
+                'id': id,
+                'episode_id': episode_id
+            })
+            .then(function (response) {
+				console.log(response.data);
+				alert('Selected video has been deleted');
+				Location.reload();
+                self.delete_video = false;
+            })
+            .catch(function (error) {
+                console.log(error);
+                self.delete_video = false;
+            });
 		},
 		addEpisode: function() {
 			this.option = 'episode';
