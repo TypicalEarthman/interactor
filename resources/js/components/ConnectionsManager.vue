@@ -1,11 +1,14 @@
 <template>
     <div id="manager-root" style='height:100%;'>
         <div class="controls">
-            <button class="btn btn-primary btn-sm" @click="createModal=true" style="position: fixed; bottom:10px;left:45%;"> 
+            <button class="btn btn-primary btn-sm" @click="createModal=true" style="position: fixed; bottom:10px;left:35%;"> 
                 Add connection
             </button>
-            <button class="btn btn-primary btn-sm" @click="deleteInitiate" style="position: fixed; bottom:10px;left:55%;"> 
+            <button class="btn btn-primary btn-sm" @click="deleteInitiate" style="position: fixed; bottom:10px;left:45%;"> 
                 Delete connection
+            </button>
+            <button class="btn btn-primary btn-sm" @click="root = true" style="position: fixed; bottom:10px;left:55%;"> 
+                Set root
             </button>
             <!--
             <button @click="root=true">

@@ -251,6 +251,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 function roundRect(ctx, x, y, width, height, radius, fill, text) {
   if (typeof radius === 'undefined') {
     radius = 5;
@@ -1871,7 +1874,7 @@ var render = function() {
           "button",
           {
             staticClass: "btn btn-primary btn-sm",
-            staticStyle: { position: "fixed", bottom: "10px", left: "45%" },
+            staticStyle: { position: "fixed", bottom: "10px", left: "35%" },
             on: {
               click: function($event) {
                 _vm.createModal = true
@@ -1885,10 +1888,24 @@ var render = function() {
           "button",
           {
             staticClass: "btn btn-primary btn-sm",
-            staticStyle: { position: "fixed", bottom: "10px", left: "55%" },
+            staticStyle: { position: "fixed", bottom: "10px", left: "45%" },
             on: { click: _vm.deleteInitiate }
           },
           [_vm._v(" \n            Delete connection\n        ")]
+        ),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-primary btn-sm",
+            staticStyle: { position: "fixed", bottom: "10px", left: "55%" },
+            on: {
+              click: function($event) {
+                _vm.root = true
+              }
+            }
+          },
+          [_vm._v(" \n            Set root\n        ")]
         )
       ]),
       _vm._v(" "),
