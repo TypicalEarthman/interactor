@@ -14,9 +14,11 @@
 use App\Project;
 
 Route::get('/', 'ProjectController@generate')->name('main');
+Route::get('/home', 'HomeController@index')->name('home');
 
 Auth::routes();
 
+Route::post('/dashboard',  'HomeController@index')->name('dashboard');
 Route::post('/video/store', 'VideoController@store')->name('video.store');
 Route::post('/video/update', 'VideoController@update')->name('video.update');
 Route::post('/video/edit', 'VideoController@edit')->name('video.edit');
@@ -32,6 +34,6 @@ Route::post('/episode/setroot','EpisodeController@set_root');
 
 
 Route::post('/connection/add','ConnectionController@create');
-Route::get('/home', 'HomeController@index')->name('home');
+Route::post('/connection/delete','ConnectionController@delete');
 Route::get('/preview', 'Custom\EditorController@preview')->name('editor.preview');
 

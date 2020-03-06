@@ -37,6 +37,13 @@ class ConnectionController extends Controller
 			"out_id" => $request->out_id,
 		]);
 	}
+	public function delete(Request $request, ConnectionService $connectionService)
+	{
+		return $connectionService->delete([
+			"episode_id" => $request->episode_id,
+			"connection_id" => $request->connection_id,
+		]);
+	}
 	
 	/**
 	 * Store a newly created resource in storage.

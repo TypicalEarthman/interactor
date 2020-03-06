@@ -19,5 +19,9 @@ class ConnectionService {
         return Episode::find($data['episode_id'])->connections; 
 	}
 	
+	public function delete($data) {
+        Connection::destroy($data['connection_id']);
+        return Episode::find($data['episode_id'])->connections; 
+	}
 }
 ?>

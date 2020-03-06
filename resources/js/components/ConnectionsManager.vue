@@ -1,8 +1,11 @@
 <template>
     <div id="manager-root" style='height:100%;'>
         <div class="controls">
-            <button class="btn btn-primary btn-sm" @click="modal=true" style="position: fixed; bottom:10px;left:45%;"> 
+            <button class="btn btn-primary btn-sm" @click="createModal=true" style="position: fixed; bottom:10px;left:45%;"> 
                 Add connection
+            </button>
+            <button class="btn btn-primary btn-sm" @click="deleteInitiate" style="position: fixed; bottom:10px;left:55%;"> 
+                Delete connection
             </button>
             <!--
             <button @click="root=true">
@@ -28,7 +31,7 @@
                 Set root
             </button>
         </div>  
-        <div class="dialog" v-show="modal">
+        <div class="dialog" v-show="createModal">
             <!--
             
         -->
@@ -64,12 +67,42 @@
                 
             </div>
 
-           <button @click="modal=false" class="btn btn-primary btn-block btn-sm" style="position: absolute; left: 20px; bottom: 20px; right: 20px; width: auto">
+           <button @click="createModal=false" class="btn btn-primary btn-block btn-sm" style="position: absolute; left: 20px; bottom: 20px; right: 20px; width: auto">
                 Close
             </button>
             
             <button @click="createConnection" class="btn btn-primary btn-block btn-sm">
                 Add connection
+            </button>
+        </div>
+        <div class="dialog" v-show="deleteModal">
+            <!--
+            
+        -->
+            <h2>
+                Connection delete
+            </h2>
+
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <label class="col-form-label">Connection:</label>
+                </div>
+                <div class="col-md-9">
+                    <select v-model="connectionTodelete" class="form-control">
+                        <option v-bind:value="connection.id" v-for="(connection,index) in connectionsText">
+                            {{ connection.name }} 
+                        </option>
+                    </select>
+                </div>
+                
+            </div>
+
+           <button @click="deleteModal=false" class="btn btn-primary btn-block btn-sm" style="position: absolute; left: 20px; bottom: 20px; right: 20px; width: auto">
+                Close
+            </button>
+            
+            <button @click="deleteConnection" class="btn btn-primary btn-block btn-sm">
+                Delete connection
             </button>
         </div>
         <div class="parent ebb-content" style='position: overflow: hidden; width:100%;height:100%;'>
@@ -156,11 +189,14 @@ export default {
     data () {
         return {
             videos: Object,
-            modal: false,
+            createModal: false,
+            deleteModal: false,
             unPicked: '',
             origin: '',
             destination: '',
+            connectionTodelete: '',
             connections: Object,
+            connectionsText: [],
             connected: '',
             root: false,
             chosenRoot: '',
@@ -214,14 +250,55 @@ export default {
             .then(function (response) {
                 console.log(response.data);
                 self.connections = response.data;
-                self.modal = false;
+                self.createModal = false;
                 self.drawConnections('update');
 
                 self.$emit("redraw_connections", response.data);
             })
             .catch(function (error) {
                 console.log(error);
-                self.modal = false;
+                self.createModal = false;
+            });
+        },
+        deleteInitiate: function() {
+            this.deleteModal = true;
+            let self = this;
+            this.connections.forEach(function(item) {
+                let connection = {};
+                connection.id = item.id;
+                let entry = item.entry_id;
+                let out = item.out_id;
+                self.videos.forEach(function(video) {
+                    if (video.id == entry) {
+                        connection.name = 'From: ' + video.name;
+                        return;
+                    }
+                    if (video.id == out) {
+                        connection.name += ' To: ' + video.name;
+                    }
+                });
+                self.connectionsText.push(connection);
+            });
+            console.log(self.connectionsText);
+        },
+        deleteConnection: function() {
+            let id = this.connectionTodelete;
+            let self = this;
+            axios.post('/connection/delete', {
+                'connection_id': id,
+                'episode_id': parseInt(self.episode_id)
+            })
+            .then(function (response) {
+                console.log(response.data);
+                self.connections = response.data;
+                self.deleteModal = false;
+                self.drawConnections('update');
+
+                self.$emit("redraw_connections", response.data);
+            })
+            .catch(function (error) {
+                console.log(error);
+                self.deleteModal = false;
             });
         },
         setRoot: function() {

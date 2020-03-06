@@ -218,6 +218,39 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 function roundRect(ctx, x, y, width, height, radius, fill, text) {
   if (typeof radius === 'undefined') {
     radius = 5;
@@ -264,11 +297,14 @@ function roundRect(ctx, x, y, width, height, radius, fill, text) {
   data: function data() {
     return {
       videos: Object,
-      modal: false,
+      createModal: false,
+      deleteModal: false,
       unPicked: '',
       origin: '',
       destination: '',
+      connectionTodelete: '',
       connections: Object,
+      connectionsText: [],
       connected: '',
       root: false,
       chosenRoot: '',
@@ -325,12 +361,51 @@ function roundRect(ctx, x, y, width, height, radius, fill, text) {
       }).then(function (response) {
         console.log(response.data);
         self.connections = response.data;
-        self.modal = false;
+        self.createModal = false;
         self.drawConnections('update');
         self.$emit("redraw_connections", response.data);
       })["catch"](function (error) {
         console.log(error);
-        self.modal = false;
+        self.createModal = false;
+      });
+    },
+    deleteInitiate: function deleteInitiate() {
+      this.deleteModal = true;
+      var self = this;
+      this.connections.forEach(function (item) {
+        var connection = {};
+        connection.id = item.id;
+        var entry = item.entry_id;
+        var out = item.out_id;
+        self.videos.forEach(function (video) {
+          if (video.id == entry) {
+            connection.name = 'From: ' + video.name;
+            return;
+          }
+
+          if (video.id == out) {
+            connection.name += ' To: ' + video.name;
+          }
+        });
+        self.connectionsText.push(connection);
+      });
+      console.log(self.connectionsText);
+    },
+    deleteConnection: function deleteConnection() {
+      var id = this.connectionTodelete;
+      var self = this;
+      axios.post('/connection/delete', {
+        'connection_id': id,
+        'episode_id': parseInt(self.episode_id)
+      }).then(function (response) {
+        console.log(response.data);
+        self.connections = response.data;
+        self.deleteModal = false;
+        self.drawConnections('update');
+        self.$emit("redraw_connections", response.data);
+      })["catch"](function (error) {
+        console.log(error);
+        self.deleteModal = false;
       });
     },
     setRoot: function setRoot() {
@@ -1799,11 +1874,21 @@ var render = function() {
             staticStyle: { position: "fixed", bottom: "10px", left: "45%" },
             on: {
               click: function($event) {
-                _vm.modal = true
+                _vm.createModal = true
               }
             }
           },
           [_vm._v(" \n            Add connection\n        ")]
+        ),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-primary btn-sm",
+            staticStyle: { position: "fixed", bottom: "10px", left: "55%" },
+            on: { click: _vm.deleteInitiate }
+          },
+          [_vm._v(" \n            Delete connection\n        ")]
         )
       ]),
       _vm._v(" "),
@@ -1891,8 +1976,8 @@ var render = function() {
             {
               name: "show",
               rawName: "v-show",
-              value: _vm.modal,
-              expression: "modal"
+              value: _vm.createModal,
+              expression: "createModal"
             }
           ],
           staticClass: "dialog"
@@ -2009,7 +2094,7 @@ var render = function() {
               },
               on: {
                 click: function($event) {
-                  _vm.modal = false
+                  _vm.createModal = false
                 }
               }
             },
@@ -2027,7 +2112,100 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
-      _vm._m(2)
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.deleteModal,
+              expression: "deleteModal"
+            }
+          ],
+          staticClass: "dialog"
+        },
+        [
+          _c("h2", [_vm._v("\n            Connection delete\n        ")]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group row" }, [
+            _vm._m(2),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-9" }, [
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.connectionTodelete,
+                      expression: "connectionTodelete"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  on: {
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.connectionTodelete = $event.target.multiple
+                        ? $$selectedVal
+                        : $$selectedVal[0]
+                    }
+                  }
+                },
+                _vm._l(_vm.connectionsText, function(connection, index) {
+                  return _c("option", { domProps: { value: connection.id } }, [
+                    _vm._v(
+                      "\n                        " +
+                        _vm._s(connection.name) +
+                        " \n                    "
+                    )
+                  ])
+                }),
+                0
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-primary btn-block btn-sm",
+              staticStyle: {
+                position: "absolute",
+                left: "20px",
+                bottom: "20px",
+                right: "20px",
+                width: "auto"
+              },
+              on: {
+                click: function($event) {
+                  _vm.deleteModal = false
+                }
+              }
+            },
+            [_vm._v("\n            Close\n        ")]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-primary btn-block btn-sm",
+              on: { click: _vm.deleteConnection }
+            },
+            [_vm._v("\n            Delete connection\n        ")]
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _vm._m(3)
     ]
   )
 }
@@ -2046,6 +2224,14 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "col-md-3" }, [
       _c("label", { staticClass: "col-form-label" }, [_vm._v("To:")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-3" }, [
+      _c("label", { staticClass: "col-form-label" }, [_vm._v("Connection:")])
     ])
   },
   function() {
