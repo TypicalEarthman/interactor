@@ -314,6 +314,19 @@ export default {
             .then(function (response) {
                 console.log(response.data);
                 self.root = false;
+                self.rootNumber = response.data.root_video;
+                
+                self.videos.forEach(function(item) {
+                    if(item.id == response.data.root_video) {
+                        self.rectangles[item.id].isActive = true;
+                    } 
+                    else {
+                        self.rectangles[item.id].isActive = false;
+                    }
+                });
+                self.drawConnections('update');
+
+                self.$emit("set_root", response.data.root_video);
             })
             .catch(function (error) {
                 console.log(error);

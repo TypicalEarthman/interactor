@@ -420,6 +420,16 @@ function roundRect(ctx, x, y, width, height, radius, fill, text) {
       }).then(function (response) {
         console.log(response.data);
         self.root = false;
+        self.rootNumber = response.data.root_video;
+        self.videos.forEach(function (item) {
+          if (item.id == response.data.root_video) {
+            self.rectangles[item.id].isActive = true;
+          } else {
+            self.rectangles[item.id].isActive = false;
+          }
+        });
+        self.drawConnections('update');
+        self.$emit("set_root", response.data.root_video);
       })["catch"](function (error) {
         console.log(error);
         self.root = false;
@@ -954,6 +964,7 @@ __webpack_require__.r(__webpack_exports__);
       var connections = this.connections[id];
       var options = [];
       var self = this;
+      console.log(connections);
       connections.forEach(function (item) {
         options.push(self.videos[item.out_id]);
       });
@@ -983,6 +994,20 @@ __webpack_require__.r(__webpack_exports__);
       this.show_options = false;
       var target = this.id;
       this.$emit("change_target_preview", target);
+    }
+  },
+  watch: {
+    rootNumber: function rootNumber(id) {
+      console.log('root changed');
+
+      if (id) {
+        this.id = this.rootNumber;
+        this.src = this.videos[this.rootNumber].url;
+        this.show_options = false;
+        this.options = [];
+        this.cover = true;
+        this.completion = 0;
+      }
     }
   },
   mounted: function mounted() {

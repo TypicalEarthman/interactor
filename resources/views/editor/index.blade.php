@@ -110,6 +110,7 @@
 				token="{{csrf_token()}}"
 				ref="manager"
 				v-on:change_target="change_target"
+				v-on:set_root="set_root"
 				v-on:redraw_connections="redraw_connections">
 			>
 			</connection-manager>
@@ -212,7 +213,6 @@ mix = {
             .then(function (response) {
 				console.log(response.data);
 				alert('Selected video has been deleted');
-				Location.reload();
                 self.delete_video = false;
             })
             .catch(function (error) {
@@ -239,6 +239,9 @@ mix = {
 			this.editor_preview.options = [];
 			this.editor_preview.show_options = false;
 			this.editor_preview.cover = true;
+		},
+		set_root(id) {
+			this.editor_preview.rootNumber = id;
 		},
 		change_target_preview(id) {
 			this.manager.activeVideo = id ;

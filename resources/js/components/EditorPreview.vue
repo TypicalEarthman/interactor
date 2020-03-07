@@ -116,6 +116,7 @@ video {
                 let connections = this.connections[id]     
                 let options = []   
                 let self = this
+                console.log(connections)
                 connections.forEach(function(item) {
                     options.push(self.videos[item.out_id])
                 })
@@ -146,6 +147,19 @@ video {
                 this.show_options = false
                 let target = this.id
                 this.$emit("change_target_preview", target);
+            }
+        },
+        watch: {
+            rootNumber: function(id) {
+                console.log('root changed');
+                if (id) {
+                    this.id = this.rootNumber
+                    this.src = this.videos[this.rootNumber].url
+                    this.show_options = false
+                    this.options = []
+                    this.cover = true
+                    this.completion = 0
+                }
             }
         },
         mounted() {
