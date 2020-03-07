@@ -22,6 +22,7 @@
 			</div>
 			<input type="hidden" name="project_id" :value="project_id"/>
 			<input type="hidden" name="episode_id" :value="episode_id"/>
+			<input type="hidden" name="meta" value="{}"/>
 			<input type="hidden" name="_token" :value="token"/>
 			<input type="submit" class="btn btn-primary btn-block btn-sm" value="Upload" />
 		</form>

@@ -12,14 +12,14 @@
 
     <div class="links">
         @auth
-            <a href="{{ route('dashboard') }}" class="white">Dashboard</a>
+            <a href="{{ route('dashboard') }}">Dashboard</a>
             <form action="/logout" method="POST">
-                <button>Logout</button>
+                <button class="red">Logout</button>
                 @csrf
             </form>
         @else
-            <a href="{{ route('login') }}" class="white">Login</a>
-            <a href="{{ route('register') }}" class="white">Register</a>
+            <a href="{{ route('login') }}">Login</a>
+            <a href="{{ route('register') }}">Register</a>
         @endauth
     </div>
 </div>

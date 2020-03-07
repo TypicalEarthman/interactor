@@ -18,7 +18,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Auth::routes();
 
-Route::post('/dashboard',  'HomeController@index')->name('dashboard');
+Route::get('/dashboard',  'DashboardController@index')->name('dashboard');
 Route::post('/video/store', 'VideoController@store')->name('video.store');
 Route::post('/video/update', 'VideoController@update')->name('video.update');
 Route::post('/video/destroy', 'VideoController@destroy')->name('video.destroy');

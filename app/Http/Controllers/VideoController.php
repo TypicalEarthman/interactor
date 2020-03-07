@@ -46,6 +46,7 @@ class VideoController extends Controller
         $videoService->store([
             "episode_id" => $request->get('episode_id'),
             "project_id" => $request->get('project_id'),
+            "meta" => $request->get('meta'),
             "name" => $request->get('name'),
             "video" => $request->video,
             "filename" => $request->video->getClientOriginalName(),

@@ -819,6 +819,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {};
@@ -2338,6 +2339,10 @@ var render = function() {
             _c("input", {
               attrs: { type: "hidden", name: "episode_id" },
               domProps: { value: _vm.episode_id }
+            }),
+            _vm._v(" "),
+            _c("input", {
+              attrs: { type: "hidden", name: "meta", value: "{}" }
             }),
             _vm._v(" "),
             _c("input", {

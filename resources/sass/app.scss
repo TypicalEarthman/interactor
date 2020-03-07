@@ -62,7 +62,58 @@ h2 {
     height: 50vh;
     padding: 1rem;
 }
+.content-home {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column;
+    margin-top: 40vh;
+}
+.content-home .header {
+    font-size: 6vw;
+}
+.content-home .links {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    width: 40vw;
+}
+.content-home .links a {
+    display: block;
+    width: 15vw;
+    background: #fff;
+    text-decoration: none;
+    line-height: 5vw;
+    text-align: center;
+    height: 5vw;
+    font-size: 2vw;
+    border-radius: 1vw;
+    color: #000;
+}
+.content-home .links button {
+    display: block;
+    width: 15vw;
+    background: #fff;
+    border: none;
+    text-align: center;
+    height: 5vw;
+    font-size: 2vw;
+    border-radius: 1vw;
+    color: #000;
+}
+.content-home .links .red {
+    background: #E64B1A;
+    color: #fff;
+}
 
+.episode-block {
+    width: 21vw;
+    margin-right: 1vw;
+  }
+  .espisode_full {
+    width: 100vw;
+    margin: 0;
+  }
 .ebb-content {
     padding: 1rem;
     background: #1e1e1e;

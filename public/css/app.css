@@ -64,6 +64,74 @@ h2 {
   padding: 1rem;
 }
 
+.content-home {
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+          align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+          flex-flow: column;
+  margin-top: 40vh;
+}
+
+.content-home .header {
+  font-size: 6vw;
+}
+
+.content-home .links {
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+          flex-flow: row;
+  -webkit-box-pack: justify;
+          justify-content: space-between;
+  width: 40vw;
+}
+
+.content-home .links a {
+  display: block;
+  width: 15vw;
+  background: #fff;
+  text-decoration: none;
+  line-height: 5vw;
+  text-align: center;
+  height: 5vw;
+  font-size: 2vw;
+  border-radius: 1vw;
+  color: #000;
+}
+
+.content-home .links button {
+  display: block;
+  width: 15vw;
+  background: #fff;
+  border: none;
+  text-align: center;
+  height: 5vw;
+  font-size: 2vw;
+  border-radius: 1vw;
+  color: #000;
+}
+
+.content-home .links .red {
+  background: #E64B1A;
+  color: #fff;
+}
+
+.episode-block {
+  width: 21vw;
+  margin-right: 1vw;
+}
+
+.espisode_full {
+  width: 100vw;
+  margin: 0;
+}
+
 .ebb-content {
   padding: 1rem;
   background: #1e1e1e;
@@ -71,23 +139,6 @@ h2 {
   overflow: auto;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(1, 1, 1, 0.75);
-}
-
-.episode-container {
-  display: flex;
-  flex-flow: row;
-  flex-wrap: wrap;
-  justify-content: start;
-  align-content: flex-start;
-}
-
-.episode-block {
-  width: 21vw;
-  margin-right: 1vw;
-}
-.espisode_full {
-  width: 100vw;
-  margin: 0;
 }
 
 .video-overlay-play-button {

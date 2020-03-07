@@ -8,11 +8,6 @@
                 <div class="card-header">Dashboard</div>
 
                 <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
                     <form action="{{ route('project.create') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         Name:
@@ -34,19 +29,18 @@
 
                         @foreach ($projects as $project)
                             <div>
-                                <form action="{{ route('episode.show') }}" method="GET" enctype="multipart/form-data">
-                                    <input type="hidden" name="project_id" value="{{$project->id}}"/>
-                                    <input type="hidden" name="episode_id" value="0"/>
+                                <form action="/episode/show/{{$project->id}}/{{$project->episodes->first()->id}}" method="GET" enctype="multipart/form-data">
                                     <input type="submit" value="{{ $project->name }}" />
                                 </form>
                             </div>
                         @endforeach
                     </div>
                 </div>
-                <form action="/logout" method="POST">
-                    <button class="btn btn-primary">Logout</button>
-                    @csrf
-                </form>
+                <div class="card">
+                    <div class="card-header">Home</div>
+                        Go to homepage<br/>
+                        <a href="{{ route('home') }}">Home</a>
+                </div>
             </div>
         </div>
     </div>

@@ -13,6 +13,15 @@
 						"project" => $project_id,
 					]) }}" target="_blank">interactor.su/{{ $project->id }}</a>
 				</li>
+				<li>
+					@auth
+						Open your dashboard:<br />
+						<a href="{{ route('dashboard') }}">Dashboard</a>
+					@else
+						Register at our service:<br />
+						<a href="{{ route('home') }}">Login/Sign up</a>
+					@endauth
+				</li>
 			</ol>
 			{{-- project name --}}
 		</div>
