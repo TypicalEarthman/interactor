@@ -926,7 +926,8 @@ __webpack_require__.r(__webpack_exports__);
       height: "48vh%",
       cover: true,
       show_options: false,
-      completion: 0
+      completion: 0,
+      scaled: false
     };
   },
   props: {
@@ -936,12 +937,12 @@ __webpack_require__.r(__webpack_exports__);
     project_preview: Boolean
   },
   methods: {
-    playpause: function playpause() {
-      if (document.querySelector("#video").paused) {
-        document.querySelector("#video").play();
+    playpause: function playpause(event) {
+      if (this.$refs.videoElement.paused) {
+        this.$refs.videoElement.play();
         this.cover = false;
       } else {
-        document.querySelector("#video").pause();
+        this.$refs.videoElement.pause();
         this.cover = true;
       }
     },
@@ -998,8 +999,6 @@ __webpack_require__.r(__webpack_exports__);
   },
   watch: {
     rootNumber: function rootNumber(id) {
-      console.log('root changed');
-
       if (id) {
         this.id = this.rootNumber;
         this.src = this.videos[this.rootNumber].url;
@@ -1012,7 +1011,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     if (this.project_preview) {
-      this.height = "100vh";
+      this.height = "100vh%";
     }
 
     this.videos = JSON.parse(this.json_videos);
@@ -2520,6 +2519,7 @@ var render = function() {
                 expression: "cover"
               }
             ],
+            ref: "svg",
             staticClass: "video-overlay-play-button",
             attrs: { viewBox: "0 0 200 200", alt: "Play video" },
             on: { click: _vm.playpause }

@@ -6,7 +6,7 @@
             </video>
             <progress-bar :value="completion">
             </progress-bar>
-            <svg class="video-overlay-play-button" viewBox="0 0 200 200" alt="Play video" @click="playpause" v-show="cover">
+            <svg class="video-overlay-play-button" viewBox="0 0 200 200" alt="Play video" @click="playpause" v-show="cover" ref="svg">
                 <circle cx="100" cy="100" r="90" fill="none" stroke-width="15" stroke="#fff"/>
                 <polygon points="70, 55 70, 145 145, 100" fill="#fff"/>
             </svg>
@@ -80,7 +80,8 @@ video {
                 height: "48vh%",
                 cover: true,
                 show_options: false,
-                completion: 0
+                completion: 0,
+                scaled: false
             }
         },
         props: {
@@ -90,13 +91,13 @@ video {
             project_preview: Boolean
         },
         methods: {
-            playpause: function() {
-                if(document.querySelector("#video").paused) {
-                    document.querySelector("#video").play();
+            playpause: function(event) {
+                if(this.$refs.videoElement.paused) {
+                    this.$refs.videoElement.play();
                     this.cover = false
                 }
                 else {
-                    document.querySelector("#video").pause();
+                    this.$refs.videoElement.pause();
                     this.cover = true
                 }
             },
@@ -151,7 +152,6 @@ video {
         },
         watch: {
             rootNumber: function(id) {
-                console.log('root changed');
                 if (id) {
                     this.id = this.rootNumber
                     this.src = this.videos[this.rootNumber].url
@@ -164,7 +164,7 @@ video {
         },
         mounted() {
             if(this.project_preview) {
-                this.height = "100vh";
+                this.height = "100vh%";
             }
             this.videos = JSON.parse(this.json_videos)
             this.connections = JSON.parse(this.json_connections)

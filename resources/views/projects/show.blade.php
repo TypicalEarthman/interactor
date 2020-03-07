@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,7 +10,7 @@
 		<meta name="csrf-token" content="{{ csrf_token() }}">
 	-->
 
-	<title>asdasdasd</title>
+	<title>Preview</title>
 
 	<!-- Scripts -->
 	<script src="{{ asset('js/vendor.js') }}"></script>
@@ -23,12 +23,20 @@
 <body>
 
 <div id="app">
-	<editor-preview
-		json_videos=" {{ $videos }}"
-		json_connections="{{ $connections }}"
-		root_number="{{$root_video}}"
-		:project_preview="true"
-	>
+	<div class="episode-container">
+		@foreach ($episodes as $episode)
+			<div class="episode-block" @click="chooseEpisode('{!! json_encode($episode->id) !!}')" episode_id={{$episode->id}}>
+				<span class="episode-name" episode_id={{$episode->id}}>{{ $episode->name }} </span>
+				<editor-preview
+					json_videos=" {{ $episode->videos }}"
+					json_connections="{{ $episode->connections }}"
+					root_number="{{$episode->root_video}}"
+					:project_preview="true"
+				>
+				</editor-preview>
+			</div>
+		@endforeach
+	</div>
 </div>
 <script>
 if(!window.mix) var mix = {};
@@ -37,9 +45,28 @@ const app_vue = new Vue({
 	mixins: [mix],
 	mounted() {
 	},
-	data : {
+	data() {
+		return {
+		}
 	},
 	methods: {
+		chooseEpisode: function(choosen_episode) {
+			choosen_episode = parseInt(choosen_episode)
+			let episode_blocks = document.querySelectorAll(".episode-block")
+			let episode_names = document.querySelectorAll(".episode-name")
+			episode_names.forEach(function(item) {
+				item.style.display = 'none';
+			});
+			episode_blocks.forEach(function(item) {
+				if (parseInt(item.getAttribute('episode_id')) != choosen_episode ) {
+					item.style.display = 'none';
+				}
+				else {
+					item.classList.add('espisode_full');
+				}
+			});
+
+		}
 	},
 });
 </script>
