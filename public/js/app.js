@@ -254,6 +254,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 function roundRect(ctx, x, y, width, height, radius, fill, text) {
   if (typeof radius === 'undefined') {
     radius = 5;
@@ -935,7 +936,8 @@ __webpack_require__.r(__webpack_exports__);
     json_videos: String,
     root_number: String,
     json_connections: String,
-    project_preview: Boolean
+    project_preview: Boolean,
+    episode_id: Number
   },
   methods: {
     playpause: function playpause(event) {
@@ -956,7 +958,7 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     onEnd: function onEnd() {
-      console.log('Film ended');
+      console.log('Video end');
 
       if (Array.isArray(this.connections)) {
         this.rebuild();
@@ -966,13 +968,20 @@ __webpack_require__.r(__webpack_exports__);
       var connections = this.connections[id];
       var options = [];
       var self = this;
-      console.log(connections);
-      connections.forEach(function (item) {
-        options.push(self.videos[item.out_id]);
-      });
-      this.options = options;
-      this.show_options = true;
-      this.cover = true;
+
+      if (connections != undefined) {
+        console.log('not yet');
+        connections.forEach(function (item) {
+          options.push(self.videos[item.out_id]);
+        });
+        this.options = options;
+        this.show_options = true;
+        this.cover = true;
+      } else {
+        if (this.project_preview) {
+          self.$emit("end_episode", self.episode_id);
+        }
+      }
     },
     rebuild: function rebuild() {
       var connections = {};
@@ -1948,18 +1957,6 @@ var render = function() {
           staticClass: "dialog"
         },
         [
-          _c(
-            "button",
-            {
-              on: {
-                click: function($event) {
-                  _vm.root = false
-                }
-              }
-            },
-            [_vm._v("\n            Close dialog\n        ")]
-          ),
-          _vm._v(" "),
           _c("h2", [_vm._v("\n            Set root\n        ")]),
           _vm._v("\n        From: \n        "),
           _c(
@@ -2007,7 +2004,27 @@ var render = function() {
           _vm._v(" "),
           _c("button", { on: { click: _vm.setRoot } }, [
             _vm._v("\n            Set root\n        ")
-          ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-primary btn-block btn-sm",
+              staticStyle: {
+                position: "absolute",
+                left: "20px",
+                bottom: "20px",
+                right: "20px",
+                width: "auto"
+              },
+              on: {
+                click: function($event) {
+                  _vm.root = false
+                }
+              }
+            },
+            [_vm._v("\n            Close\n        ")]
+          )
         ]
       ),
       _vm._v(" "),

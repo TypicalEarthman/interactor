@@ -88,7 +88,8 @@ video {
             json_videos: String,
             root_number: String,
             json_connections: String,
-            project_preview: Boolean
+            project_preview: Boolean,
+            episode_id: Number
         },
         methods: {
             playpause: function(event) {
@@ -109,7 +110,7 @@ video {
                 }
             },
             onEnd: function() {
-                console.log('Film ended')
+                console.log('Video end')
                 if(Array.isArray(this.connections)) {
                     this.rebuild()
                 }
@@ -117,13 +118,20 @@ video {
                 let connections = this.connections[id]     
                 let options = []   
                 let self = this
-                console.log(connections)
-                connections.forEach(function(item) {
-                    options.push(self.videos[item.out_id])
-                })
-                this.options = options
-                this.show_options = true
-                this.cover = true
+                if(connections != undefined) {
+                    console.log('not yet')
+                    connections.forEach(function(item) {
+                        options.push(self.videos[item.out_id])
+                    })
+                    this.options = options
+                    this.show_options = true
+                    this.cover = true
+                }
+                else {
+                    if(this.project_preview) {   
+                        self.$emit("end_episode", self.episode_id);
+                    }
+                }
             },
             rebuild: function() {
                 let connections = {}

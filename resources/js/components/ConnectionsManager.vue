@@ -17,9 +17,6 @@
         -->
         </div>
         <div class="dialog" v-show="root">
-            <button @click="root=false">
-                Close dialog
-            </button>
             <h2>
                 Set root
             </h2>
@@ -32,6 +29,10 @@
             <br/>
             <button @click="setRoot">
                 Set root
+            </button>
+            
+           <button @click="root=false" class="btn btn-primary btn-block btn-sm" style="position: absolute; left: 20px; bottom: 20px; right: 20px; width: auto">
+                Close
             </button>
         </div>  
         <div class="dialog" v-show="createModal">

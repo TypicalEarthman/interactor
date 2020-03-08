@@ -105,7 +105,15 @@ h2 {
     background: #E64B1A;
     color: #fff;
 }
+.card {
+    color: #131313;
+}
 
+.episode-container {
+    display: flex;
+    justify-content: start;
+    align-items: flex-start;
+}
 .episode-block {
     width: 21vw;
     margin-right: 1vw;

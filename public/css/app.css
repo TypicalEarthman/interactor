@@ -122,6 +122,19 @@ h2 {
   color: #fff;
 }
 
+.card {
+  color: #131313;
+}
+
+.episode-container {
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-pack: start;
+          justify-content: start;
+  -webkit-box-align: start;
+          align-items: flex-start;
+}
+
 .episode-block {
   width: 21vw;
   margin-right: 1vw;
