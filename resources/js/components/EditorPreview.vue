@@ -81,7 +81,8 @@ video {
                 cover: true,
                 show_options: false,
                 completion: 0,
-                scaled: false
+                scaled: false,
+                queue: ''
             }
         },
         props: {
@@ -92,6 +93,48 @@ video {
             episode_id: Number
         },
         methods: {
+            preload_videos: function(options) {
+                // create queue
+                this.queue = new createjs.LoadQueue();
+                let videosTarget = null;
+                let files = [];
+                options.forEach(function(item) {
+                    let object = {
+                        id: item.name,
+                        src: item.url,
+                        type: createjs.AbstractLoader.BINARY
+                    }
+                    files.push(object)
+                })
+                
+                // create manifest for files to load
+                this.queue.loadManifest(files);
+
+                // handle  & show progress
+                let self = this
+                this.queue.on("progress", function(evt){
+                    let p = self.queue.progress * 100;
+                    console.log(" "+Math.round(p)+"%");
+                });
+
+            },
+            set_next_options: function(id) {
+                console.log('Video end')
+                if(Array.isArray(this.connections)) {
+                    this.rebuild()
+                }
+                let connections = this.connections[id]     
+                let options = []   
+                let self = this
+                if(connections != undefined) {
+                    connections.forEach(function(item) {
+                        options.push(self.videos[item.out_id])
+                    })
+                    this.options = options
+                }
+                this.preload_videos(this.options)
+
+            },
             playpause: function(event) {
                 if(this.$refs.videoElement.paused) {
                     this.$refs.videoElement.play();
@@ -111,19 +154,7 @@ video {
             },
             onEnd: function() {
                 console.log('Video end')
-                if(Array.isArray(this.connections)) {
-                    this.rebuild()
-                }
-                let id = this.id
-                let connections = this.connections[id]     
-                let options = []   
-                let self = this
-                if(connections != undefined) {
-                    console.log('not yet')
-                    connections.forEach(function(item) {
-                        options.push(self.videos[item.out_id])
-                    })
-                    this.options = options
+                if(this.connections[this.id] != undefined) {
                     this.show_options = true
                     this.cover = true
                 }
@@ -150,12 +181,18 @@ video {
 
             },
             choose: function(video) {
-                this.src = video.url
+                let videoTarget = this.queue.getResult(video.name);
+                let blob = new Blob( [ videoTarget ], { type: "video/mp4" } );
+                let urlCreator = window.URL || window.webkitURL;
+                let objUrl = urlCreator.createObjectURL( blob );
+                console.log(video)
+                this.src = objUrl
                 this.id = video.id
                 this.options = []
                 this.show_options = false
                 let target = this.id
-                this.$emit("change_target_preview", target);
+                this.$emit("change_target_preview", target)
+                this.set_next_options(this.id)
             }
         },
         watch: {
@@ -164,7 +201,7 @@ video {
                     this.id = this.rootNumber
                     this.src = this.videos[this.rootNumber].url
                     this.show_options = false
-                    this.options = []
+                    this.set_next_options(this.id)
                     this.cover = true
                     this.completion = 0
                 }
@@ -187,6 +224,7 @@ video {
             this.src = this.videos[this.rootNumber].url
 
             this.rebuild()
+            this.set_next_options(this.id)
         }
     }
 </script>

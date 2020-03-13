@@ -929,7 +929,8 @@ __webpack_require__.r(__webpack_exports__);
       cover: true,
       show_options: false,
       completion: 0,
-      scaled: false
+      scaled: false,
+      queue: ''
     };
   },
   props: {
@@ -940,6 +941,48 @@ __webpack_require__.r(__webpack_exports__);
     episode_id: Number
   },
   methods: {
+    preload_videos: function preload_videos(options) {
+      // create queue
+      this.queue = new createjs.LoadQueue();
+      var videosTarget = null;
+      var files = [];
+      options.forEach(function (item) {
+        var object = {
+          id: item.name,
+          src: item.url,
+          type: createjs.AbstractLoader.BINARY
+        };
+        files.push(object);
+      }); // create manifest for files to load
+
+      this.queue.loadManifest(files); // handle  & show progress
+
+      var self = this;
+      this.queue.on("progress", function (evt) {
+        var p = self.queue.progress * 100;
+        console.log(" " + Math.round(p) + "%");
+      });
+    },
+    set_next_options: function set_next_options(id) {
+      console.log('Video end');
+
+      if (Array.isArray(this.connections)) {
+        this.rebuild();
+      }
+
+      var connections = this.connections[id];
+      var options = [];
+      var self = this;
+
+      if (connections != undefined) {
+        connections.forEach(function (item) {
+          options.push(self.videos[item.out_id]);
+        });
+        this.options = options;
+      }
+
+      this.preload_videos(this.options);
+    },
     playpause: function playpause(event) {
       if (this.$refs.videoElement.paused) {
         this.$refs.videoElement.play();
@@ -960,21 +1003,7 @@ __webpack_require__.r(__webpack_exports__);
     onEnd: function onEnd() {
       console.log('Video end');
 
-      if (Array.isArray(this.connections)) {
-        this.rebuild();
-      }
-
-      var id = this.id;
-      var connections = this.connections[id];
-      var options = [];
-      var self = this;
-
-      if (connections != undefined) {
-        console.log('not yet');
-        connections.forEach(function (item) {
-          options.push(self.videos[item.out_id]);
-        });
-        this.options = options;
+      if (this.connections[this.id] != undefined) {
         this.show_options = true;
         this.cover = true;
       } else {
@@ -999,12 +1028,20 @@ __webpack_require__.r(__webpack_exports__);
       this.connections = connections;
     },
     choose: function choose(video) {
-      this.src = video.url;
+      var videoTarget = this.queue.getResult(video.name);
+      var blob = new Blob([videoTarget], {
+        type: "video/mp4"
+      });
+      var urlCreator = window.URL || window.webkitURL;
+      var objUrl = urlCreator.createObjectURL(blob);
+      console.log(video);
+      this.src = objUrl;
       this.id = video.id;
       this.options = [];
       this.show_options = false;
       var target = this.id;
       this.$emit("change_target_preview", target);
+      this.set_next_options(this.id);
     }
   },
   watch: {
@@ -1013,7 +1050,7 @@ __webpack_require__.r(__webpack_exports__);
         this.id = this.rootNumber;
         this.src = this.videos[this.rootNumber].url;
         this.show_options = false;
-        this.options = [];
+        this.set_next_options(this.id);
         this.cover = true;
         this.completion = 0;
       }
@@ -1036,6 +1073,7 @@ __webpack_require__.r(__webpack_exports__);
     this.videos = videos;
     this.src = this.videos[this.rootNumber].url;
     this.rebuild();
+    this.set_next_options(this.id);
   }
 });
 

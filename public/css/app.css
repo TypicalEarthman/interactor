@@ -130,7 +130,7 @@ h2 {
   display: -webkit-box;
   display: flex;
   -webkit-box-pack: start;
-          justify-content: start;
+          justify-content: flex-start;
   -webkit-box-align: start;
           align-items: flex-start;
 }
