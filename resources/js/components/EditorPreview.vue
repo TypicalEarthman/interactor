@@ -94,6 +94,7 @@ video {
         },
         methods: {
             preload_videos: function(options) {
+                console.log('LOL')
                 // create queue
                 this.queue = new createjs.LoadQueue();
                 let videosTarget = null;

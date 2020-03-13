@@ -942,7 +942,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     preload_videos: function preload_videos(options) {
-      // create queue
+      console.log('LOL'); // create queue
+
       this.queue = new createjs.LoadQueue();
       var videosTarget = null;
       var files = [];
