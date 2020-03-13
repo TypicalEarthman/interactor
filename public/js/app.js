@@ -926,7 +926,7 @@ __webpack_require__.r(__webpack_exports__);
       id: Number,
       options: Array,
       height: "48vh%",
-      cover: true,
+      cover: false,
       show_options: false,
       completion: 0,
       scaled: false,

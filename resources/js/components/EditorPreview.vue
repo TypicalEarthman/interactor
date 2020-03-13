@@ -78,7 +78,7 @@ video {
                 id: Number,
                 options: Array,
                 height: "48vh%",
-                cover: true,
+                cover: false,
                 show_options: false,
                 completion: 0,
                 scaled: false,
