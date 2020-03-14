@@ -914,14 +914,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1200,7 +1192,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.active[data-v-02862bc0] {\n    position: static;\n}\n.non-active[data-v-02862bc0] {\n    position: absolute;\n    left: -9000px;\n}\n.preview[data-v-02862bc0] {\n    position: relative;\n    height: 100%;\n}\n.chooseOptions[data-v-02862bc0] {\n    position: absolute;\n    width: 100%;\n    top: 0;\n    left: 0;\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: horizontal;\n    -webkit-box-direction: normal;\n            flex-flow: row wrap;\n    z-index: 500;\n    justify-content: space-around;\n    height: 100%;\n    z-index: 1000;\n}\n.option[data-v-02862bc0] {\n    position: relative;\n}\n.option-background[data-v-02862bc0] {\n    display: -webkit-box;\n    display: flex;\n    width: 100%;\n    height: 100%;\n    -webkit-box-pack: center;\n            justify-content: center;\n    -webkit-box-align: center;\n            align-items: center;\n    background: rgba(155,0,0,0.7);\n    cursor: pointer;\n    border-radius: 10px;\n    -webkit-transition: background .3s, -webkit-transform .3s;\n    transition: background .3s, -webkit-transform .3s;\n    transition: background .3s, transform .3s;\n    transition: background .3s, transform .3s, -webkit-transform .3s;\n}\n.option-background[data-v-02862bc0]:hover {\n    -webkit-transform: scale(1.05);\n            transform: scale(1.05);\n    background: rgba(155,0,0,0.8);\n}\n", ""]);
+exports.push([module.i, "\n.preview[data-v-02862bc0] {\n    position: relative;\n    height: 100%;\n}\n.chooseOptions[data-v-02862bc0] {\n    position: absolute;\n    width: 100%;\n    top: 0;\n    left: 0;\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: horizontal;\n    -webkit-box-direction: normal;\n            flex-flow: row wrap;\n    z-index: 500;\n    justify-content: space-around;\n    height: 100%;\n    z-index: 1000;\n}\n.option[data-v-02862bc0] {\n    position: relative;\n}\n.option-background[data-v-02862bc0] {\n    display: -webkit-box;\n    display: flex;\n    width: 100%;\n    height: 100%;\n    -webkit-box-pack: center;\n            justify-content: center;\n    -webkit-box-align: center;\n            align-items: center;\n    background: rgba(155,0,0,0.7);\n    cursor: pointer;\n    border-radius: 10px;\n    -webkit-transition: background .3s, -webkit-transform .3s;\n    transition: background .3s, -webkit-transform .3s;\n    transition: background .3s, transform .3s;\n    transition: background .3s, transform .3s, -webkit-transform .3s;\n}\n.option-background[data-v-02862bc0]:hover {\n    -webkit-transform: scale(1.05);\n            transform: scale(1.05);\n    background: rgba(155,0,0,0.8);\n}\n", ""]);
 
 // exports
 
@@ -2612,7 +2604,6 @@ var render = function() {
       },
       [
         _c("video-player", {
-          class: _vm.rootClass,
           attrs: { source: _vm.src, id: _vm.rootNumber, first: true },
           on: { end_video: _vm.end_video }
         })

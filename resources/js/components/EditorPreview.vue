@@ -4,7 +4,6 @@
             <video-player
                 :source="src"
                 :id="rootNumber"
-                :class="rootClass"
                 v-on:end_video="end_video"
                 :first="true"
             >
@@ -22,13 +21,6 @@
 </template>
 
 <style scoped>
-.active {
-    position: static;
-}
-.non-active {
-    position: absolute;
-    left: -9000px;
-}
 .preview {
     position: relative;
     height: 100%;
