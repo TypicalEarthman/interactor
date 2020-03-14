@@ -916,14 +916,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -950,6 +942,17 @@ __webpack_require__.r(__webpack_exports__);
     end_video: function end_video(id) {
       this.show_options = true;
     },
+    preload_videos: function preload_videos() {
+      this.options.forEach(function (item) {
+        axios.get(item.url, {
+          responseType: 'blob'
+        }).then(function (response) {
+          var source = URL.createObjectURL(response.data);
+          item.url = source;
+          console.log(item.url);
+        });
+      });
+    },
     set_next_options: function set_next_options(id) {
       if (Array.isArray(this.connections)) {
         this.rebuild();
@@ -963,10 +966,11 @@ __webpack_require__.r(__webpack_exports__);
         connections.forEach(function (item) {
           self.videos[item.out_id]["class"] = 'non-active';
           options.push(self.videos[item.out_id]);
-          console.log(self.videos[item.out_id]);
         });
         this.options = options;
       }
+
+      this.preload_videos();
     },
     rebuild: function rebuild() {
       var connections = {};
@@ -984,12 +988,7 @@ __webpack_require__.r(__webpack_exports__);
       this.connections = connections;
     },
     choose: function choose(video) {
-      this.rootClass = 'non-active';
-      this.options.forEach(function (item) {
-        if (item.id == video.id) {
-          item["class"] = 'active';
-        }
-      });
+      this.src = video.url;
       this.id = video.id;
       this.options = [];
       this.show_options = false;
@@ -1147,11 +1146,7 @@ __webpack_require__.r(__webpack_exports__);
       this.$emit("end_video", this.id);
     }
   },
-  created: function created() {
-    if (this.first) {
-      this.cover = true;
-    }
-  }
+  created: function created() {}
 });
 
 /***/ }),
@@ -1168,7 +1163,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n#manager-root[data-v-08416e43] {\r\n    display: -webkit-box;\r\n    display: flex;\r\n    -webkit-box-orient: vertical;\r\n    -webkit-box-direction: normal;\r\n            flex-flow: column wrap;\r\n    -webkit-box-pack: start;\r\n            justify-content: flex-start;\r\n    align-content: flex-start;\n}\n.controls[data-v-08416e43] {\r\n    position: absolute;\r\n    bottom: 0px;\r\n    left: 50%;\r\n    width: 300px;\r\n    margin: 0 0 0 -150px;\n}\n.parent[data-v-08416e43] {\r\n    padding: 0;\r\n    overflow: hidden;\n}\n.layer[data-v-08416e43] {\r\n    display: -webkit-box;\r\n    display: flex;\r\n    -webkit-box-orient: vertical;\r\n    -webkit-box-direction: normal;\r\n            flex-flow: column;\n}\n.video[data-v-08416e43] {\r\n    background: #f00;\r\n    width: 100px;\r\n    height: 50px;\r\n    margin-bottom: 20px;\r\n    margin-right: 20px;\n}\r\n", ""]);
+exports.push([module.i, "\n#manager-root[data-v-08416e43] {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n            flex-flow: column wrap;\n    -webkit-box-pack: start;\n            justify-content: flex-start;\n    align-content: flex-start;\n}\n.controls[data-v-08416e43] {\n    position: absolute;\n    bottom: 0px;\n    left: 50%;\n    width: 300px;\n    margin: 0 0 0 -150px;\n}\n.parent[data-v-08416e43] {\n    padding: 0;\n    overflow: hidden;\n}\n.layer[data-v-08416e43] {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n            flex-flow: column;\n}\n.video[data-v-08416e43] {\n    background: #f00;\n    width: 100px;\n    height: 50px;\n    margin-bottom: 20px;\n    margin-right: 20px;\n}\n", ""]);
 
 // exports
 
@@ -1187,7 +1182,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.active[data-v-02862bc0] {\r\n    position: static;\n}\n.non-active[data-v-02862bc0] {\r\n    position: absolute;\r\n    left: -9000px;\n}\n.preview[data-v-02862bc0] {\r\n    position: relative;\r\n    height: 100%;\n}\n.chooseOptions[data-v-02862bc0] {\r\n    position: absolute;\r\n    width: 100%;\r\n    top: 0;\r\n    left: 0;\r\n    display: -webkit-box;\r\n    display: flex;\r\n    -webkit-box-orient: horizontal;\r\n    -webkit-box-direction: normal;\r\n            flex-flow: row wrap;\r\n    z-index: 500;\r\n    justify-content: space-around;\r\n    height: 100%;\r\n    z-index: 1000;\n}\n.option[data-v-02862bc0] {\r\n    position: relative;\n}\n.option-background[data-v-02862bc0] {\r\n    display: -webkit-box;\r\n    display: flex;\r\n    width: 100%;\r\n    height: 100%;\r\n    -webkit-box-pack: center;\r\n            justify-content: center;\r\n    -webkit-box-align: center;\r\n            align-items: center;\r\n    background: rgba(155,0,0,0.7);\r\n    cursor: pointer;\r\n    border-radius: 10px;\r\n    -webkit-transition: background .3s, -webkit-transform .3s;\r\n    transition: background .3s, -webkit-transform .3s;\r\n    transition: background .3s, transform .3s;\r\n    transition: background .3s, transform .3s, -webkit-transform .3s;\n}\n.option-background[data-v-02862bc0]:hover {\r\n    -webkit-transform: scale(1.05);\r\n            transform: scale(1.05);\r\n    background: rgba(155,0,0,0.8);\n}\r\n", ""]);
+exports.push([module.i, "\n.active[data-v-02862bc0] {\n    position: static;\n}\n.non-active[data-v-02862bc0] {\n    position: absolute;\n    left: -9000px;\n}\n.preview[data-v-02862bc0] {\n    position: relative;\n    height: 100%;\n}\n.chooseOptions[data-v-02862bc0] {\n    position: absolute;\n    width: 100%;\n    top: 0;\n    left: 0;\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: horizontal;\n    -webkit-box-direction: normal;\n            flex-flow: row wrap;\n    z-index: 500;\n    justify-content: space-around;\n    height: 100%;\n    z-index: 1000;\n}\n.option[data-v-02862bc0] {\n    position: relative;\n}\n.option-background[data-v-02862bc0] {\n    display: -webkit-box;\n    display: flex;\n    width: 100%;\n    height: 100%;\n    -webkit-box-pack: center;\n            justify-content: center;\n    -webkit-box-align: center;\n            align-items: center;\n    background: rgba(155,0,0,0.7);\n    cursor: pointer;\n    border-radius: 10px;\n    -webkit-transition: background .3s, -webkit-transform .3s;\n    transition: background .3s, -webkit-transform .3s;\n    transition: background .3s, transform .3s;\n    transition: background .3s, transform .3s, -webkit-transform .3s;\n}\n.option-background[data-v-02862bc0]:hover {\n    -webkit-transform: scale(1.05);\n            transform: scale(1.05);\n    background: rgba(155,0,0,0.8);\n}\n", ""]);
 
 // exports
 
@@ -2587,17 +2582,9 @@ var render = function() {
           class: _vm.rootClass,
           attrs: { source: _vm.src, id: _vm.rootNumber, first: true },
           on: { end_video: _vm.end_video }
-        }),
-        _vm._v(" "),
-        _vm._l(_vm.options, function(option) {
-          return _c("video-player", {
-            class: option.class,
-            attrs: { source: option.url, id: option.id },
-            on: { end_video: _vm.end_video }
-          })
         })
       ],
-      2
+      1
     ),
     _vm._v(" "),
     _vm.show_options
@@ -2688,7 +2675,14 @@ var render = function() {
     [
       _c("video", {
         ref: "videoElement",
-        attrs: { src: _vm.source, id: "video", preload: "auto" },
+        attrs: {
+          src: _vm.source,
+          id: "video",
+          preload: "auto",
+          muted: "",
+          autoplay: ""
+        },
+        domProps: { muted: true },
         on: {
           ended: _vm.onEnd,
           click: _vm.playpause,
@@ -3312,9 +3306,9 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\interactor\resources\js\app.js */"./resources/js/app.js");
-__webpack_require__(/*! D:\interactor\resources\sass\app.scss */"./resources/sass/app.scss");
-module.exports = __webpack_require__(/*! D:\interactor\resources\sass\vendor.scss */"./resources/sass/vendor.scss");
+__webpack_require__(/*! C:\interactor\interactor\resources\js\app.js */"./resources/js/app.js");
+__webpack_require__(/*! C:\interactor\interactor\resources\sass\app.scss */"./resources/sass/app.scss");
+module.exports = __webpack_require__(/*! C:\interactor\interactor\resources\sass\vendor.scss */"./resources/sass/vendor.scss");
 
 
 /***/ })

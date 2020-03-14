@@ -9,14 +9,6 @@
                 :first="true"
             >
             </video-player>
-            <video-player
-                v-for="option in options"
-                :source="option.url"
-                :id="option.id"
-                :class="option.class"
-                v-on:end_video="end_video"
-            >
-            </video-player>
         </div>
         <div class="chooseOptions row" v-if="show_options">
             <div class="col-md-6 option p-3" v-for="option in options" @click="choose(option)">
@@ -102,6 +94,17 @@
             end_video: function(id) {
                 this.show_options = true
             },
+            preload_videos: function() {
+                this.options.forEach(function(item) {
+                    axios.get(item.url, {
+                        responseType: 'blob'
+                    }).then( response => {
+                        let source = URL.createObjectURL(response.data);
+                        item.url = source;
+                        console.log(item.url)
+                    });
+                })
+            },
             set_next_options: function(id) {
                 if(Array.isArray(this.connections)) {
                     this.rebuild()
@@ -113,11 +116,10 @@
                     connections.forEach(function(item) {
                         self.videos[item.out_id].class = 'non-active'
                         options.push(self.videos[item.out_id])
-                        console.log(self.videos[item.out_id])
                     })
                     this.options = options
                 }
-
+                this.preload_videos()
             },
             rebuild: function() {
                 let connections = {}
@@ -136,12 +138,7 @@
 
             },
             choose: function(video) {
-                this.rootClass = 'non-active'
-                this.options.forEach(function(item) {
-                    if(item.id == video.id) {
-                        item.class = 'active'
-                    }
-                })
+                this.src = video.url
                 this.id = video.id
                 this.options = []
                 this.show_options = false

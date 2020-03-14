@@ -259,20 +259,6 @@ mix = {
 	mounted: function() {
 		this.editor_preview = this.$refs.editor_preview;
 		this.manager = this.$refs.manager;
-
-		/*
-		setTimeout(() => {
-			axios.get('/test.mp4', {
-				responseType: 'blob'
-				}).then( response => {
-					console.log(response);
-					let vid = URL.createObjectURL(response.data);
-					console.log(vid);
-					let _video = document.querySelector("#video")
-					_video.src = vid;
-				});
-		}, 2000);
-		*/
 	}
 };
 

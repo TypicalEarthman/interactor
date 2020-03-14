@@ -1,6 +1,6 @@
 <template>
     <div class="root_video_component">
-        <video :src="source" id="video" @ended="onEnd" @click="playpause" @timeupdate="onTimeUpdate()" ref="videoElement" preload="auto"
+        <video :src="source" id="video" @ended="onEnd" @click="playpause" @timeupdate="onTimeUpdate()" ref="videoElement" preload="auto" muted autoplay
         >
         </video>
         <progress-bar :value="completion">
@@ -55,9 +55,6 @@
             }
         },
         created() {
-            if(this.first) {
-                this.cover = true
-            }
         }
     }
 </script>
