@@ -1,15 +1,22 @@
 <template>
     <div class="preview" v-bind:style="{ height: height}">
-        <div class="embed-responsive embed-responsive-16by9">
-            <video :src="src" id="video" @ended="onEnd" @click="playpause" @timeupdate="onTimeUpdate()" ref="videoElement"
+        <div class="embed-responsive embed-responsive-16by9" id="video-holder">
+            <video-player
+                :source="src"
+                :id="rootNumber"
+                :class="rootClass"
+                v-on:end_video="end_video"
+                :first="true"
             >
-            </video>
-            <progress-bar :value="completion">
-            </progress-bar>
-            <svg class="video-overlay-play-button" viewBox="0 0 200 200" alt="Play video" @click="playpause" v-show="cover" ref="svg">
-                <circle cx="100" cy="100" r="90" fill="none" stroke-width="15" stroke="#fff"/>
-                <polygon points="70, 55 70, 145 145, 100" fill="#fff"/>
-            </svg>
+            </video-player>
+            <video-player
+                v-for="option in options"
+                :source="option.url"
+                :id="option.id"
+                :class="option.class"
+                v-on:end_video="end_video"
+            >
+            </video-player>
         </div>
         <div class="chooseOptions row" v-if="show_options">
             <div class="col-md-6 option p-3" v-for="option in options" @click="choose(option)">
@@ -23,10 +30,12 @@
 </template>
 
 <style scoped>
-video {
-    height: 100%;
-    width: auto;
-    max-width: 100%;
+.active {
+    position: static;
+}
+.non-active {
+    position: absolute;
+    left: -9000px;
 }
 .preview {
     position: relative;
@@ -45,7 +54,6 @@ video {
     z-index: 1000;
 }
 .option {
-    
     position: relative;
 }
 
@@ -78,11 +86,9 @@ video {
                 id: Number,
                 options: Array,
                 height: "48vh%",
-                cover: false,
                 show_options: false,
-                completion: 0,
                 scaled: false,
-                queue: ''
+                rootClass: 'active'
             }
         },
         props: {
@@ -93,34 +99,10 @@ video {
             episode_id: Number
         },
         methods: {
-            preload_videos: function(options) {
-                console.log('LOL')
-                // create queue
-                this.queue = new createjs.LoadQueue();
-                let videosTarget = null;
-                let files = [];
-                options.forEach(function(item) {
-                    let object = {
-                        id: item.name,
-                        src: item.url,
-                        type: createjs.AbstractLoader.BINARY
-                    }
-                    files.push(object)
-                })
-                
-                // create manifest for files to load
-                this.queue.loadManifest(files);
-
-                // handle  & show progress
-                let self = this
-                this.queue.on("progress", function(evt){
-                    let p = self.queue.progress * 100;
-                    console.log(" "+Math.round(p)+"%");
-                });
-
+            end_video: function(id) {
+                this.show_options = true
             },
             set_next_options: function(id) {
-                console.log('Video end')
                 if(Array.isArray(this.connections)) {
                     this.rebuild()
                 }
@@ -129,41 +111,13 @@ video {
                 let self = this
                 if(connections != undefined) {
                     connections.forEach(function(item) {
+                        self.videos[item.out_id].class = 'non-active'
                         options.push(self.videos[item.out_id])
+                        console.log(self.videos[item.out_id])
                     })
                     this.options = options
                 }
-                this.preload_videos(this.options)
 
-            },
-            playpause: function(event) {
-                if(this.$refs.videoElement.paused) {
-                    this.$refs.videoElement.play();
-                    this.cover = false
-                }
-                else {
-                    this.$refs.videoElement.pause();
-                    this.cover = true
-                }
-            },
-            onTimeUpdate: function() {
-                let video = this.$refs.videoElement
-                if(!isNaN(video.duration)) {
-                    let percent_complete = video.currentTime / video.duration;
-                    this.completion = percent_complete
-                }
-            },
-            onEnd: function() {
-                console.log('Video end')
-                if(this.connections[this.id] != undefined) {
-                    this.show_options = true
-                    this.cover = true
-                }
-                else {
-                    if(this.project_preview) {   
-                        self.$emit("end_episode", self.episode_id);
-                    }
-                }
             },
             rebuild: function() {
                 let connections = {}
@@ -182,12 +136,12 @@ video {
 
             },
             choose: function(video) {
-                let videoTarget = this.queue.getResult(video.name);
-                let blob = new Blob( [ videoTarget ], { type: "video/mp4" } );
-                let urlCreator = window.URL || window.webkitURL;
-                let objUrl = urlCreator.createObjectURL( blob );
-                console.log(video)
-                this.src = objUrl
+                this.rootClass = 'non-active'
+                this.options.forEach(function(item) {
+                    if(item.id == video.id) {
+                        item.class = 'active'
+                    }
+                })
                 this.id = video.id
                 this.options = []
                 this.show_options = false
@@ -203,12 +157,12 @@ video {
                     this.src = this.videos[this.rootNumber].url
                     this.show_options = false
                     this.set_next_options(this.id)
-                    this.cover = true
+                    this.cover = false
                     this.completion = 0
                 }
             }
         },
-        mounted() {
+        beforeMount() {
             if(this.project_preview) {
                 this.height = "100vh%";
             }
@@ -223,9 +177,7 @@ video {
             })
             this.videos = videos
             this.src = this.videos[this.rootNumber].url
-
             this.rebuild()
-            this.set_next_options(this.id)
         }
     }
 </script>
