@@ -913,33 +913,58 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
+  mounted: function mounted() {
+    console.log(this.episode);
+    var self = this;
+    self.src = self.episode.videos[self.episode.current_video_id].url_horizontal;
+    window.addEventListener("orientationchange", function () {
+      if (screen.orientation.angle == 90) {
+        self.src = self.episode.videos[self.episode.current_video_id].url_horizontal;
+      } else {
+        self.src = self.episode.videos[self.episode.current_video_id].url_vertical;
+      }
+    });
+  },
   data: function data() {
     return {
-      src: String,
-      videos: Object,
-      connections: Object,
-      rootNumber: Number,
-      id: Number,
-      options: Array,
       height: "48vh%",
       show_options: false,
-      scaled: false,
-      rootClass: 'active'
+      src: ''
     };
   },
   props: {
-    json_videos: String,
-    root_number: String,
-    json_connections: String,
-    project_preview: Boolean,
-    episode_id: Number
+    project_preview: {
+      type: Boolean,
+      "default": function _default() {
+        return false;
+      }
+    },
+    episode: Object
+  },
+  computed: {
+    options: function options() {
+      var options = [];
+      var connections = this.episode.videos[this.episode.current_video_id].connections;
+      var self = this;
+
+      if (connections) {
+        console.log(connections);
+        connections.forEach(function (item) {
+          options.push(self.episode.videos[item.out_id]);
+          axios.get(self.episode.videos[item.out_id].url_horizontal, {
+            responseType: 'blob'
+          }).then(function (response) {
+            var source = URL.createObjectURL(response.data);
+            self.episode.videos[item.out_id].url_horizontal = source;
+          });
+        });
+      }
+
+      return options;
+    }
   },
   methods: {
-    end_video: function end_video(id) {
-      this.show_options = true;
-    },
     preload_videos: function preload_videos() {
       this.options.forEach(function (item) {
         axios.get(item.url_horizontal, {
@@ -951,91 +976,18 @@ __webpack_require__.r(__webpack_exports__);
         });
       });
     },
-    set_next_options: function set_next_options(id) {
-      if (Array.isArray(this.connections)) {
-        this.rebuild();
-      }
-
-      var connections = this.connections[id];
-      var options = [];
-      var self = this;
-
-      if (connections != undefined) {
-        connections.forEach(function (item) {
-          self.videos[item.out_id]["class"] = 'non-active';
-          options.push(self.videos[item.out_id]);
-        });
-        this.options = options;
-      }
-
-      this.preload_videos();
-    },
-    rebuild: function rebuild() {
-      var connections = {};
-      this.connections.forEach(function (item) {
-        var id = item.entry_id;
-
-        if (connections.hasOwnProperty(item.entry_id)) {
-          connections[item.entry_id].push(item);
-        } else {
-          var layer = [];
-          layer.push(item);
-          connections[item.entry_id] = layer;
-        }
-      });
-      this.connections = connections;
+    end_video: function end_video(id) {
+      this.show_options = true;
     },
     choose: function choose(video) {
-      this.src = video.url_horizontal;
-      this.id = video.id;
-      this.options = [];
-      this.show_options = false;
-      var target = this.id;
-      this.$emit("change_target_preview", target);
-      this.set_next_options(this.id);
+      this.episode.current_video_id = video.id;
     }
   },
-  watch: {
-    rootNumber: function rootNumber(id) {
-      if (id) {
-        this.id = this.rootNumber;
-        this.src = this.videos[this.rootNumber].url_horizontal;
-        this.show_options = false;
-        this.set_next_options(this.id);
-        this.cover = false;
-        this.completion = 0;
-      }
-    }
-  },
+  watch: {},
   beforeMount: function beforeMount() {
     if (this.project_preview) {
       this.height = "100vh%";
     }
-
-    this.videos = JSON.parse(this.json_videos);
-    this.connections = JSON.parse(this.json_connections);
-    this.rootNumber = parseInt(this.root_number);
-    this.id = this.rootNumber;
-    var videos = {};
-    this.videos.forEach(function (item) {
-      var id = item.id;
-      videos[id] = item;
-    });
-    this.videos = videos;
-    this.src = this.videos[this.rootNumber].url_horizontal;
-    this.rebuild();
-  },
-  mounted: function mounted() {
-    var self = this;
-    window.addEventListener("orientationchange", function () {
-      if (screen.orientation.angle == 90) {
-        self.src = self.videos[self.rootNumber].url_horizontal;
-        console.log(self.src);
-      } else {
-        self.src = self.videos[self.rootNumber].url_vertical;
-        console.log(self.src);
-      }
-    });
   }
 });
 
@@ -1153,7 +1105,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     onEnd: function onEnd() {
       console.log('Video end');
-      this.$emit("end_video", this.id);
+      this.$emit("end_video"); //this.$emit("end_video", this.id)
     }
   },
   created: function created() {}
@@ -1192,7 +1144,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.preview[data-v-02862bc0] {\n    position: relative;\n    height: 100%;\n}\n.chooseOptions[data-v-02862bc0] {\n    position: absolute;\n    width: 100%;\n    top: 0;\n    left: 0;\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: horizontal;\n    -webkit-box-direction: normal;\n            flex-flow: row wrap;\n    z-index: 500;\n    justify-content: space-around;\n    height: 100%;\n    z-index: 1000;\n}\n.option[data-v-02862bc0] {\n    position: relative;\n}\n.option-background[data-v-02862bc0] {\n    display: -webkit-box;\n    display: flex;\n    width: 100%;\n    height: 100%;\n    -webkit-box-pack: center;\n            justify-content: center;\n    -webkit-box-align: center;\n            align-items: center;\n    background: rgba(155,0,0,0.7);\n    cursor: pointer;\n    border-radius: 10px;\n    -webkit-transition: background .3s, -webkit-transform .3s;\n    transition: background .3s, -webkit-transform .3s;\n    transition: background .3s, transform .3s;\n    transition: background .3s, transform .3s, -webkit-transform .3s;\n}\n.option-background[data-v-02862bc0]:hover {\n    -webkit-transform: scale(1.05);\n            transform: scale(1.05);\n    background: rgba(155,0,0,0.8);\n}\n", ""]);
+exports.push([module.i, "\n.preview[data-v-02862bc0] {\n\tposition: relative;\n\theight: 100%;\n}\n.chooseOptions[data-v-02862bc0] {\n\tposition: absolute;\n\twidth: 100%;\n\ttop: 0;\n\tleft: 0;\n\tdisplay: -webkit-box;\n\tdisplay: flex;\n\t-webkit-box-orient: horizontal;\n\t-webkit-box-direction: normal;\n\t        flex-flow: row wrap;\n\tz-index: 500;\n\tjustify-content: space-around;\n\theight: 100%;\n\tz-index: 1000;\n}\n.option[data-v-02862bc0] {\n\tposition: relative;\n}\n.option-background[data-v-02862bc0] {\n\tdisplay: -webkit-box;\n\tdisplay: flex;\n\twidth: 100%;\n\theight: 100%;\n\t-webkit-box-pack: center;\n\t        justify-content: center;\n\t-webkit-box-align: center;\n\t        align-items: center;\n\tbackground: rgba(155,0,0,0.7);\n\tcursor: pointer;\n\tborder-radius: 10px;\n\t-webkit-transition: background .3s, -webkit-transform .3s;\n\ttransition: background .3s, -webkit-transform .3s;\n\ttransition: background .3s, transform .3s;\n\ttransition: background .3s, transform .3s, -webkit-transform .3s;\n}\n.option-background[data-v-02862bc0]:hover {\n\t-webkit-transform: scale(1.05);\n\t        transform: scale(1.05);\n\tbackground: rgba(155,0,0,0.8);\n}\n", ""]);
 
 // exports
 
@@ -2604,42 +2556,50 @@ var render = function() {
       },
       [
         _c("video-player", {
-          attrs: { source: _vm.src, id: _vm.rootNumber, first: true },
+          ref: "videoPlayer",
+          attrs: { source: _vm.src },
           on: { end_video: _vm.end_video }
         })
       ],
       1
     ),
     _vm._v(" "),
-    _vm.show_options
-      ? _c(
-          "div",
-          { staticClass: "chooseOptions row" },
-          _vm._l(_vm.options, function(option) {
-            return _c(
-              "div",
-              {
-                staticClass: "col-md-6 option p-3",
-                on: {
-                  click: function($event) {
-                    return _vm.choose(option)
-                  }
+    _c(
+      "div",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.show_options,
+            expression: "show_options"
+          }
+        ],
+        staticClass: "chooseOptions row"
+      },
+      _vm._l(
+        _vm.episode.videos[_vm.episode.current_video_id].connections,
+        function(option) {
+          return _c(
+            "div",
+            {
+              staticClass: "col-md-6 option p-3",
+              on: {
+                click: function($event) {
+                  return _vm.choose(option)
                 }
-              },
-              [
-                _c("div", { staticClass: "option-background" }, [
-                  _vm._v(
-                    "\n                " +
-                      _vm._s(option.name) +
-                      "\n            "
-                  )
-                ])
-              ]
-            )
-          }),
-          0
-        )
-      : _vm._e()
+              }
+            },
+            [
+              _c("div", { staticClass: "option-background" }, [
+                _vm._v("\n\t\t\t\t" + _vm._s(option.name) + "\n\t\t\t")
+              ])
+            ]
+          )
+        }
+      ),
+      0
+    )
   ])
 }
 var staticRenderFns = []

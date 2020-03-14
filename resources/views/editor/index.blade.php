@@ -30,12 +30,7 @@
 
 	<div id="preview" class="col-md-8 editor-base-block">
 		<editor-preview
-			json_videos=" {{ $videos }} "
-			json_connections="{{ $connections }}"
-			root_number="{{$root_video}}"
-			:project_preview="false"
-			ref="editor_preview"
-			v-on:change_target_preview="change_target_preview"
+			:episode="episode"
 		>
 		</editor-preview>
 	</div>
@@ -63,6 +58,7 @@
 			</button>
 		</div>
 	</div>
+
 	<div id="files" class="col-md-2 editor-base-block pr-0 pt-0">
 		<div class="ebb-content">
 		<h2>
@@ -72,28 +68,8 @@
 		@foreach ($videos as $video)
 			<li class="mb-3"> 
 				<p class="mb-0">Action: {{ $video->name }}</p>
-				<p class="mb-0">Filename: {{$video->filename }}</p>
+				<p class="mb-0">Filename: {{$video->filename_horiz }}</p>
 			</li>
-
-			<!--
-				
-				<video src="{{ asset("{$video->url}") }}" width="400" controls="controls">
-				</video>
-				<form method="POST" action="{{ route('video.update') }}" method="POST" enctype="multipart/form-data">
-					@csrf
-					Заменить видео
-					<br />
-					New name:
-					<br /><br />
-					<input type="text" name="name" />
-					<br /><br />
-					<input type="file" name="video" />
-					<br /><br />
-					<button type="submit" class="btn btn-sm btn-default">Обновить</button>
-					<input type="hidden" name="id" value="{{$video->id}}" />
-					<input type="hidden" name="project_id" value="{{$project_id}}" />
-				</form>
-			-->
 		@endforeach
 		</ol>
 		<button class="btn btn-primary btn-block btn-sm mt-5" @click="addVideo" style="position: fixed; left: 30px; bottom: 35px; width: auto;"> 
@@ -111,6 +87,7 @@
 	</div>
 	<div id="manager" class="col-md-10 editor-base-block pt-0">
 		<div class="ebb-content" style="overflow: hidden; position: relative">
+			{{-- 
 			<connection-manager
 				json_videos="{{ $videos }}"
 				json_connections="{{ $connections }}"
@@ -123,6 +100,7 @@
 				v-on:redraw_connections="redraw_connections">
 			>
 			</connection-manager>
+			--}}
 		</div>
 	</div>
 	<transition name="fade">
@@ -158,11 +136,10 @@
 	</transition>
 	<transition name="fade">
 		<div class="dialog" v-show="modal">
-		{{-- 
+		 
 			<button @click="modal=false">
 				Close dialog
 			</button>
-			--}}
 			<custom-form 
 				:option="option" 
 				episode_id="{{$episode_id}}" 
@@ -201,9 +178,14 @@ mix = {
 		route: '',
 		videoDeleteId: '',
 		delete_video: false,
-		editor_preview: null,
 		target_id: '',
-		manager: null
+		manager: null,
+		episode: {
+			'videos' : @json($videos),
+			{{-- 'connections' : @json($connections), --}}
+			'current_video_id' : {{ $root_video }},
+			'video_player_ref' : undefined,
+		}
 	},
 	methods: {
 		addVideo: function() {
@@ -239,25 +221,11 @@ mix = {
 			this.route = '?';
 			this.modal = true;
 		},
-		redraw_connections(connections) {
-			this.editor_preview.connections = connections;
-		},
-		change_target(video) {
-			this.editor_preview.src = video.url;
-			this.editor_preview.id = video.id;
-			this.editor_preview.options = [];
-			this.editor_preview.show_options = false;
-			this.editor_preview.cover = true;
-		},
-		set_root(id) {
-			this.editor_preview.rootNumber = id;
-		},
 		change_target_preview(id) {
 			this.manager.activeVideo = id ;
 		}
 	},
 	mounted: function() {
-		this.editor_preview = this.$refs.editor_preview;
 		this.manager = this.$refs.manager;
 	}
 };

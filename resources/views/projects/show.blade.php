@@ -25,18 +25,16 @@
 <div id="app">
 	<div class="episode-container">
 		@foreach ($episodes as $episode)
-			<div class="episode-block" @click="chooseEpisode('{!! json_encode($episode->id) !!}')" episode_id={{$episode->id}}>
+			{{ $episode->id }}
+			<!--
+				<div class="episode-block" @click="chooseEpisode('{!! json_encode($episode->id) !!}')" episode_id={{$episode->id}}>
 				<span class="episode-name" episode_id={{$episode->id}}>{{ $episode->name }} </span>
 				<editor-preview
-					json_videos=" {{ $episode->videos }}"
-					json_connections="{{ $episode->connections }}"
-					root_number="{{$episode->root_video}}"
-					:episode_id="parseInt({{$episode->id}})"
-					:project_preview="true"
-					v-on:end_episode="end_episode"
+					:episode="{{$episode}}"
 				>
 				</editor-preview>
 			</div>
+		-->
 		@endforeach
 	</div>
 </div>

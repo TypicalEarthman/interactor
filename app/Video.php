@@ -16,6 +16,6 @@ class Video extends Model
         return $this->belongsTo(Episode::class);
     }
     public function connections() {
-        return $this->hasMany(Connection::class);
+        return $this->belongsToMany(Video::class, 'connections', 'entry_id', 'out_id');
     }
 }
