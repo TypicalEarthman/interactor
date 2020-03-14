@@ -821,6 +821,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {};
@@ -916,6 +922,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+<<<<<<< HEAD
 //
 //
 //
@@ -933,6 +940,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+=======
+>>>>>>> 6d614cf1115e55b54fa7ddfcd175bd420d191b5d
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log(this.episode);
@@ -985,6 +994,7 @@ __webpack_require__.r(__webpack_exports__);
     end_video: function end_video(id) {
       this.show_options = true;
     },
+<<<<<<< HEAD
     set_next_options: function set_next_options(id) {// # ОТРЕФАКТОРЕНО В COMPUTED.OPTIONS
 
       /*
@@ -1003,6 +1013,37 @@ __webpack_require__.r(__webpack_exports__);
       	this.options = options
       }
       */
+=======
+    preload_videos: function preload_videos() {
+      this.options.forEach(function (item) {
+        axios.get(item.url_horizontal, {
+          responseType: 'blob'
+        }).then(function (response) {
+          var source = URL.createObjectURL(response.data);
+          item.url_horizontal = source;
+          console.log(item.url_horizontal);
+        });
+      });
+    },
+    set_next_options: function set_next_options(id) {
+      if (Array.isArray(this.connections)) {
+        this.rebuild();
+      }
+
+      var connections = this.connections[id];
+      var options = [];
+      var self = this;
+
+      if (connections != undefined) {
+        connections.forEach(function (item) {
+          self.videos[item.out_id]["class"] = 'non-active';
+          options.push(self.videos[item.out_id]);
+        });
+        this.options = options;
+      }
+
+      this.preload_videos();
+>>>>>>> 6d614cf1115e55b54fa7ddfcd175bd420d191b5d
     },
     rebuild: function rebuild() {
       /*
@@ -1022,6 +1063,7 @@ __webpack_require__.r(__webpack_exports__);
       */
     },
     choose: function choose(video) {
+<<<<<<< HEAD
       this.episode.current_video_id = video.id;
       /*
       this.rootClass = 'non-active'
@@ -1050,6 +1092,27 @@ __webpack_require__.r(__webpack_exports__);
     		this.cover = false
     		this.completion = 0
     	}
+=======
+      this.src = video.url_horizontal;
+      this.id = video.id;
+      this.options = [];
+      this.show_options = false;
+      var target = this.id;
+      this.$emit("change_target_preview", target);
+      this.set_next_options(this.id);
+    }
+  },
+  watch: {
+    rootNumber: function rootNumber(id) {
+      if (id) {
+        this.id = this.rootNumber;
+        this.src = this.videos[this.rootNumber].url_horizontal;
+        this.show_options = false;
+        this.set_next_options(this.id);
+        this.cover = false;
+        this.completion = 0;
+      }
+>>>>>>> 6d614cf1115e55b54fa7ddfcd175bd420d191b5d
     }
     */
   },
@@ -1073,6 +1136,33 @@ __webpack_require__.r(__webpack_exports__);
     this.rebuild()
     */
 
+<<<<<<< HEAD
+=======
+    this.videos = JSON.parse(this.json_videos);
+    this.connections = JSON.parse(this.json_connections);
+    this.rootNumber = parseInt(this.root_number);
+    this.id = this.rootNumber;
+    var videos = {};
+    this.videos.forEach(function (item) {
+      var id = item.id;
+      videos[id] = item;
+    });
+    this.videos = videos;
+    this.src = this.videos[this.rootNumber].url_horizontal;
+    this.rebuild();
+  },
+  mounted: function mounted() {
+    var self = this;
+    window.addEventListener("orientationchange", function () {
+      if (screen.orientation.angle == 90) {
+        self.src = self.videos[self.rootNumber].url_horizontal;
+        console.log(self.src);
+      } else {
+        self.src = self.videos[self.rootNumber].url_vertical;
+        console.log(self.src);
+      }
+    });
+>>>>>>> 6d614cf1115e55b54fa7ddfcd175bd420d191b5d
   }
 });
 
@@ -1193,11 +1283,7 @@ __webpack_require__.r(__webpack_exports__);
       this.$emit("end_video"); //this.$emit("end_video", this.id)
     }
   },
-  created: function created() {
-    if (this.first) {
-      this.cover = true;
-    }
-  }
+  created: function created() {}
 });
 
 /***/ }),
@@ -1214,7 +1300,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n#manager-root[data-v-08416e43] {\r\n    display: -webkit-box;\r\n    display: flex;\r\n    -webkit-box-orient: vertical;\r\n    -webkit-box-direction: normal;\r\n            flex-flow: column wrap;\r\n    -webkit-box-pack: start;\r\n            justify-content: flex-start;\r\n    align-content: flex-start;\n}\n.controls[data-v-08416e43] {\r\n    position: absolute;\r\n    bottom: 0px;\r\n    left: 50%;\r\n    width: 300px;\r\n    margin: 0 0 0 -150px;\n}\n.parent[data-v-08416e43] {\r\n    padding: 0;\r\n    overflow: hidden;\n}\n.layer[data-v-08416e43] {\r\n    display: -webkit-box;\r\n    display: flex;\r\n    -webkit-box-orient: vertical;\r\n    -webkit-box-direction: normal;\r\n            flex-flow: column;\n}\n.video[data-v-08416e43] {\r\n    background: #f00;\r\n    width: 100px;\r\n    height: 50px;\r\n    margin-bottom: 20px;\r\n    margin-right: 20px;\n}\r\n", ""]);
+exports.push([module.i, "\n#manager-root[data-v-08416e43] {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n            flex-flow: column wrap;\n    -webkit-box-pack: start;\n            justify-content: flex-start;\n    align-content: flex-start;\n}\n.controls[data-v-08416e43] {\n    position: absolute;\n    bottom: 0px;\n    left: 50%;\n    width: 300px;\n    margin: 0 0 0 -150px;\n}\n.parent[data-v-08416e43] {\n    padding: 0;\n    overflow: hidden;\n}\n.layer[data-v-08416e43] {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n            flex-flow: column;\n}\n.video[data-v-08416e43] {\n    background: #f00;\n    width: 100px;\n    height: 50px;\n    margin-bottom: 20px;\n    margin-right: 20px;\n}\n", ""]);
 
 // exports
 
@@ -1233,7 +1319,11 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
+<<<<<<< HEAD
 exports.push([module.i, "\n.active[data-v-02862bc0] {\r\n\tposition: static;\n}\n.non-active[data-v-02862bc0] {\r\n\tposition: absolute;\r\n\tleft: -9000px;\n}\n.preview[data-v-02862bc0] {\r\n\tposition: relative;\r\n\theight: 100%;\n}\n.chooseOptions[data-v-02862bc0] {\r\n\tposition: absolute;\r\n\twidth: 100%;\r\n\ttop: 0;\r\n\tleft: 0;\r\n\tdisplay: -webkit-box;\r\n\tdisplay: flex;\r\n\t-webkit-box-orient: horizontal;\r\n\t-webkit-box-direction: normal;\r\n\t        flex-flow: row wrap;\r\n\tz-index: 500;\r\n\tjustify-content: space-around;\r\n\theight: 100%;\r\n\tz-index: 1000;\n}\n.option[data-v-02862bc0] {\r\n\tposition: relative;\n}\n.option-background[data-v-02862bc0] {\r\n\tdisplay: -webkit-box;\r\n\tdisplay: flex;\r\n\twidth: 100%;\r\n\theight: 100%;\r\n\t-webkit-box-pack: center;\r\n\t        justify-content: center;\r\n\t-webkit-box-align: center;\r\n\t        align-items: center;\r\n\tbackground: rgba(155,0,0,0.7);\r\n\tcursor: pointer;\r\n\tborder-radius: 10px;\r\n\t-webkit-transition: background .3s, -webkit-transform .3s;\r\n\ttransition: background .3s, -webkit-transform .3s;\r\n\ttransition: background .3s, transform .3s;\r\n\ttransition: background .3s, transform .3s, -webkit-transform .3s;\n}\n.option-background[data-v-02862bc0]:hover {\r\n\t-webkit-transform: scale(1.05);\r\n\t        transform: scale(1.05);\r\n\tbackground: rgba(155,0,0,0.8);\n}\r\n", ""]);
+=======
+exports.push([module.i, "\n.active[data-v-02862bc0] {\n    position: static;\n}\n.non-active[data-v-02862bc0] {\n    position: absolute;\n    left: -9000px;\n}\n.preview[data-v-02862bc0] {\n    position: relative;\n    height: 100%;\n}\n.chooseOptions[data-v-02862bc0] {\n    position: absolute;\n    width: 100%;\n    top: 0;\n    left: 0;\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: horizontal;\n    -webkit-box-direction: normal;\n            flex-flow: row wrap;\n    z-index: 500;\n    justify-content: space-around;\n    height: 100%;\n    z-index: 1000;\n}\n.option[data-v-02862bc0] {\n    position: relative;\n}\n.option-background[data-v-02862bc0] {\n    display: -webkit-box;\n    display: flex;\n    width: 100%;\n    height: 100%;\n    -webkit-box-pack: center;\n            justify-content: center;\n    -webkit-box-align: center;\n            align-items: center;\n    background: rgba(155,0,0,0.7);\n    cursor: pointer;\n    border-radius: 10px;\n    -webkit-transition: background .3s, -webkit-transform .3s;\n    transition: background .3s, -webkit-transform .3s;\n    transition: background .3s, transform .3s;\n    transition: background .3s, transform .3s, -webkit-transform .3s;\n}\n.option-background[data-v-02862bc0]:hover {\n    -webkit-transform: scale(1.05);\n            transform: scale(1.05);\n    background: rgba(155,0,0,0.8);\n}\n", ""]);
+>>>>>>> 6d614cf1115e55b54fa7ddfcd175bd420d191b5d
 
 // exports
 
@@ -2571,13 +2661,28 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "form-group row" }, [
       _c("div", { staticClass: "col-md-3" }, [
-        _c("label", { staticClass: "col-form-label" }, [_vm._v("File:")])
+        _c("label", { staticClass: "col-form-label" }, [
+          _vm._v("Horizontal video:")
+        ])
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "col-md-9" }, [
         _c("input", {
           staticClass: "form-control",
-          attrs: { type: "file", name: "video", required: "" }
+          attrs: { type: "file", name: "horizontal_video", required: "" }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-3" }, [
+        _c("label", { staticClass: "col-form-label" }, [
+          _vm._v("Vertical video:")
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-9" }, [
+        _c("input", {
+          staticClass: "form-control",
+          attrs: { type: "file", name: "vertical_video" }
         })
       ])
     ])
@@ -2735,7 +2840,14 @@ var render = function() {
     [
       _c("video", {
         ref: "videoElement",
-        attrs: { src: _vm.source, id: "video", preload: "auto" },
+        attrs: {
+          src: _vm.source,
+          id: "video",
+          preload: "auto",
+          muted: "",
+          autoplay: ""
+        },
+        domProps: { muted: true },
         on: {
           ended: _vm.onEnd,
           click: _vm.playpause,
@@ -3359,9 +3471,9 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\interactor\resources\js\app.js */"./resources/js/app.js");
-__webpack_require__(/*! D:\interactor\resources\sass\app.scss */"./resources/sass/app.scss");
-module.exports = __webpack_require__(/*! D:\interactor\resources\sass\vendor.scss */"./resources/sass/vendor.scss");
+__webpack_require__(/*! C:\interactor\interactor\resources\js\app.js */"./resources/js/app.js");
+__webpack_require__(/*! C:\interactor\interactor\resources\sass\app.scss */"./resources/sass/app.scss");
+module.exports = __webpack_require__(/*! C:\interactor\interactor\resources\sass\vendor.scss */"./resources/sass/vendor.scss");
 
 
 /***/ })

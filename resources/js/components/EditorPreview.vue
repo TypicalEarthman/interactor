@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
 	<div class="preview" v-bind:style="{ height: height}">
 		<div class="embed-responsive embed-responsive-16by9" id="video-holder">
 			<video-player
@@ -85,6 +86,7 @@
 </style>
 
 <script>
+<<<<<<< HEAD
 	export default {
 		mounted() {
 			console.log(this.episode)
@@ -230,4 +232,129 @@
 			*/
 		}
 	}
+=======
+    export default {
+        data () {
+            return {
+                src: String,
+                videos: Object,
+                connections: Object,
+                rootNumber: Number,
+                id: Number,
+                options: Array,
+                height: "48vh%",
+                show_options: false,
+                scaled: false,
+                rootClass: 'active'
+            }
+        },
+        props: {
+            json_videos: String,
+            root_number: String,
+            json_connections: String,
+            project_preview: Boolean,
+            episode_id: Number
+        },
+        methods: {
+            end_video: function(id) {
+                this.show_options = true
+            },
+            preload_videos: function() {
+                this.options.forEach(function(item) {
+                    axios.get(item.url_horizontal, {
+                        responseType: 'blob'
+                    }).then( response => {
+                        let source = URL.createObjectURL(response.data);
+                        item.url_horizontal = source;
+                        console.log(item.url_horizontal)
+                    });
+                })
+            },
+            set_next_options: function(id) {
+                if(Array.isArray(this.connections)) {
+                    this.rebuild()
+                }
+                let connections = this.connections[id]     
+                let options = []   
+                let self = this
+                if(connections != undefined) {
+                    connections.forEach(function(item) {
+                        self.videos[item.out_id].class = 'non-active'
+                        options.push(self.videos[item.out_id])
+                    })
+                    this.options = options
+                }
+                this.preload_videos()
+            },
+            rebuild: function() {
+                let connections = {}
+                this.connections.forEach(function(item) {
+                    let id = item.entry_id
+                    if (connections.hasOwnProperty(item.entry_id)) {
+                    connections[item.entry_id].push(item)
+                    }
+                    else {
+                        let layer = []
+                        layer.push(item)
+                        connections[item.entry_id] = layer
+                    }
+                })
+                this.connections = connections
+
+            },
+            choose: function(video) {
+                this.src = video.url_horizontal
+                this.id = video.id
+                this.options = []
+                this.show_options = false
+                let target = this.id
+                this.$emit("change_target_preview", target)
+                this.set_next_options(this.id)
+            }
+        },
+        watch: {
+            rootNumber: function(id) {
+                if (id) {
+                    this.id = this.rootNumber
+                    this.src = this.videos[this.rootNumber].url_horizontal
+                    this.show_options = false
+                    this.set_next_options(this.id)
+                    this.cover = false
+                    this.completion = 0
+                }
+            }
+        },
+        beforeMount() {
+            if(this.project_preview) {
+                this.height = "100vh%";
+            }
+            this.videos = JSON.parse(this.json_videos)
+            this.connections = JSON.parse(this.json_connections)
+            this.rootNumber = parseInt(this.root_number)
+            this.id = this.rootNumber
+            let videos = {}
+            this.videos.forEach(function(item) {
+                let id = item.id;
+                videos[id] = item;
+            })
+            this.videos = videos
+            this.src = this.videos[this.rootNumber].url_horizontal
+            this.rebuild()
+        },
+        mounted() {
+            let self = this
+            window.addEventListener("orientationchange", function() {
+                if( screen.orientation.angle == 90) {
+                    self.src = self.videos[self.rootNumber].url_horizontal
+                    console.log(self.src)
+                }
+                else {
+                    self.src = self.videos[self.rootNumber].url_vertical
+                    console.log(self.src)
+                }
+            });
+
+        }
+    }
+>>>>>>> 6d614cf1115e55b54fa7ddfcd175bd420d191b5d
 </script>

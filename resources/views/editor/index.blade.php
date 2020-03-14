@@ -277,6 +277,7 @@ mix = {
 	mounted: function() {
 		this.editor_preview = this.$refs.editor_preview;
 		this.manager = this.$refs.manager;
+<<<<<<< HEAD
 
 		this.episode.video_player_ref = this.$refs.editor_preview;
 		/*
@@ -292,6 +293,8 @@ mix = {
 				});
 		}, 2000);
 		*/
+=======
+>>>>>>> 6d614cf1115e55b54fa7ddfcd175bd420d191b5d
 	}
 };
 

@@ -77,8 +77,10 @@ class ProjectController extends Controller
             "episode_id" => $data["episode"]->id,
             "project_id" => $data["project"]->id,
             "name" => "Main",
-            "filename" => "1.mp4",
-            "url" => "starter/1.mp4",
+            "filename_horiz" => "1.mp4",
+            "filename_vert" => null,
+            "url_horiz" => "starter/1.mp4",
+            "url_vertical" => null,
             "meta" => '{"x":34.599998474121094,"y":101}'
         ]);
 
@@ -86,8 +88,10 @@ class ProjectController extends Controller
             "episode_id" => $data["episode"]->id,
             "project_id" => $data["project"]->id,
             "name" => "I want to view result",
-            "filename" => "1_1.mp4",
-            "url" => "starter/1_1.mp4",
+            "filename_horiz" => "1_1.mp4",
+            "filename_vert" => null,
+            "url_horiz" => "starter/1_1.mp4",
+            "url_vertical" => null,
             "meta" => '{"x":363.5999984741211,"y":28}'
         ]);
 
@@ -95,8 +99,10 @@ class ProjectController extends Controller
             "episode_id" => $data["episode"]->id,
             "project_id" => $data["project"]->id,
             "name" => "I want to upload my video",
-            "filename" => "1_2.mp4",
-            "url" => "starter/1_2.mp4",
+            "filename_horiz" => "1_2.mp4",
+            "filename_vert" => null,
+            "url_horiz" => "starter/1_2.mp4",
+            "url_vertical" => null,
             "meta" => '{"x":368.5999984741211,"y":212}'
         ]);
 
