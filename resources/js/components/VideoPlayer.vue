@@ -23,7 +23,7 @@
         data () {
             return {
                 completion: 0,
-                cover: false
+                cover: true
             }
         },
         props: {
@@ -51,7 +51,8 @@
             },
             onEnd: function() {
                 console.log('Video end')
-                this.$emit("end_video", this.id)
+                this.$emit("end_video");
+                //this.$emit("end_video", this.id)
             }
         },
         created() {

@@ -30,10 +30,7 @@
 
 	<div id="preview" class="col-md-8 editor-base-block">
 		<editor-preview
-			json_videos=" {{ $videos }} "
-			json_connections="{{ $connections }}"
-			root_number="{{$root_video}}"
-			:project_preview="false"
+			:episode="episode"
 			ref="editor_preview"
 			v-on:change_target_preview="change_target_preview"
 		>
@@ -63,6 +60,7 @@
 			</button>
 		</div>
 	</div>
+
 	<div id="files" class="col-md-2 editor-base-block pr-0 pt-0">
 		<div class="ebb-content">
 		<h2>
@@ -111,6 +109,7 @@
 	</div>
 	<div id="manager" class="col-md-10 editor-base-block pt-0">
 		<div class="ebb-content" style="overflow: hidden; position: relative">
+			{{-- 
 			<connection-manager
 				json_videos="{{ $videos }}"
 				json_connections="{{ $connections }}"
@@ -123,6 +122,7 @@
 				v-on:redraw_connections="redraw_connections">
 			>
 			</connection-manager>
+			--}}
 		</div>
 	</div>
 	<transition name="fade">
@@ -163,6 +163,7 @@
 				Close dialog
 			</button>
 			--}}
+			{{-- 
 			<custom-form 
 				:option="option" 
 				episode_id="{{$episode_id}}" 
@@ -170,6 +171,7 @@
 				:route="route" 
 				token="{{csrf_token()}}">
 			</custom-form>
+			--}}
 		</div>
 	</transition>
 
@@ -203,7 +205,13 @@ mix = {
 		delete_video: false,
 		editor_preview: null,
 		target_id: '',
-		manager: null
+		manager: null,
+		episode: {
+			'videos' : @json($videos),
+			'connections' : @json($connections),
+			'current_video_id' : {{ $root_video }},
+			'video_player_ref' : undefined,
+		}
 	},
 	methods: {
 		addVideo: function() {
@@ -260,6 +268,7 @@ mix = {
 		this.editor_preview = this.$refs.editor_preview;
 		this.manager = this.$refs.manager;
 
+		this.episode.video_player_ref = this.$refs.editor_preview;
 		/*
 		setTimeout(() => {
 			axios.get('/test.mp4', {

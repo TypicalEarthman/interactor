@@ -924,6 +924,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -943,8 +952,14 @@ __webpack_require__.r(__webpack_exports__);
     json_videos: String,
     root_number: String,
     json_connections: String,
-    project_preview: Boolean,
-    episode_id: Number
+    project_preview: {
+      type: Boolean,
+      "default": function _default() {
+        return false;
+      }
+    },
+    episode_id: Number,
+    episode: Object
   },
   methods: {
     end_video: function end_video(id) {
@@ -1010,23 +1025,27 @@ __webpack_require__.r(__webpack_exports__);
       }
     }
   },
+  mounted: function mounted() {},
   beforeMount: function beforeMount() {
     if (this.project_preview) {
       this.height = "100vh%";
-    }
+    } //console.log(this.episode)
 
-    this.videos = JSON.parse(this.json_videos);
-    this.connections = JSON.parse(this.json_connections);
-    this.rootNumber = parseInt(this.root_number);
-    this.id = this.rootNumber;
-    var videos = {};
-    this.videos.forEach(function (item) {
-      var id = item.id;
-      videos[id] = item;
-    });
-    this.videos = videos;
-    this.src = this.videos[this.rootNumber].url;
-    this.rebuild();
+    /*
+    this.videos = JSON.parse(this.json_videos)
+    this.connections = JSON.parse(this.json_connections)
+    this.rootNumber = parseInt(this.root_number)
+    this.id = this.rootNumber
+    let videos = {}
+    this.videos.forEach(function(item) {
+    	let id = item.id;
+    	videos[id] = item;
+    })
+    this.videos = videos
+    this.src = this.videos[this.rootNumber].url
+    this.rebuild()
+    */
+
   }
 });
 
@@ -1116,7 +1135,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       completion: 0,
-      cover: false
+      cover: true
     };
   },
   props: {
@@ -1144,7 +1163,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     onEnd: function onEnd() {
       console.log('Video end');
-      this.$emit("end_video", this.id);
+      this.$emit("end_video"); //this.$emit("end_video", this.id)
     }
   },
   created: function created() {
@@ -1187,7 +1206,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.active[data-v-02862bc0] {\r\n    position: static;\n}\n.non-active[data-v-02862bc0] {\r\n    position: absolute;\r\n    left: -9000px;\n}\n.preview[data-v-02862bc0] {\r\n    position: relative;\r\n    height: 100%;\n}\n.chooseOptions[data-v-02862bc0] {\r\n    position: absolute;\r\n    width: 100%;\r\n    top: 0;\r\n    left: 0;\r\n    display: -webkit-box;\r\n    display: flex;\r\n    -webkit-box-orient: horizontal;\r\n    -webkit-box-direction: normal;\r\n            flex-flow: row wrap;\r\n    z-index: 500;\r\n    justify-content: space-around;\r\n    height: 100%;\r\n    z-index: 1000;\n}\n.option[data-v-02862bc0] {\r\n    position: relative;\n}\n.option-background[data-v-02862bc0] {\r\n    display: -webkit-box;\r\n    display: flex;\r\n    width: 100%;\r\n    height: 100%;\r\n    -webkit-box-pack: center;\r\n            justify-content: center;\r\n    -webkit-box-align: center;\r\n            align-items: center;\r\n    background: rgba(155,0,0,0.7);\r\n    cursor: pointer;\r\n    border-radius: 10px;\r\n    -webkit-transition: background .3s, -webkit-transform .3s;\r\n    transition: background .3s, -webkit-transform .3s;\r\n    transition: background .3s, transform .3s;\r\n    transition: background .3s, transform .3s, -webkit-transform .3s;\n}\n.option-background[data-v-02862bc0]:hover {\r\n    -webkit-transform: scale(1.05);\r\n            transform: scale(1.05);\r\n    background: rgba(155,0,0,0.8);\n}\r\n", ""]);
+exports.push([module.i, "\n.active[data-v-02862bc0] {\r\n\tposition: static;\n}\n.non-active[data-v-02862bc0] {\r\n\tposition: absolute;\r\n\tleft: -9000px;\n}\n.preview[data-v-02862bc0] {\r\n\tposition: relative;\r\n\theight: 100%;\n}\n.chooseOptions[data-v-02862bc0] {\r\n\tposition: absolute;\r\n\twidth: 100%;\r\n\ttop: 0;\r\n\tleft: 0;\r\n\tdisplay: -webkit-box;\r\n\tdisplay: flex;\r\n\t-webkit-box-orient: horizontal;\r\n\t-webkit-box-direction: normal;\r\n\t        flex-flow: row wrap;\r\n\tz-index: 500;\r\n\tjustify-content: space-around;\r\n\theight: 100%;\r\n\tz-index: 1000;\n}\n.option[data-v-02862bc0] {\r\n\tposition: relative;\n}\n.option-background[data-v-02862bc0] {\r\n\tdisplay: -webkit-box;\r\n\tdisplay: flex;\r\n\twidth: 100%;\r\n\theight: 100%;\r\n\t-webkit-box-pack: center;\r\n\t        justify-content: center;\r\n\t-webkit-box-align: center;\r\n\t        align-items: center;\r\n\tbackground: rgba(155,0,0,0.7);\r\n\tcursor: pointer;\r\n\tborder-radius: 10px;\r\n\t-webkit-transition: background .3s, -webkit-transform .3s;\r\n\ttransition: background .3s, -webkit-transform .3s;\r\n\ttransition: background .3s, transform .3s;\r\n\ttransition: background .3s, transform .3s, -webkit-transform .3s;\n}\n.option-background[data-v-02862bc0]:hover {\r\n\t-webkit-transform: scale(1.05);\r\n\t        transform: scale(1.05);\r\n\tbackground: rgba(155,0,0,0.8);\n}\r\n", ""]);
 
 // exports
 
@@ -2584,20 +2603,14 @@ var render = function() {
       },
       [
         _c("video-player", {
-          class: _vm.rootClass,
-          attrs: { source: _vm.src, id: _vm.rootNumber, first: true },
+          ref: "videoPlayer",
+          attrs: {
+            source: _vm.episode.videos[_vm.episode.current_video_id].url
+          },
           on: { end_video: _vm.end_video }
-        }),
-        _vm._v(" "),
-        _vm._l(_vm.options, function(option) {
-          return _c("video-player", {
-            class: option.class,
-            attrs: { source: option.url, id: option.id },
-            on: { end_video: _vm.end_video }
-          })
         })
       ],
-      2
+      1
     ),
     _vm._v(" "),
     _vm.show_options
@@ -2617,11 +2630,7 @@ var render = function() {
               },
               [
                 _c("div", { staticClass: "option-background" }, [
-                  _vm._v(
-                    "\n                " +
-                      _vm._s(option.name) +
-                      "\n            "
-                  )
+                  _vm._v("\n\t\t\t\t" + _vm._s(option.name) + "\n\t\t\t")
                 ])
               ]
             )
