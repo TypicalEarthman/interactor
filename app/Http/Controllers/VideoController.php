@@ -48,8 +48,10 @@ class VideoController extends Controller
             "project_id" => $request->get('project_id'),
             "meta" => $request->get('meta'),
             "name" => $request->get('name'),
-            "video" => $request->video,
-            "filename" => $request->video->getClientOriginalName(),
+            "url_horizontal" => $request->horizontal_video,
+            "url_vertical" => $request->vertical_video,
+            "filename_horiz" => $request->horizontal_video->getClientOriginalName(),
+            "filename_vert" => $request->vertical_video->getClientOriginalName(),
         ]);
 
         return redirect()->back();

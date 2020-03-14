@@ -18,8 +18,10 @@ class CreateVideosTable extends Migration
             $table->unsignedBigInteger('episode_id');
             $table->unsignedBigInteger('project_id');
             $table->string('name');
-            $table->string('filename');
-            $table->string('url');
+            $table->string('filename_horiz');
+            $table->string('filename_vert')->nullable();
+            $table->string('url_horizontal');
+            $table->string('url_vertical')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->json('meta');
             $table->timestamps();

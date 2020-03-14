@@ -13,10 +13,16 @@
 
 			<div class="form-group row">
 				<div class="col-md-3">
-					<label class="col-form-label">File:</label>
+					<label class="col-form-label">Horizontal video:</label>
 				</div>
 				<div class="col-md-9">
-					<input type="file" name="video" required class="form-control" />
+					<input type="file" name="horizontal_video" required class="form-control" />
+				</div>
+				<div class="col-md-3">
+					<label class="col-form-label">Vertical video:</label>
+				</div>
+				<div class="col-md-9">
+					<input type="file" name="vertical_video" class="form-control" />
 				</div>
 				
 			</div>

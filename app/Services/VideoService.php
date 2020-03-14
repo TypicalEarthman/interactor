@@ -21,21 +21,28 @@ class VideoService {
                 }
 
                 
-                $filename = $data["filename"];
-                $video->filename = $filename;
+                $filename_horiz = $data["filename_horiz"];
+                $filename_vert = $data["filename_vert"];
+                $video->filename_horiz = $filename_horiz;
+                $video->filename_vert = $filename_vert;
                 $video->episode_id = $episode_id;
                 $video->project_id = $project_id;
                 $video->meta = $data['meta'];
                 
-                if(isset($data["video"])) {
-                        $path = Storage::putFileAs("project/{$project_id}/episode/{$episode_id}", $data["video"], $filename);
+                if(isset($data["url_horizontal"])) {
+                        $path_horiz = Storage::putFileAs("project/{$project_id}/episode/{$episode_id}", $data["url_horizontal"], $filename_horiz);
                         
                 } else {
-                        $path = $data["url"];
+                        $path_horiz = $data["url_horiz"];
+                }
+
+                if(isset($data["url_vertical"])) {
+                        $path_vert = Storage::putFileAs("project/{$project_id}/episode/{$episode_id}", $data["url_vertical"], $filename_vert);
+                        $video->url_vertical = "/storage/{$path_vert}";
                 }
 
                 
-                $video->url = "/storage/{$path}";
+                $video->url_horizontal = "/storage/{$path_horiz}";
                 //$video->filename = $data["video"]->hashName;
 
                 

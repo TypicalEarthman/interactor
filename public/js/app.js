@@ -821,6 +821,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {};
@@ -944,12 +950,12 @@ __webpack_require__.r(__webpack_exports__);
     },
     preload_videos: function preload_videos() {
       this.options.forEach(function (item) {
-        axios.get(item.url, {
+        axios.get(item.url_horizontal, {
           responseType: 'blob'
         }).then(function (response) {
           var source = URL.createObjectURL(response.data);
-          item.url = source;
-          console.log(item.url);
+          item.url_horizontal = source;
+          console.log(item.url_horizontal);
         });
       });
     },
@@ -988,7 +994,7 @@ __webpack_require__.r(__webpack_exports__);
       this.connections = connections;
     },
     choose: function choose(video) {
-      this.src = video.url;
+      this.src = video.url_horizontal;
       this.id = video.id;
       this.options = [];
       this.show_options = false;
@@ -1001,7 +1007,7 @@ __webpack_require__.r(__webpack_exports__);
     rootNumber: function rootNumber(id) {
       if (id) {
         this.id = this.rootNumber;
-        this.src = this.videos[this.rootNumber].url;
+        this.src = this.videos[this.rootNumber].url_horizontal;
         this.show_options = false;
         this.set_next_options(this.id);
         this.cover = false;
@@ -1024,8 +1030,20 @@ __webpack_require__.r(__webpack_exports__);
       videos[id] = item;
     });
     this.videos = videos;
-    this.src = this.videos[this.rootNumber].url;
+    this.src = this.videos[this.rootNumber].url_horizontal;
     this.rebuild();
+  },
+  mounted: function mounted() {
+    var self = this;
+    window.addEventListener("orientationchange", function () {
+      if (screen.orientation.angle == 90) {
+        self.src = self.videos[self.rootNumber].url_horizontal;
+        console.log(self.src);
+      } else {
+        self.src = self.videos[self.rootNumber].url_vertical;
+        console.log(self.src);
+      }
+    });
   }
 });
 
@@ -2520,13 +2538,28 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "form-group row" }, [
       _c("div", { staticClass: "col-md-3" }, [
-        _c("label", { staticClass: "col-form-label" }, [_vm._v("File:")])
+        _c("label", { staticClass: "col-form-label" }, [
+          _vm._v("Horizontal video:")
+        ])
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "col-md-9" }, [
         _c("input", {
           staticClass: "form-control",
-          attrs: { type: "file", name: "video", required: "" }
+          attrs: { type: "file", name: "horizontal_video", required: "" }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-3" }, [
+        _c("label", { staticClass: "col-form-label" }, [
+          _vm._v("Vertical video:")
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-9" }, [
+        _c("input", {
+          staticClass: "form-control",
+          attrs: { type: "file", name: "vertical_video" }
         })
       ])
     ])
