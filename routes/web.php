@@ -13,6 +13,8 @@
 
 use App\Project;
 
+Route::view('/test', 'test');
+
 Route::get('/', 'ProjectController@generate')->name('main');
 Route::get('/home', 'HomeController@index')->name('home');
 
