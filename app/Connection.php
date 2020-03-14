@@ -16,6 +16,6 @@ class Connection extends Model
         return $this->belongsTo(Episode::class);
     }
     public function videos() {
-        return $this->hasMany(Video::class);
+        return $this->belongsToMany(Video::class);
     }
 }

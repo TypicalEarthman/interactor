@@ -27,8 +27,8 @@
 			</video-player>
 		-->
 		</div>
-		<div class="chooseOptions row" v-if="show_options">
-			<div class="col-md-6 option p-3" v-for="option in options" @click="choose(option)">
+		<div class="chooseOptions row" v-show="show_options">
+			<div class="col-md-6 option p-3" v-for="option in episode.videos[episode.current_video_id].connections" @click="choose(option)">
 				<div class="option-background">
 					{{ option.name }}
 				</div>
@@ -86,38 +86,64 @@
 
 <script>
 	export default {
+		mounted() {
+			console.log(this.episode)
+		},
 		data () {
 			return {
+				/*
 				src: String,
 				videos: Object,
 				connections: Object,
-				rootNumber: Number,
+				//rootNumber: Number,
 				id: Number,
-				options: Array,
+				// options: Array, // ОТРЕФАКТОРЕНО В COMPUTED.OPTIONS
+				rootClass: 'active'
+				scaled: false,
+				*/
 				height: "48vh%",
 				show_options: false,
-				scaled: false,
-				rootClass: 'active'
 			}
 		},
 		props: {
+			/*
 			json_videos: String,
 			root_number: String,
 			json_connections: String,
+			episode_id: Number,
+			*/
 			project_preview: {
 				type: Boolean,
 				default() {
 					return false;
 				}
 			},
-			episode_id: Number,
 			episode: Object,
+		},
+		computed: {
+			/*
+			options() {
+				let options = [];
+
+				let connections = this.episode.videos[this.episode.current_video_id].connections;
+
+				if(connections) {
+					console.log(connections)
+					//options.push()
+				}
+
+				return options;
+			}
+			*/
 		},
 		methods: {
 			end_video: function(id) {
 				this.show_options = true
 			},
 			set_next_options: function(id) {
+				// # ОТРЕФАКТОРЕНО В COMPUTED.OPTIONS
+
+				/*
 				if(Array.isArray(this.connections)) {
 					this.rebuild()
 				}
@@ -132,9 +158,10 @@
 					})
 					this.options = options
 				}
-
+				*/
 			},
 			rebuild: function() {
+				/*
 				let connections = {}
 				this.connections.forEach(function(item) {
 					let id = item.entry_id
@@ -148,9 +175,11 @@
 					}
 				})
 				this.connections = connections
-
+				*/
 			},
 			choose: function(video) {
+				this.episode.current_video_id = video.id;
+				/*
 				this.rootClass = 'non-active'
 				this.options.forEach(function(item) {
 					if(item.id == video.id) {
@@ -163,9 +192,11 @@
 				let target = this.id
 				this.$emit("change_target_preview", target)
 				this.set_next_options(this.id)
+				*/
 			}
 		},
 		watch: {
+			/*
 			rootNumber: function(id) {
 				if (id) {
 					this.id = this.rootNumber
@@ -176,9 +207,7 @@
 					this.completion = 0
 				}
 			}
-		},
-		mounted() {
-
+			*/
 		},
 		beforeMount() {
 			if(this.project_preview) {

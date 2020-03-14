@@ -934,98 +934,125 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
+  mounted: function mounted() {
+    console.log(this.episode);
+  },
   data: function data() {
     return {
+      /*
       src: String,
       videos: Object,
       connections: Object,
-      rootNumber: Number,
+      //rootNumber: Number,
       id: Number,
-      options: Array,
-      height: "48vh%",
-      show_options: false,
-      scaled: false,
+      // options: Array, // ОТРЕФАКТОРЕНО В COMPUTED.OPTIONS
       rootClass: 'active'
+      scaled: false,
+      */
+      height: "48vh%",
+      show_options: false
     };
   },
   props: {
+    /*
     json_videos: String,
     root_number: String,
     json_connections: String,
+    episode_id: Number,
+    */
     project_preview: {
       type: Boolean,
       "default": function _default() {
         return false;
       }
     },
-    episode_id: Number,
     episode: Object
+  },
+  computed: {
+    /*
+    options() {
+    	let options = [];
+    		let connections = this.episode.videos[this.episode.current_video_id].connections;
+    		if(connections) {
+    		console.log(connections)
+    		//options.push()
+    	}
+    		return options;
+    }
+    */
   },
   methods: {
     end_video: function end_video(id) {
       this.show_options = true;
     },
-    set_next_options: function set_next_options(id) {
-      if (Array.isArray(this.connections)) {
-        this.rebuild();
-      }
+    set_next_options: function set_next_options(id) {// # ОТРЕФАКТОРЕНО В COMPUTED.OPTIONS
 
-      var connections = this.connections[id];
-      var options = [];
-      var self = this;
-
-      if (connections != undefined) {
-        connections.forEach(function (item) {
-          self.videos[item.out_id]["class"] = 'non-active';
-          options.push(self.videos[item.out_id]);
-          console.log(self.videos[item.out_id]);
-        });
-        this.options = options;
+      /*
+      if(Array.isArray(this.connections)) {
+      	this.rebuild()
       }
+      let connections = this.connections[id]     
+      let options = []   
+      let self = this
+      if(connections != undefined) {
+      	connections.forEach(function(item) {
+      		self.videos[item.out_id].class = 'non-active'
+      		options.push(self.videos[item.out_id])
+      		console.log(self.videos[item.out_id])
+      	})
+      	this.options = options
+      }
+      */
     },
     rebuild: function rebuild() {
-      var connections = {};
-      this.connections.forEach(function (item) {
-        var id = item.entry_id;
-
-        if (connections.hasOwnProperty(item.entry_id)) {
-          connections[item.entry_id].push(item);
-        } else {
-          var layer = [];
-          layer.push(item);
-          connections[item.entry_id] = layer;
-        }
-      });
-      this.connections = connections;
+      /*
+      let connections = {}
+      this.connections.forEach(function(item) {
+      	let id = item.entry_id
+      	if (connections.hasOwnProperty(item.entry_id)) {
+      	connections[item.entry_id].push(item)
+      	}
+      	else {
+      		let layer = []
+      		layer.push(item)
+      		connections[item.entry_id] = layer
+      	}
+      })
+      this.connections = connections
+      */
     },
     choose: function choose(video) {
-      this.rootClass = 'non-active';
-      this.options.forEach(function (item) {
-        if (item.id == video.id) {
-          item["class"] = 'active';
-        }
-      });
-      this.id = video.id;
-      this.options = [];
-      this.show_options = false;
-      var target = this.id;
-      this.$emit("change_target_preview", target);
-      this.set_next_options(this.id);
+      this.episode.current_video_id = video.id;
+      /*
+      this.rootClass = 'non-active'
+      this.options.forEach(function(item) {
+      	if(item.id == video.id) {
+      		item.class = 'active'
+      	}
+      })
+      this.id = video.id
+      this.options = []
+      this.show_options = false
+      let target = this.id
+      this.$emit("change_target_preview", target)
+      this.set_next_options(this.id)
+      */
     }
   },
   watch: {
-    rootNumber: function rootNumber(id) {
-      if (id) {
-        this.id = this.rootNumber;
-        this.src = this.videos[this.rootNumber].url;
-        this.show_options = false;
-        this.set_next_options(this.id);
-        this.cover = false;
-        this.completion = 0;
-      }
+    /*
+    rootNumber: function(id) {
+    	if (id) {
+    		this.id = this.rootNumber
+    		this.src = this.videos[this.rootNumber].url
+    		this.show_options = false
+    		this.set_next_options(this.id)
+    		this.cover = false
+    		this.completion = 0
+    	}
     }
+    */
   },
-  mounted: function mounted() {},
   beforeMount: function beforeMount() {
     if (this.project_preview) {
       this.height = "100vh%";
@@ -2613,31 +2640,42 @@ var render = function() {
       1
     ),
     _vm._v(" "),
-    _vm.show_options
-      ? _c(
-          "div",
-          { staticClass: "chooseOptions row" },
-          _vm._l(_vm.options, function(option) {
-            return _c(
-              "div",
-              {
-                staticClass: "col-md-6 option p-3",
-                on: {
-                  click: function($event) {
-                    return _vm.choose(option)
-                  }
+    _c(
+      "div",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.show_options,
+            expression: "show_options"
+          }
+        ],
+        staticClass: "chooseOptions row"
+      },
+      _vm._l(
+        _vm.episode.videos[_vm.episode.current_video_id].connections,
+        function(option) {
+          return _c(
+            "div",
+            {
+              staticClass: "col-md-6 option p-3",
+              on: {
+                click: function($event) {
+                  return _vm.choose(option)
                 }
-              },
-              [
-                _c("div", { staticClass: "option-background" }, [
-                  _vm._v("\n\t\t\t\t" + _vm._s(option.name) + "\n\t\t\t")
-                ])
-              ]
-            )
-          }),
-          0
-        )
-      : _vm._e()
+              }
+            },
+            [
+              _c("div", { staticClass: "option-background" }, [
+                _vm._v("\n\t\t\t\t" + _vm._s(option.name) + "\n\t\t\t")
+              ])
+            ]
+          )
+        }
+      ),
+      0
+    )
   ])
 }
 var staticRenderFns = []

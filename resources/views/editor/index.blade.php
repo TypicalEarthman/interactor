@@ -32,9 +32,19 @@
 		<editor-preview
 			:episode="episode"
 			ref="editor_preview"
+		>
+		</editor-preview>
+		{{-- 
+		<editor-preview
+			json_videos=" {{ $videos }} "
+			json_connections="{{ $connections }}"
+			root_number="{{$root_video}}"
+			:project_preview="false"
+			ref="editor_preview"
 			v-on:change_target_preview="change_target_preview"
 		>
 		</editor-preview>
+		--}}
 	</div>
 	
 	<div id="episodes" class="col-md-2 editor-base-block pl-0">
@@ -208,7 +218,7 @@ mix = {
 		manager: null,
 		episode: {
 			'videos' : @json($videos),
-			'connections' : @json($connections),
+			{{-- 'connections' : @json($connections), --}}
 			'current_video_id' : {{ $root_video }},
 			'video_player_ref' : undefined,
 		}
