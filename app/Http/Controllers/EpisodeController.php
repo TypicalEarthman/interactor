@@ -63,6 +63,39 @@ class EpisodeController extends Controller
             "episode_id" => $request->episode_id,
         ]);
     }
+    public function view(Request $request, $project_id, $episode_id)
+    {
+        $project = \App\Project::where('id', $project_id)->first();
+        $episodes = $project->episodes;
+        $episode;
+        if($episode_id == 0) 
+        {
+            $episode = $episodes[0];
+            $episode_id = $episode->id;
+        }
+        else 
+        {
+            foreach($episodes as $temp_episode) {
+                if($temp_episode['id'] == $episode_id) {
+                    $episode = $temp_episode;
+                    break;
+                }
+            }
+        }
+        $videos = $episode->videos()->with('connections')->get();
+        $root_video = $episode->root_video;
+        $connections = $episode->connections;
+
+        return view('projects/view',[
+            'root_video' => $root_video,
+            'videos' => $videos->keyBy('id'),
+            'connections' => $connections->keyBy('entry_id'),
+            'project' => $project,
+            'project_id' => $project_id,
+            'episodes' => $episodes,
+            'episode_id'=> $episode_id
+        ]);
+    }
     public function show(Request $request, $project_id, $episode_id)
     {
         $project = \App\Project::where('id', $project_id)->first();

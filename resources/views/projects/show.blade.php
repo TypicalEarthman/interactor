@@ -25,16 +25,9 @@
 <div id="app">
 	<div class="episode-container">
 		@foreach ($episodes as $episode)
-			{{ $episode->id }}
-			<!--
-				<div class="episode-block" @click="chooseEpisode('{!! json_encode($episode->id) !!}')" episode_id={{$episode->id}}>
-				<span class="episode-name" episode_id={{$episode->id}}>{{ $episode->name }} </span>
-				<editor-preview
-					:episode="{{$episode}}"
-				>
-				</editor-preview>
+			<div>
+				<a href="/episode/view/{{$project_id}}/{{$episode->id}}">{{ $episode->name}}</a>
 			</div>
-		-->
 		@endforeach
 	</div>
 </div>

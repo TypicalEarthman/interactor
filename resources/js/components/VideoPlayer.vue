@@ -29,33 +29,35 @@
         props: {
             source: String,
             id: Number,
+			episode: Object,
             first: Boolean
         },
         methods: {
             playpause: function(event) {
                 if(this.$refs.videoElement.paused) {
-                    this.$refs.videoElement.play();
+                    this.$refs.videoElement.play()
                     this.cover = false
                 }
                 else {
-                    this.$refs.videoElement.pause();
+                    this.$refs.videoElement.pause()
                     this.cover = true
                 }
             },
             onTimeUpdate: function() {
                 let video = this.$refs.videoElement
                 if(!isNaN(video.duration)) {
-                    let percent_complete = video.currentTime / video.duration;
+                    let percent_complete = video.currentTime / video.duration
                     this.completion = percent_complete
                 }
             },
             onEnd: function() {
                 console.log('Video end')
-                this.$emit("end_video");
+                this.$emit("end_video")
                 //this.$emit("end_video", this.id)
             }
         },
-        created() {
+        mounted() {
+            this.episode.video_player_ref = this.$refs.videoElement
         }
     }
 </script>

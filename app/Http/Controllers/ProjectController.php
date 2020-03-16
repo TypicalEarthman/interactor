@@ -40,7 +40,8 @@ class ProjectController extends Controller
     public function show(Project $project)
     {
         return view('projects.show',[
-            'episodes' => $project->episodes
+            'episodes' => $project->episodes,
+            'project_id' => $project->id
         ]);
     }
 

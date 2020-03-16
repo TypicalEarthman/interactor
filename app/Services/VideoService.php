@@ -22,9 +22,7 @@ class VideoService {
 
                 
                 $filename_horiz = $data["filename_horiz"];
-                $filename_vert = $data["filename_vert"];
                 $video->filename_horiz = $filename_horiz;
-                $video->filename_vert = $filename_vert;
                 $video->episode_id = $episode_id;
                 $video->project_id = $project_id;
                 $video->meta = $data['meta'];
@@ -39,6 +37,8 @@ class VideoService {
                 if(isset($data["url_vertical"])) {
                         $path_vert = Storage::putFileAs("project/{$project_id}/episode/{$episode_id}", $data["url_vertical"], $filename_vert);
                         $video->url_vertical = "/storage/{$path_vert}";
+                        $filename_vert = $data["filename_vert"];
+                        $video->filename_vert = $filename_vert;
                 }
 
                 

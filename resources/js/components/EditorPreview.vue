@@ -5,6 +5,7 @@
 				:source="src"
 				v-on:end_video="end_video"
 				ref="videoPlayer"
+				:episode="episode"
 			>
 			</video-player>
 		</div>
@@ -63,12 +64,26 @@
 		mounted() {
             console.log(this.episode)
             let self = this
-            self.src = self.episode.videos[self.episode.current_video_id].url_horizontal
+			self.src = self.episode.videos[self.episode.current_video_id].url_horizontal
+			let video = self.episode.video_player_ref
             window.addEventListener("orientationchange", function () {
+				video.pause()
+				let time = video.currentTime
+				let set_time = function() {
+					video.play()
+					console.log(time)
+					video.currentTime = time
+					console.log(video.currentTime)
+					video.removeEventListener('canplaythrough',set_time,false)
+				}
                 if (screen.orientation.angle == 90) {
-                    self.src = self.episode.videos[self.episode.current_video_id].url_horizontal
+					self.src = self.episode.videos[self.episode.current_video_id].url_horizontal
+					video.addEventListener('canplaythrough',set_time,false)
+					self.episode.horiz = true
                 } else {
                     self.src = self.episode.videos[self.episode.current_video_id].url_vertical
+					video.addEventListener('canplaythrough',set_time,false)
+					self.episode.horiz = false
                 }
             })
 		},
@@ -76,7 +91,7 @@
 			return {
 				height: "48vh%",
                 show_options: false,
-                src: ''
+				src: ''
 			}
 		},
 		props: {
@@ -123,6 +138,13 @@
                         item.url_horizontal = source;
                         console.log(item.url_horizontal)
                     });
+                    axios.get(item.url_vertical, {
+                        responseType: 'blob'
+                    }).then( response => {
+                        let source = URL.createObjectURL(response.data);
+                        item.url_vertical = source;
+                        console.log(item.url_vertical)
+                    });
                 })
             },
 			end_video: function(id) {
@@ -130,6 +152,11 @@
 			},
 			choose: function(video) {
 				this.episode.current_video_id = video.id
+				if (this.episode.horiz = true) {
+					this.src = this.episode.videos[this.current_video_id].url_horizontal
+				} else {
+					this.src = this.episode.videos[this.current_video_id].url_vertical
+				}
 			}
 		},
 		watch: {

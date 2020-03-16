@@ -43,16 +43,29 @@ class VideoController extends Controller
      */
     public function store(Request $request, VideoService $videoService)
     {
-        $videoService->store([
-            "episode_id" => $request->get('episode_id'),
-            "project_id" => $request->get('project_id'),
-            "meta" => $request->get('meta'),
-            "name" => $request->get('name'),
-            "url_horizontal" => $request->horizontal_video,
-            "url_vertical" => $request->vertical_video,
-            "filename_horiz" => $request->horizontal_video->getClientOriginalName(),
-            "filename_vert" => $request->vertical_video->getClientOriginalName(),
-        ]);
+        if(isset($data["url_vertical"])) {
+            $videoService->store([
+                "episode_id" => $request->get('episode_id'),
+                "project_id" => $request->get('project_id'),
+                "meta" => $request->get('meta'),
+                "name" => $request->get('name'),
+                "url_horizontal" => $request->horizontal_video,
+                "url_vertical" => $request->vertical_video,
+                "filename_horiz" => $request->horizontal_video->getClientOriginalName(),
+                "filename_vert" => $request->vertical_video->getClientOriginalName(),
+            ]);
+        }
+        else {
+            $videoService->store([
+                "episode_id" => $request->get('episode_id'),
+                "project_id" => $request->get('project_id'),
+                "meta" => $request->get('meta'),
+                "name" => $request->get('name'),
+                "url_horizontal" => $request->horizontal_video,
+                "filename_horiz" => $request->horizontal_video->getClientOriginalName(),
+            ]);
+
+        }
 
         return redirect()->back();
     }

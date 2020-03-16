@@ -31,6 +31,9 @@ Route::get('/{project}', 'ProjectController@show')->name('project.show');
 
 Route::post('/episode/create', 'EpisodeController@create')->name('episode.create');
 Route::get('/episode/show/{project_id}/{episode_id}', 'EpisodeController@show')->name('episode.show');
+
+Route::get('/episode/view/{project_id}/{episode_id}', 'EpisodeController@view')->name('episode.view');
+
 Route::post('/episode/setroot','EpisodeController@set_root');
 
 

@@ -913,16 +913,33 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log(this.episode);
     var self = this;
     self.src = self.episode.videos[self.episode.current_video_id].url_horizontal;
+    var video = self.episode.video_player_ref;
     window.addEventListener("orientationchange", function () {
+      video.pause();
+      var time = video.currentTime;
+
+      var set_time = function set_time() {
+        video.play();
+        console.log(time);
+        video.currentTime = time;
+        console.log(video.currentTime);
+        video.removeEventListener('canplaythrough', set_time, false);
+      };
+
       if (screen.orientation.angle == 90) {
         self.src = self.episode.videos[self.episode.current_video_id].url_horizontal;
+        video.addEventListener('canplaythrough', set_time, false);
+        self.episode.horiz = true;
       } else {
         self.src = self.episode.videos[self.episode.current_video_id].url_vertical;
+        video.addEventListener('canplaythrough', set_time, false);
+        self.episode.horiz = false;
       }
     });
   },
@@ -974,6 +991,13 @@ __webpack_require__.r(__webpack_exports__);
           item.url_horizontal = source;
           console.log(item.url_horizontal);
         });
+        axios.get(item.url_vertical, {
+          responseType: 'blob'
+        }).then(function (response) {
+          var source = URL.createObjectURL(response.data);
+          item.url_vertical = source;
+          console.log(item.url_vertical);
+        });
       });
     },
     end_video: function end_video(id) {
@@ -981,6 +1005,12 @@ __webpack_require__.r(__webpack_exports__);
     },
     choose: function choose(video) {
       this.episode.current_video_id = video.id;
+
+      if (this.episode.horiz = true) {
+        this.src = this.episode.videos[this.current_video_id].url_horizontal;
+      } else {
+        this.src = this.episode.videos[this.current_video_id].url_vertical;
+      }
     }
   },
   watch: {},
@@ -1083,6 +1113,7 @@ __webpack_require__.r(__webpack_exports__);
   props: {
     source: String,
     id: Number,
+    episode: Object,
     first: Boolean
   },
   methods: {
@@ -1108,7 +1139,9 @@ __webpack_require__.r(__webpack_exports__);
       this.$emit("end_video"); //this.$emit("end_video", this.id)
     }
   },
-  created: function created() {}
+  mounted: function mounted() {
+    this.episode.video_player_ref = this.$refs.videoElement;
+  }
 });
 
 /***/ }),
@@ -2557,7 +2590,7 @@ var render = function() {
       [
         _c("video-player", {
           ref: "videoPlayer",
-          attrs: { source: _vm.src },
+          attrs: { source: _vm.src, episode: _vm.episode },
           on: { end_video: _vm.end_video }
         })
       ],
