@@ -914,40 +914,52 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log(this.episode);
     var self = this;
-    self.src = self.episode.videos[self.episode.current_video_id].url_horizontal;
     var video = self.episode.video_player_ref;
+    var horiz = document.querySelector('#video-holder-horiz');
+    var vert = document.querySelector('#video-holder-vert');
     window.addEventListener("orientationchange", function () {
-      video.pause();
-      var time = video.currentTime;
-
-      var set_time = function set_time() {
-        video.play();
-        console.log(time);
-        video.currentTime = time;
-        console.log(video.currentTime);
-        video.removeEventListener('canplaythrough', set_time, false);
-      };
-
       if (screen.orientation.angle == 90) {
-        self.src = self.episode.videos[self.episode.current_video_id].url_horizontal;
-        video.addEventListener('canplaythrough', set_time, false);
-        self.episode.horiz = true;
+        horiz.classList.remove('inactive');
+        horiz.classList.add('active');
+        vert.classList.remove('active');
+        vert.classList.add('inactive');
       } else {
-        self.src = self.episode.videos[self.episode.current_video_id].url_vertical;
-        video.addEventListener('canplaythrough', set_time, false);
-        self.episode.horiz = false;
+        vert.classList.remove('inactive');
+        vert.classList.add('active');
+        horiz.classList.remove('active');
+        horiz.classList.add('inactive');
       }
     });
   },
   data: function data() {
     return {
       height: "48vh%",
-      show_options: false,
-      src: ''
+      show_options: false
     };
   },
   props: {
@@ -974,6 +986,12 @@ __webpack_require__.r(__webpack_exports__);
           }).then(function (response) {
             var source = URL.createObjectURL(response.data);
             self.episode.videos[item.out_id].url_horizontal = source;
+          });
+          axios.get(self.episode.videos[item.out_id].url_vertical, {
+            responseType: 'blob'
+          }).then(function (response) {
+            var source = URL.createObjectURL(response.data);
+            self.episode.videos[item.out_id].url_vertical = source;
           });
         });
       }
@@ -1106,24 +1124,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      completion: 0,
-      cover: false
+      completion: 0
     };
   },
   props: {
     source: String,
     id: Number,
     episode: Object,
-    first: Boolean
+    first: Boolean,
+    vertical: Boolean
   },
   methods: {
     playpause: function playpause(event) {
       if (this.$refs.videoElement.paused) {
-        this.$refs.videoElement.play();
-        this.cover = false;
+        this.episode.video_horiz_ref.play();
+        this.episode.video_vert_ref.play();
+        this.episode.cover = false;
       } else {
-        this.$refs.videoElement.pause();
-        this.cover = true;
+        this.episode.video_horiz_ref.pause();
+        this.episode.video_vert_ref.pause();
+        this.episode.cover = true;
       }
     },
     onTimeUpdate: function onTimeUpdate() {
@@ -1140,7 +1160,11 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   mounted: function mounted() {
-    this.episode.video_player_ref = this.$refs.videoElement;
+    if (this.vertical) {
+      this.episode.video_vert_ref = this.$refs.videoElement;
+    } else {
+      this.episode.video_horiz_ref = this.$refs.videoElement;
+    }
   }
 });
 
@@ -1177,7 +1201,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.preview[data-v-02862bc0] {\n\tposition: relative;\n\theight: 100%;\n}\n.chooseOptions[data-v-02862bc0] {\n\tposition: absolute;\n\twidth: 100%;\n\ttop: 0;\n\tleft: 0;\n\tdisplay: -webkit-box;\n\tdisplay: flex;\n\t-webkit-box-orient: horizontal;\n\t-webkit-box-direction: normal;\n\t        flex-flow: row wrap;\n\tz-index: 500;\n\tjustify-content: space-around;\n\theight: 100%;\n\tz-index: 1000;\n}\n.option[data-v-02862bc0] {\n\tposition: relative;\n}\n.option-background[data-v-02862bc0] {\n\tdisplay: -webkit-box;\n\tdisplay: flex;\n\twidth: 100%;\n\theight: 100%;\n\t-webkit-box-pack: center;\n\t        justify-content: center;\n\t-webkit-box-align: center;\n\t        align-items: center;\n\tbackground: rgba(155,0,0,0.7);\n\tcursor: pointer;\n\tborder-radius: 10px;\n\t-webkit-transition: background .3s, -webkit-transform .3s;\n\ttransition: background .3s, -webkit-transform .3s;\n\ttransition: background .3s, transform .3s;\n\ttransition: background .3s, transform .3s, -webkit-transform .3s;\n}\n.option-background[data-v-02862bc0]:hover {\n\t-webkit-transform: scale(1.05);\n\t        transform: scale(1.05);\n\tbackground: rgba(155,0,0,0.8);\n}\n", ""]);
+exports.push([module.i, "\n.active[data-v-02862bc0] {\n\tposition: absolute;\n\ttop: 0;\n\tz-index: 150;\n}\n.inactive[data-v-02862bc0] {\n\tz-index: 100;\n\tleft: 0;\n\tposition: absolute;\n}\n.preview[data-v-02862bc0] {\n\tposition: relative;\n\theight: 100%;\n}\n.chooseOptions[data-v-02862bc0] {\n\tposition: absolute;\n\twidth: 100%;\n\ttop: 0;\n\tleft: 0;\n\tdisplay: -webkit-box;\n\tdisplay: flex;\n\t-webkit-box-orient: horizontal;\n\t-webkit-box-direction: normal;\n\t        flex-flow: row wrap;\n\tz-index: 500;\n\tjustify-content: space-around;\n\theight: 100%;\n\tz-index: 1000;\n}\n.option[data-v-02862bc0] {\n\tposition: relative;\n}\n.option-background[data-v-02862bc0] {\n\tdisplay: -webkit-box;\n\tdisplay: flex;\n\twidth: 100%;\n\theight: 100%;\n\t-webkit-box-pack: center;\n\t        justify-content: center;\n\t-webkit-box-align: center;\n\t        align-items: center;\n\tbackground: rgba(155,0,0,0.7);\n\tcursor: pointer;\n\tborder-radius: 10px;\n\t-webkit-transition: background .3s, -webkit-transform .3s;\n\ttransition: background .3s, -webkit-transform .3s;\n\ttransition: background .3s, transform .3s;\n\ttransition: background .3s, transform .3s, -webkit-transform .3s;\n}\n.option-background[data-v-02862bc0]:hover {\n\t-webkit-transform: scale(1.05);\n\t        transform: scale(1.05);\n\tbackground: rgba(155,0,0,0.8);\n}\n", ""]);
 
 // exports
 
@@ -2584,13 +2608,39 @@ var render = function() {
     _c(
       "div",
       {
-        staticClass: "embed-responsive embed-responsive-16by9",
-        attrs: { id: "video-holder" }
+        staticClass: "embed-responsive embed-responsive-16by9 active",
+        attrs: { id: "video-holder-horiz" }
       },
       [
         _c("video-player", {
-          ref: "videoPlayer",
-          attrs: { source: _vm.src, episode: _vm.episode },
+          ref: "video_player_horiz",
+          attrs: {
+            source: this.episode.videos[this.episode.current_video_id]
+              .url_horizontal,
+            episode: _vm.episode,
+            vertical: false
+          },
+          on: { end_video: _vm.end_video }
+        })
+      ],
+      1
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "embed-responsive embed-responsive-16by9 inactive",
+        attrs: { id: "video-holder-vert" }
+      },
+      [
+        _c("video-player", {
+          ref: "video_player_vert",
+          attrs: {
+            source: this.episode.videos[this.episode.current_video_id]
+              .url_vertical,
+            episode: _vm.episode,
+            vertical: true
+          },
           on: { end_video: _vm.end_video }
         })
       ],
@@ -2692,13 +2742,7 @@ var render = function() {
     [
       _c("video", {
         ref: "videoElement",
-        attrs: {
-          src: _vm.source,
-          id: "video",
-          preload: "auto",
-          muted: "",
-          autoplay: ""
-        },
+        attrs: { src: _vm.source, id: "video", preload: "auto", muted: "" },
         domProps: { muted: true },
         on: {
           ended: _vm.onEnd,
@@ -2718,8 +2762,8 @@ var render = function() {
             {
               name: "show",
               rawName: "v-show",
-              value: _vm.cover,
-              expression: "cover"
+              value: _vm.episode.cover,
+              expression: "episode.cover"
             }
           ],
           ref: "svg",

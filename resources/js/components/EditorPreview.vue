@@ -1,11 +1,22 @@
 <template>
 	<div class="preview" v-bind:style="{ height: height}">
-		<div class="embed-responsive embed-responsive-16by9" id="video-holder">
+		<div class="embed-responsive embed-responsive-16by9 active" id="video-holder-horiz">
 			<video-player
-				:source="src"
+				:source="this.episode.videos[this.episode.current_video_id].url_horizontal"
 				v-on:end_video="end_video"
-				ref="videoPlayer"
+				ref="video_player_horiz"
 				:episode="episode"
+				:vertical="false"
+			>
+			</video-player>
+		</div>
+		<div class="embed-responsive embed-responsive-16by9 inactive" id="video-holder-vert">
+			<video-player
+				:source="this.episode.videos[this.episode.current_video_id].url_vertical"
+				v-on:end_video="end_video"
+				ref="video_player_vert"
+				:episode="episode"
+				:vertical="true"
 			>
 			</video-player>
 		</div>
@@ -21,6 +32,16 @@
 </template>
 
 <style scoped>
+.active {
+	position: absolute;
+	top: 0;
+	z-index: 150;
+}
+.inactive {
+	z-index: 100;
+	left: 0;
+	position: absolute;
+}
 .preview {
 	position: relative;
 	height: 100%;
@@ -64,34 +85,27 @@
 		mounted() {
             console.log(this.episode)
             let self = this
-			self.src = self.episode.videos[self.episode.current_video_id].url_horizontal
 			let video = self.episode.video_player_ref
+			let horiz = document.querySelector('#video-holder-horiz')
+			let vert = document.querySelector('#video-holder-vert')
             window.addEventListener("orientationchange", function () {
-				video.pause()
-				let time = video.currentTime
-				let set_time = function() {
-					video.play()
-					console.log(time)
-					video.currentTime = time
-					console.log(video.currentTime)
-					video.removeEventListener('canplaythrough',set_time,false)
-				}
                 if (screen.orientation.angle == 90) {
-					self.src = self.episode.videos[self.episode.current_video_id].url_horizontal
-					video.addEventListener('canplaythrough',set_time,false)
-					self.episode.horiz = true
+					horiz.classList.remove('inactive')
+					horiz.classList.add('active')
+					vert.classList.remove('active')
+					vert.classList.add('inactive')
                 } else {
-                    self.src = self.episode.videos[self.episode.current_video_id].url_vertical
-					video.addEventListener('canplaythrough',set_time,false)
-					self.episode.horiz = false
+					vert.classList.remove('inactive')
+					vert.classList.add('active')
+					horiz.classList.remove('active')
+					horiz.classList.add('inactive')
                 }
             })
 		},
 		data () {
 			return {
 				height: "48vh%",
-                show_options: false,
-				src: ''
+                show_options: false
 			}
 		},
 		props: {
@@ -121,6 +135,12 @@
                         }).then( response => {
                             let source = URL.createObjectURL(response.data);
                             self.episode.videos[item.out_id].url_horizontal = source;
+                        });
+                        axios.get(self.episode.videos[item.out_id].url_vertical, {
+                            responseType: 'blob'
+                        }).then( response => {
+                            let source = URL.createObjectURL(response.data);
+                            self.episode.videos[item.out_id].url_vertical = source;
                         });
 					})
 				}

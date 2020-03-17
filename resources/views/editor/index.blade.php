@@ -184,7 +184,9 @@ mix = {
 			'videos' : @json($videos),
 			{{-- 'connections' : @json($connections), --}}
 			'current_video_id' : {{ $root_video }},
-			'video_player_ref' : undefined,
+			'video_horiz_ref' : undefined,
+			'video_vert_ref' : undefined,
+			'cover': true
 		}
 	},
 	methods: {

@@ -1,11 +1,11 @@
 <template>
     <div class="root_video_component">
-        <video :src="source" id="video" @ended="onEnd" @click="playpause" @timeupdate="onTimeUpdate()" ref="videoElement" preload="auto" muted autoplay
+        <video :src="source" id="video" @ended="onEnd" @click="playpause" @timeupdate="onTimeUpdate()" ref="videoElement" preload="auto" muted
         >
         </video>
         <progress-bar :value="completion">
         </progress-bar>
-        <svg class="video-overlay-play-button" viewBox="0 0 200 200" alt="Play video" @click="playpause" v-show="cover" ref="svg">
+        <svg class="video-overlay-play-button" viewBox="0 0 200 200" alt="Play video" @click="playpause" v-show="episode.cover" ref="svg">
             <circle cx="100" cy="100" r="90" fill="none" stroke-width="15" stroke="#fff"/>
             <polygon points="70, 55 70, 145 145, 100" fill="#fff"/>
         </svg>
@@ -23,24 +23,26 @@
         data () {
             return {
                 completion: 0,
-                cover: false
             }
         },
         props: {
             source: String,
             id: Number,
 			episode: Object,
-            first: Boolean
+            first: Boolean,
+            vertical: Boolean
         },
         methods: {
             playpause: function(event) {
                 if(this.$refs.videoElement.paused) {
-                    this.$refs.videoElement.play()
-                    this.cover = false
+                    this.episode.video_horiz_ref.play()
+                    this.episode.video_vert_ref.play()
+                    this.episode.cover = false
                 }
                 else {
-                    this.$refs.videoElement.pause()
-                    this.cover = true
+                    this.episode.video_horiz_ref.pause()
+                    this.episode.video_vert_ref.pause()
+                    this.episode.cover = true
                 }
             },
             onTimeUpdate: function() {
@@ -57,7 +59,12 @@
             }
         },
         mounted() {
-            this.episode.video_player_ref = this.$refs.videoElement
+            if(this.vertical) {
+                this.episode.video_vert_ref = this.$refs.videoElement
+            }
+            else {
+                this.episode.video_horiz_ref = this.$refs.videoElement
+            }
         }
     }
 </script>
