@@ -87,6 +87,8 @@
 	</div>
 	<div id="manager" class="col-md-10 editor-base-block pt-0">
 		<div class="ebb-content" style="overflow: hidden; position: relative">
+			<canvas-editor :episode="episode">
+			</canvas-editor>
 			{{-- 
 			<connection-manager
 				json_videos="{{ $videos }}"

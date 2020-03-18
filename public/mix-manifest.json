@@ -2,5 +2,6 @@
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
     "/css/vendor.css": "/css/vendor.css",
+    "/js/manager.js": "/js/manager.js",
     "/js/vendor.js": "/js/vendor.js"
 }
