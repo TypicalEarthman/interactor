@@ -5113,12 +5113,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 paper__WEBPACK_IMPORTED_MODULE_0__["install"](window);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      rectangles: {}
+      rectangles: {},
+      drag: false
     };
   },
   props: {
@@ -5166,10 +5170,10 @@ paper__WEBPACK_IMPORTED_MODULE_0__["install"](window);
           width: width,
           height: height
         };
-        this.drawRect(x, y, width, height, main, text, fill);
+        this.drawRect(x, y, width, height, main, text, fill, key);
       }
     },
-    drawRect: function drawRect(x, y, width, height, main, text, fill) {
+    drawRect: function drawRect(x, y, width, height, main, text, fill, key) {
       var group = new Group();
       var rectangle = new Rectangle(new Point(x, y), new Point(x + width, y + height));
       var radius = new Size(30, 30);
@@ -5188,18 +5192,81 @@ paper__WEBPACK_IMPORTED_MODULE_0__["install"](window);
       });
       group.addChild(path);
       group.addChild(text_block);
-      var tool = new Tool();
+      this.rectEvents(group, key, width, height);
+      view.draw();
+    },
+    rectEvents: function rectEvents(group, id, width, height) {
+      var self = this;
 
-      tool.onMouseDrag = function (event) {
-        group.position += event.delta;
+      group.onMouseDrag = function (event) {
+        self.drag = true;
+        group.position.x += event.delta.x;
+        group.position.y += event.delta.y;
       };
 
-      view.draw();
+      group.onMouseUp = function (event) {
+        self.drag = false;
+        setTimeout(function () {
+          var position = {
+            x: group.position.x - width / 2,
+            y: group.position.y - height / 2
+          };
+          var request = {
+            meta: position,
+            id: id
+          };
+          axios.post('/video/edit', request).then(function (response) {
+            console.log('saved');
+          })["catch"](function (error) {
+            console.log(error);
+          });
+        }, 300);
+      };
+    },
+    canvasMove: function canvasMove(event) {
+      if (!this.drag) {
+        console.log(event.delta);
+        var parent = document.querySelector('.parent');
+        var x = parent.scrollLeft;
+        var y = parent.scrollTop;
+        parent.scrollTo(x - event.delta.x, y - event.delta.y);
+      }
+    },
+    drawGrid: function drawGrid() {
+      var num_rectangles_wide = 80;
+      var num_rectangles_tall = 16;
+      var boundingRect = view.bounds;
+      var width_per_rectangle = boundingRect.width / num_rectangles_wide;
+      var height_per_rectangle = boundingRect.height / num_rectangles_tall;
+
+      for (var _i = 0; _i <= num_rectangles_wide; _i++) {
+        var xPos = boundingRect.left + _i * width_per_rectangle;
+        var topPoint = new Point(xPos, boundingRect.top);
+        var bottomPoint = new Point(xPos, boundingRect.bottom);
+        var aLine = new Path.Line(topPoint, bottomPoint);
+        aLine.strokeColor = '#D5D3D2';
+      }
+
+      for (var i = 0; i <= num_rectangles_tall; i++) {
+        var yPos = boundingRect.top + i * height_per_rectangle;
+        var leftPoint = new Point(boundingRect.left, yPos);
+        var rightPoint = new Point(boundingRect.right, yPos);
+
+        var _aLine = new Path.Line(leftPoint, rightPoint);
+
+        _aLine.strokeColor = '#D5D3D2';
+      }
     }
   },
   mounted: function mounted() {
     paper__WEBPACK_IMPORTED_MODULE_0__["setup"]('paper_root');
+    this.drawGrid();
     this.drawVideos('mount');
+    var self = this;
+
+    view.onMouseDrag = function (event) {
+      self.canvasMove(event);
+    };
   }
 });
 
@@ -6301,7 +6368,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n#manager-root[data-v-d1bacb60] {\r\n    display: -webkit-box;\r\n    display: flex;\r\n    -webkit-box-orient: vertical;\r\n    -webkit-box-direction: normal;\r\n            flex-flow: column wrap;\r\n    -webkit-box-pack: start;\r\n            justify-content: flex-start;\r\n    align-content: flex-start;\n}\n.parent[data-v-d1bacb60] {\r\n    padding: 0;\r\n    overflow: hidden;\n}\r\n", ""]);
+exports.push([module.i, "\ncanvas[data-v-d1bacb60] {\r\n    border:1px solid #000000;\n}\n#manager-root[data-v-d1bacb60] {\r\n    display: -webkit-box;\r\n    display: flex;\r\n    -webkit-box-orient: vertical;\r\n    -webkit-box-direction: normal;\r\n            flex-flow: column wrap;\r\n    -webkit-box-pack: start;\r\n            justify-content: flex-start;\r\n    align-content: flex-start;\n}\n.parent[data-v-d1bacb60] {\r\n    padding: 0;\r\n    overflow: hidden;\n}\r\n", ""]);
 
 // exports
 
@@ -6512,7 +6579,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 var paper = function(self, undefined) {
 
-self = self || __webpack_require__(/*! ./node/self.js */ 3);
+self = self || __webpack_require__(/*! ./node/self.js */ 1);
 var window = self.window,
 	document = self.document;
 
@@ -23853,7 +23920,7 @@ var paper = new (PaperScope.inject(Base.exports, {
 }))();
 
 if (paper.agent.node) {
-	__webpack_require__(/*! ./node/extend.js */ 4)(paper);
+	__webpack_require__(/*! ./node/extend.js */ 2)(paper);
 }
 
 if (true) {
@@ -26081,7 +26148,7 @@ module.exports = __webpack_require__(/*! C:\interactor\interactor\resources\sass
 
 /***/ }),
 
-/***/ 3:
+/***/ 1:
 /*!********************************!*\
   !*** ./node/self.js (ignored) ***!
   \********************************/
@@ -26092,7 +26159,7 @@ module.exports = __webpack_require__(/*! C:\interactor\interactor\resources\sass
 
 /***/ }),
 
-/***/ 4:
+/***/ 2:
 /*!**********************************!*\
   !*** ./node/extend.js (ignored) ***!
   \**********************************/

@@ -7,6 +7,9 @@
     </div>
 </template>
 <style scoped>
+canvas {
+    border:1px solid #000000;
+}
 #manager-root {
     display: flex;
     flex-flow: column wrap;
@@ -24,7 +27,8 @@ paper.install(window)
 export default {
     data () {
         return {
-            rectangles: {}
+            rectangles: {},
+            drag: false
         }
     },
     props: {
@@ -71,11 +75,10 @@ export default {
                     width: width,
                     height: height
                 }
-                this.drawRect(x,y,width,height,main,text,fill)
+                this.drawRect(x,y,width,height,main,text,fill,key)
             }
         },
-        drawRect: function(x,y,width,height,main,text,fill) {
-            
+        drawRect: function(x,y,width,height,main,text,fill,key) {
             let group = new Group()
             let rectangle = new Rectangle(new Point(x, y), new Point(x+width, y+height))
             let radius = new Size(30, 30)
@@ -95,18 +98,76 @@ export default {
             })
             group.addChild(path)
             group.addChild(text_block)
-
-            let tool = new Tool();
-
-            tool.onMouseDrag = function(event) {
-                group.position += event.delta
-            }
+            this.rectEvents(group,key,width,height)
             view.draw()
+        },
+        rectEvents: function(group,id,width,height) {
+            let self = this
+            group.onMouseDrag = function(event) {
+                self.drag = true
+                group.position.x += event.delta.x
+                group.position.y += event.delta.y
+            }
+            group.onMouseUp = function(event) {
+                self.drag = false
+                setTimeout(function() {
+                    let position = {
+                        x: group.position.x - width/2,
+                        y: group.position.y - height/2
+                    }
+                    let request = {
+                        meta: position,
+                        id: id
+                    }
+                    axios.post('/video/edit', request)
+                        .then(function (response) {
+                            console.log('saved')
+                        })
+                        .catch(function (error) {
+                            console.log(error)
+                        })
+                }, 300);
+            }
+        },
+        canvasMove: function(event) {
+            if(!this.drag) {
+                console.log(event.delta)
+                let parent = document.querySelector('.parent')
+                let x = parent.scrollLeft
+                let y = parent.scrollTop
+                parent.scrollTo(x-event.delta.x, y-event.delta.y)
+            }
+        },
+        drawGrid: function() {
+            let num_rectangles_wide = 80
+            let num_rectangles_tall = 16
+            let boundingRect = view.bounds
+            let width_per_rectangle = boundingRect.width / num_rectangles_wide;
+            let height_per_rectangle = boundingRect.height / num_rectangles_tall;
+            for (let i = 0; i <= num_rectangles_wide; i++) {
+                let xPos = boundingRect.left + i * width_per_rectangle;
+                let topPoint = new Point(xPos, boundingRect.top);
+                let bottomPoint = new Point(xPos, boundingRect.bottom);
+                let aLine = new Path.Line(topPoint, bottomPoint);
+                aLine.strokeColor = '#D5D3D2';
+            }
+            for (var i = 0; i <= num_rectangles_tall; i++) {
+                let yPos = boundingRect.top + i * height_per_rectangle;
+                let leftPoint = new Point(boundingRect.left, yPos);
+                let rightPoint = new Point(boundingRect.right, yPos);
+                let aLine = new Path.Line(leftPoint, rightPoint);
+                aLine.strokeColor = '#D5D3D2';
+            }
         }
     },
     mounted() {
         paper.setup('paper_root')
+        this.drawGrid()
         this.drawVideos('mount')
+        let self = this
+        view.onMouseDrag = function(event) {
+            self.canvasMove(event)
+        }
     }
 }
 </script>
