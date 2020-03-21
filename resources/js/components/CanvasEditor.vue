@@ -1,5 +1,5 @@
 <template>
-<div>
+<div style='height:100%;'>
     <div id="manager-root" style='height:100%;'>
         <div class="parent" style='position: overflow: hidden; width:100%;height:100%;'>
             <canvas id="paper_root" width="5000" height="1000">
@@ -58,7 +58,8 @@
     font-weight: bold;
 	border-radius: 50px;
 	text-align: center;
-	box-shadow: 2px 2px 3px #999;
+    box-shadow: 2px 2px 3px #999;
+    cursor: pointer;
 }
 canvas {
     border:1px solid #000000;
@@ -91,7 +92,8 @@ export default {
                 entry_id: '',
                 out_id: ''
             },
-            bezier: []
+            bezier: [],
+            buttons: []
         }
     },
     props: {
@@ -178,6 +180,10 @@ export default {
                 item.remove();
             })
             this.bezier = []
+            this.buttons.forEach(function(item) {
+                item.remove();
+            })
+            this.buttons = []
             let self = this
             let connections = this.episode.connections
             for(let key in connections) {
@@ -220,7 +226,11 @@ export default {
                 
                 self.bezier[self.bezier.length] =  new Path(r1seg, r2seg)
                 
-                self.bezier[self.bezier.length - 1].strokeColor = '#fff' //Give it some colour so we can see it.
+                self.bezier[self.bezier.length - 1].strokeColor = '#41E598' //Give it some colour so we can see it.
+                
+                self.buttons[self.buttons.length] =  new Path.Circle(rc.center,8)
+                self.buttons[self.buttons.length - 1].fillColor = '#D15411'
+                self.buttonEvents(self.buttons[self.buttons.length - 1],item)
                 /*
                     Конкуренты
                     Эталон
@@ -228,7 +238,24 @@ export default {
                 */
             }
         },
+        buttonEvents: function(button,connection) {
+            button.onMouseDown = function (event) {
+                console.log(connection)
+            }
+            button.onMouseEnter = function (event) {
+                document.querySelector('.parent').style.cursor = "pointer";
+            }
+            button.onMouseLeave = function (event) {
+                document.querySelector('.parent').style.cursor = "default";
+            }
+        },
         rectEvents: function(group,id,width,height,path) {
+            group.onMouseEnter = function (event) {
+                document.querySelector('.parent').style.cursor = "pointer";
+            }
+            group.onMouseLeave = function (event) {
+                document.querySelector('.parent').style.cursor = "default";
+            }
             let self = this
             group.onMouseDrag = function(event) {
                 if(!self.line_draw) {

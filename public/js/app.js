@@ -5170,6 +5170,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 paper__WEBPACK_IMPORTED_MODULE_0__["install"](window);
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -5185,7 +5186,8 @@ paper__WEBPACK_IMPORTED_MODULE_0__["install"](window);
         entry_id: '',
         out_id: ''
       },
-      bezier: []
+      bezier: [],
+      buttons: []
     };
   },
   props: {
@@ -5269,6 +5271,10 @@ paper__WEBPACK_IMPORTED_MODULE_0__["install"](window);
         item.remove();
       });
       this.bezier = [];
+      this.buttons.forEach(function (item) {
+        item.remove();
+      });
+      this.buttons = [];
       var self = this;
       var connections = this.episode.connections;
 
@@ -5305,8 +5311,11 @@ paper__WEBPACK_IMPORTED_MODULE_0__["install"](window);
         var r1seg = new Segment(r1cent, null, h1);
         var r2seg = new Segment(r2cent, h2, null);
         self.bezier[self.bezier.length] = new Path(r1seg, r2seg);
-        self.bezier[self.bezier.length - 1].strokeColor = '#fff'; //Give it some colour so we can see it.
+        self.bezier[self.bezier.length - 1].strokeColor = '#41E598'; //Give it some colour so we can see it.
 
+        self.buttons[self.buttons.length] = new Path.Circle(rc.center, 8);
+        self.buttons[self.buttons.length - 1].fillColor = '#D15411';
+        self.buttonEvents(self.buttons[self.buttons.length - 1], item);
         /*
             Конкуренты
             Эталон
@@ -5314,7 +5323,28 @@ paper__WEBPACK_IMPORTED_MODULE_0__["install"](window);
         */
       }
     },
+    buttonEvents: function buttonEvents(button, connection) {
+      button.onMouseDown = function (event) {
+        console.log(connection);
+      };
+
+      button.onMouseEnter = function (event) {
+        document.querySelector('.parent').style.cursor = "pointer";
+      };
+
+      button.onMouseLeave = function (event) {
+        document.querySelector('.parent').style.cursor = "default";
+      };
+    },
     rectEvents: function rectEvents(group, id, width, height, path) {
+      group.onMouseEnter = function (event) {
+        document.querySelector('.parent').style.cursor = "pointer";
+      };
+
+      group.onMouseLeave = function (event) {
+        document.querySelector('.parent').style.cursor = "default";
+      };
+
       var self = this;
 
       group.onMouseDrag = function (event) {
@@ -6519,7 +6549,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.tools_button[data-v-d1bacb60] {\r\n\tposition: absolute;\r\n\twidth: 50px;\r\n\theight: 50px;\r\n\tleft:  10px;\r\n\ttop: 40px;\r\n\tbackground-color: #fff;\r\n\tcolor: #000;\r\n    font-size: 40px;\r\n    line-height: 50px;\r\n    font-weight: bold;\r\n\tborder-radius: 50px;\r\n\ttext-align: center;\r\n\tbox-shadow: 2px 2px 3px #999;\n}\ncanvas[data-v-d1bacb60] {\r\n    border:1px solid #000000;\n}\n#manager-root[data-v-d1bacb60] {\r\n    display: -webkit-box;\r\n    display: flex;\r\n    -webkit-box-orient: vertical;\r\n    -webkit-box-direction: normal;\r\n            flex-flow: column wrap;\r\n    -webkit-box-pack: start;\r\n            justify-content: flex-start;\r\n    align-content: flex-start;\r\n    position: relative;\n}\n.parent[data-v-d1bacb60] {\r\n    padding: 0;\r\n    overflow: hidden;\n}\r\n", ""]);
+exports.push([module.i, "\n.tools_button[data-v-d1bacb60] {\r\n\tposition: absolute;\r\n\twidth: 50px;\r\n\theight: 50px;\r\n\tleft:  10px;\r\n\ttop: 40px;\r\n\tbackground-color: #fff;\r\n\tcolor: #000;\r\n    font-size: 40px;\r\n    line-height: 50px;\r\n    font-weight: bold;\r\n\tborder-radius: 50px;\r\n\ttext-align: center;\r\n    box-shadow: 2px 2px 3px #999;\r\n    cursor: pointer;\n}\ncanvas[data-v-d1bacb60] {\r\n    border:1px solid #000000;\n}\n#manager-root[data-v-d1bacb60] {\r\n    display: -webkit-box;\r\n    display: flex;\r\n    -webkit-box-orient: vertical;\r\n    -webkit-box-direction: normal;\r\n            flex-flow: column wrap;\r\n    -webkit-box-pack: start;\r\n            justify-content: flex-start;\r\n    align-content: flex-start;\r\n    position: relative;\n}\n.parent[data-v-d1bacb60] {\r\n    padding: 0;\r\n    overflow: hidden;\n}\r\n", ""]);
 
 // exports
 
@@ -24764,6 +24794,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
+    { staticStyle: { height: "100%" } },
     [
       _c(
         "div",
