@@ -188,6 +188,22 @@ canvas[resize] {
     box-shadow: 0 0 10px rgba(0,0,0,0.75);
     color: #131313;
 }
+.floating_dialog {
+    background: #fff;
+    width: 600px;
+    height: 100px;
+    opacity: 0.9;
+    font-size: 50px;
+    margin-left: -300px;
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    z-index: 1010;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    color: #131313;
+}
 
 
 .blacker {

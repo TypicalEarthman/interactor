@@ -5116,13 +5116,76 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 paper__WEBPACK_IMPORTED_MODULE_0__["install"](window);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       rectangles: {},
-      drag: false
+      drag: false,
+      line_draw: false,
+      connection: {
+        modal_conn_first: false,
+        modal_conn_second: false,
+        modal_conn_result: false,
+        entry_id: '',
+        out_id: ''
+      },
+      bezier: []
     };
   },
   props: {
@@ -5130,6 +5193,12 @@ paper__WEBPACK_IMPORTED_MODULE_0__["install"](window);
   },
   watch: {},
   methods: {
+    openTools: function openTools() {
+      this.drawVideos('mount');
+      this.connection.modal_conn_second = false;
+      this.connection.modal_conn_result = false;
+      this.connection.modal_conn_first = true;
+    },
     drawVideos: function drawVideos(type) {
       var default_x = 20;
       var default_y = 20;
@@ -5192,40 +5261,121 @@ paper__WEBPACK_IMPORTED_MODULE_0__["install"](window);
       });
       group.addChild(path);
       group.addChild(text_block);
-      this.rectEvents(group, key, width, height);
+      this.rectEvents(group, key, width, height, path);
       view.draw();
     },
-    rectEvents: function rectEvents(group, id, width, height) {
+    drawConnections: function drawConnections() {
+      this.bezier.forEach(function (item) {
+        item.remove();
+      });
+      this.bezier = [];
+      var self = this;
+      var connections = this.episode.connections;
+
+      for (var key in connections) {
+        var item = connections[key];
+        var origin = this.rectangles[item.entry_id];
+        var destination = this.rectangles[item.out_id];
+        var r1cent = void 0;
+        var r2cent = void 0; //Get the center points, they will be used as endpoints for the curve.
+
+        if (origin.x <= destination.x) {
+          if (origin.y < destination.y) {
+            r1cent = new Point(origin.x + origin.width, origin.y + origin.height / 2);
+            r2cent = new Point(destination.x, destination.y + destination.height / 2);
+          } else {
+            r1cent = new Point(destination.x, destination.y + destination.height / 2);
+            r2cent = new Point(origin.x + origin.width, origin.y + origin.height / 2);
+          }
+        } else {
+          if (origin.y < destination.y) {
+            r1cent = new Point(origin.x, origin.y + origin.height / 2);
+            r2cent = new Point(destination.x + destination.width, destination.y + destination.height / 2);
+          } else {
+            r1cent = new Point(destination.x + destination.width, destination.y + destination.height / 2);
+            r2cent = new Point(origin.x, origin.y + origin.height / 2);
+          }
+        }
+
+        var rc = new Rectangle(r1cent, r2cent); // the handles are relative to the path's point
+        // not absolute.
+
+        var h1 = new Point(rc.topCenter.x - r1cent.x, rc.topCenter.y - r1cent.y);
+        var h2 = new Point(rc.bottomCenter.x - r2cent.x, rc.bottomCenter.y - r2cent.y);
+        var r1seg = new Segment(r1cent, null, h1);
+        var r2seg = new Segment(r2cent, h2, null);
+        self.bezier[self.bezier.length] = new Path(r1seg, r2seg);
+        self.bezier[self.bezier.length - 1].strokeColor = '#fff'; //Give it some colour so we can see it.
+
+        /*
+            Конкуренты
+            Эталон
+            Возможные пути
+        */
+      }
+    },
+    rectEvents: function rectEvents(group, id, width, height, path) {
       var self = this;
 
       group.onMouseDrag = function (event) {
-        self.drag = true;
-        group.position.x += event.delta.x;
-        group.position.y += event.delta.y;
+        if (!self.line_draw) {
+          self.drag = true;
+          group.position.x += event.delta.x;
+          group.position.y += event.delta.y;
+          self.rectangles[id].x = group.position.x - self.rectangles[id].width / 2;
+          self.rectangles[id].y = group.position.y - self.rectangles[id].height / 2;
+          self.drawConnections();
+        }
       };
 
       group.onMouseUp = function (event) {
-        self.drag = false;
-        setTimeout(function () {
-          var position = {
-            x: group.position.x - width / 2,
-            y: group.position.y - height / 2
-          };
-          var request = {
-            meta: position,
-            id: id
-          };
-          axios.post('/video/edit', request).then(function (response) {
-            console.log('saved');
+        if (self.connection.modal_conn_first) {
+          self.connection.entry_id = id;
+          self.connection.modal_conn_first = false;
+          self.connection.modal_conn_second = true;
+          path.fillColor = '#588B58';
+        } else if (self.connection.modal_conn_second) {
+          self.connection.out_id = id;
+          self.connection.modal_conn_second = false;
+          axios.post('/connection/add', {
+            'entry_id': self.connection.entry_id,
+            'out_id': self.connection.out_id,
+            'episode_id': self.episode.episode_id
+          }).then(function (response) {
+            console.log(response.data);
+            self.drawVideos('mount');
+            self.connection.modal_conn_result = true;
+            setTimeout(function () {
+              self.connection.modal_conn_result = false;
+            }, 1500);
           })["catch"](function (error) {
             console.log(error);
+            self.createModal = false;
           });
-        }, 300);
+        } else {
+          if (self.drag) {
+            self.drag = false;
+            setTimeout(function () {
+              var position = {
+                x: group.position.x - width / 2,
+                y: group.position.y - height / 2
+              };
+              var request = {
+                meta: position,
+                id: id
+              };
+              axios.post('/video/edit', request).then(function (response) {
+                console.log('saved');
+              })["catch"](function (error) {
+                console.log(error);
+              });
+            }, 300);
+          }
+        }
       };
     },
     canvasMove: function canvasMove(event) {
-      if (!this.drag) {
-        console.log(event.delta);
+      if (!this.drag && !this.line_draw) {
         var parent = document.querySelector('.parent');
         var x = parent.scrollLeft;
         var y = parent.scrollTop;
@@ -5262,6 +5412,7 @@ paper__WEBPACK_IMPORTED_MODULE_0__["install"](window);
     paper__WEBPACK_IMPORTED_MODULE_0__["setup"]('paper_root');
     this.drawGrid();
     this.drawVideos('mount');
+    this.drawConnections();
     var self = this;
 
     view.onMouseDrag = function (event) {
@@ -6368,7 +6519,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\ncanvas[data-v-d1bacb60] {\r\n    border:1px solid #000000;\n}\n#manager-root[data-v-d1bacb60] {\r\n    display: -webkit-box;\r\n    display: flex;\r\n    -webkit-box-orient: vertical;\r\n    -webkit-box-direction: normal;\r\n            flex-flow: column wrap;\r\n    -webkit-box-pack: start;\r\n            justify-content: flex-start;\r\n    align-content: flex-start;\n}\n.parent[data-v-d1bacb60] {\r\n    padding: 0;\r\n    overflow: hidden;\n}\r\n", ""]);
+exports.push([module.i, "\n.tools_button[data-v-d1bacb60] {\r\n\tposition: absolute;\r\n\twidth: 50px;\r\n\theight: 50px;\r\n\tleft:  10px;\r\n\ttop: 40px;\r\n\tbackground-color: #fff;\r\n\tcolor: #000;\r\n    font-size: 40px;\r\n    line-height: 50px;\r\n    font-weight: bold;\r\n\tborder-radius: 50px;\r\n\ttext-align: center;\r\n\tbox-shadow: 2px 2px 3px #999;\n}\ncanvas[data-v-d1bacb60] {\r\n    border:1px solid #000000;\n}\n#manager-root[data-v-d1bacb60] {\r\n    display: -webkit-box;\r\n    display: flex;\r\n    -webkit-box-orient: vertical;\r\n    -webkit-box-direction: normal;\r\n            flex-flow: column wrap;\r\n    -webkit-box-pack: start;\r\n            justify-content: flex-start;\r\n    align-content: flex-start;\r\n    position: relative;\n}\n.parent[data-v-d1bacb60] {\r\n    padding: 0;\r\n    overflow: hidden;\n}\r\n", ""]);
 
 // exports
 
@@ -24611,37 +24762,174 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticStyle: { height: "100%" }, attrs: { id: "manager-root" } },
-      [
+  return _c(
+    "div",
+    [
+      _c(
+        "div",
+        { staticStyle: { height: "100%" }, attrs: { id: "manager-root" } },
+        [
+          _c(
+            "div",
+            {
+              staticClass: "parent",
+              staticStyle: {
+                position: "overflow: hidden",
+                width: "100%",
+                height: "100%"
+              }
+            },
+            [
+              _c("canvas", {
+                attrs: { id: "paper_root", width: "5000", height: "1000" }
+              }),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "tools_button", on: { click: _vm.openTools } },
+                [_vm._v("\r\n                +\r\n            ")]
+              )
+            ]
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _c("transition", { attrs: { name: "fade" } }, [
         _c(
           "div",
           {
-            staticClass: "parent",
-            staticStyle: {
-              position: "overflow: hidden",
-              width: "100%",
-              height: "100%"
-            }
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.connection.modal_conn_first,
+                expression: "connection.modal_conn_first"
+              }
+            ],
+            staticClass: "floating_dialog"
           },
           [
-            _c("canvas", {
-              attrs: { id: "paper_root", width: "5000", height: "1000" }
-            })
+            _c("h4", [
+              _vm._v(
+                "\r\n            Click on the element to start the connection from\r\n            "
+              )
+            ]),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary btn-block btn-sm",
+                staticStyle: {
+                  position: "absolute",
+                  left: "20px",
+                  bottom: "20px",
+                  right: "20px",
+                  width: "auto"
+                },
+                on: {
+                  click: function($event) {
+                    _vm.connection.modal_conn_first = false
+                  }
+                }
+              },
+              [_vm._v("\r\n                Close\r\n            ")]
+            )
           ]
         )
-      ]
-    )
-  }
-]
+      ]),
+      _vm._v(" "),
+      _c("transition", { attrs: { name: "fade" } }, [
+        _c(
+          "div",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.connection.modal_conn_second,
+                expression: "connection.modal_conn_second"
+              }
+            ],
+            staticClass: "floating_dialog"
+          },
+          [
+            _c("h4", [
+              _vm._v(
+                "\r\n            Choose the destination element\r\n            "
+              )
+            ]),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary btn-block btn-sm",
+                staticStyle: {
+                  position: "absolute",
+                  left: "20px",
+                  bottom: "20px",
+                  right: "20px",
+                  width: "auto"
+                },
+                on: {
+                  click: function($event) {
+                    _vm.connection.modal_conn_second = false
+                  }
+                }
+              },
+              [_vm._v("\r\n                Close\r\n            ")]
+            )
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("transition", { attrs: { name: "fade" } }, [
+        _c(
+          "div",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.connection.modal_conn_result,
+                expression: "connection.modal_conn_result"
+              }
+            ],
+            staticClass: "floating_dialog"
+          },
+          [
+            _c("h4", [
+              _vm._v(
+                "\r\n            Connection has been created\r\n            "
+              )
+            ]),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary btn-block btn-sm",
+                staticStyle: {
+                  position: "absolute",
+                  left: "20px",
+                  bottom: "20px",
+                  right: "20px",
+                  width: "auto"
+                },
+                on: {
+                  click: function($event) {
+                    _vm.connection.modal_conn_result = false
+                  }
+                }
+              },
+              [_vm._v("\r\n                Close\r\n            ")]
+            )
+          ]
+        )
+      ])
+    ],
+    1
+  )
+}
+var staticRenderFns = []
 render._withStripped = true
 
 

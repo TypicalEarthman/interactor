@@ -174,7 +174,6 @@ mix = {
 			api:  'http://interactor.su/',
 			@endif
 		@endif
-		episode_id: '',
 		project_id: '',
 		option: '',
 		route: '',
@@ -184,11 +183,12 @@ mix = {
 		manager: null,
 		episode: {
 			'videos' : @json($videos),
-			{{-- 'connections' : @json($connections), --}}
+			'connections' : @json($connections),
 			'current_video_id' : {{ $root_video }},
 			'video_horiz_ref' : undefined,
 			'video_vert_ref' : undefined,
-			'cover': true
+			'cover': true,
+			'episode_id': {{ $episode_id }}
 		}
 	},
 	methods: {

@@ -1,12 +1,65 @@
 <template>
+<div>
     <div id="manager-root" style='height:100%;'>
         <div class="parent" style='position: overflow: hidden; width:100%;height:100%;'>
             <canvas id="paper_root" width="5000" height="1000">
             </canvas>
+            <div class="tools_button" @click="openTools">
+                +
+            </div>
         </div>
     </div>
+	<transition name="fade">
+        <div class="floating_dialog" v-show="connection.modal_conn_first">
+            <h4>
+            Click on the element to start the connection from
+            </h4>
+
+            <button @click="connection.modal_conn_first=false" class="btn btn-primary btn-block btn-sm" style="position: absolute; left: 20px; bottom: 20px; right: 20px; width: auto">
+                Close
+            </button>
+        </div>
+	</transition>
+	<transition name="fade">
+        <div class="floating_dialog" v-show="connection.modal_conn_second">
+            <h4>
+            Choose the destination element
+            </h4>
+
+            <button @click="connection.modal_conn_second=false" class="btn btn-primary btn-block btn-sm" style="position: absolute; left: 20px; bottom: 20px; right: 20px; width: auto">
+                Close
+            </button>
+        </div>
+	</transition>
+	<transition name="fade">
+        <div class="floating_dialog" v-show="connection.modal_conn_result">
+            <h4>
+            Connection has been created
+            </h4>
+
+            <button @click="connection.modal_conn_result=false" class="btn btn-primary btn-block btn-sm" style="position: absolute; left: 20px; bottom: 20px; right: 20px; width: auto">
+                Close
+            </button>
+        </div>
+	</transition>
+</div>
 </template>
 <style scoped>
+.tools_button {
+	position: absolute;
+	width: 50px;
+	height: 50px;
+	left:  10px;
+	top: 40px;
+	background-color: #fff;
+	color: #000;
+    font-size: 40px;
+    line-height: 50px;
+    font-weight: bold;
+	border-radius: 50px;
+	text-align: center;
+	box-shadow: 2px 2px 3px #999;
+}
 canvas {
     border:1px solid #000000;
 }
@@ -15,6 +68,7 @@ canvas {
     flex-flow: column wrap;
     justify-content: flex-start;
     align-content: flex-start;
+    position: relative;
 }
 .parent {
     padding: 0;
@@ -28,7 +82,16 @@ export default {
     data () {
         return {
             rectangles: {},
-            drag: false
+            drag: false,
+            line_draw: false,
+            connection: {
+                modal_conn_first: false,
+                modal_conn_second: false,
+                modal_conn_result: false,
+                entry_id: '',
+                out_id: ''
+            },
+            bezier: []
         }
     },
     props: {
@@ -37,6 +100,12 @@ export default {
     watch: {
     },
     methods: {
+        openTools: function() {
+            this.drawVideos('mount')
+            this.connection.modal_conn_second = false
+            this.connection.modal_conn_result = false
+            this.connection.modal_conn_first = true
+        },
         drawVideos: function(type) {
             let default_x = 20
             let default_y = 20
@@ -84,9 +153,11 @@ export default {
             let radius = new Size(30, 30)
             let path = new Path.Rectangle(rectangle, radius)
             path.fillColor = fill
+            
 
             let text_x = x + (width)/2
             let text_y = y + (height)/2
+
             let text_block = new PointText({
                 point: new Point(text_x,text_y),
                 content: text,
@@ -96,42 +167,134 @@ export default {
                 fontFamily: 'Arial',
                 fontSize: 14
             })
+
             group.addChild(path)
             group.addChild(text_block)
-            this.rectEvents(group,key,width,height)
+            this.rectEvents(group,key,width,height,path)
             view.draw()
         },
-        rectEvents: function(group,id,width,height) {
+        drawConnections: function() {
+            this.bezier.forEach(function(item) {
+                item.remove();
+            })
+            this.bezier = []
+            let self = this
+            let connections = this.episode.connections
+            for(let key in connections) {
+                let item = connections[key]
+                let origin = this.rectangles[item.entry_id]
+                let destination = this.rectangles[item.out_id]
+                let r1cent
+                let r2cent 
+                //Get the center points, they will be used as endpoints for the curve.
+                if(origin.x <= destination.x) {          
+                    if(origin.y < destination.y) {
+                        r1cent = new Point(origin.x + origin.width, origin.y + origin.height/2)
+                        r2cent = new Point(destination.x, destination.y + destination.height/2)
+                    }
+                    else {
+                        r1cent = new Point(destination.x , destination.y + destination.height/2)
+                        r2cent = new Point(origin.x+ origin.width, origin.y + origin.height/2)
+                    }
+                }
+                else {   
+                    if(origin.y < destination.y) {
+                        r1cent = new Point(origin.x, origin.y + origin.height/2)
+                        r2cent = new Point(destination.x + destination.width, destination.y + destination.height/2)    
+                    }
+                    else {
+                        r1cent = new Point(destination.x + destination.width, destination.y + destination.height/2)
+                        r2cent = new Point(origin.x, origin.y + origin.height/2)
+                    }
+                }
+                
+                let rc = new Rectangle(r1cent, r2cent)
+
+                // the handles are relative to the path's point
+                // not absolute.
+                let h1 = new Point(rc.topCenter.x - r1cent.x,rc.topCenter.y - r1cent.y)
+                let h2 = new Point(rc.bottomCenter.x - r2cent.x,rc.bottomCenter.y - r2cent.y)
+            
+                let r1seg = new Segment(r1cent, null, h1)
+                let r2seg = new Segment(r2cent, h2, null)
+                
+                self.bezier[self.bezier.length] =  new Path(r1seg, r2seg)
+                
+                self.bezier[self.bezier.length - 1].strokeColor = '#fff' //Give it some colour so we can see it.
+                /*
+                    Конкуренты
+                    Эталон
+                    Возможные пути
+                */
+            }
+        },
+        rectEvents: function(group,id,width,height,path) {
             let self = this
             group.onMouseDrag = function(event) {
-                self.drag = true
-                group.position.x += event.delta.x
-                group.position.y += event.delta.y
+                if(!self.line_draw) {
+                    self.drag = true
+                    group.position.x += event.delta.x
+                    group.position.y += event.delta.y
+                    self.rectangles[id].x = group.position.x - self.rectangles[id].width/2
+                    self.rectangles[id].y = group.position.y - self.rectangles[id].height/2
+                    self.drawConnections()
+                }
             }
             group.onMouseUp = function(event) {
-                self.drag = false
-                setTimeout(function() {
-                    let position = {
-                        x: group.position.x - width/2,
-                        y: group.position.y - height/2
+                if(self.connection.modal_conn_first) {
+                    self.connection.entry_id = id
+                    self.connection.modal_conn_first = false
+                    self.connection.modal_conn_second = true    
+                    path.fillColor = '#588B58'
+                }
+                else if(self.connection.modal_conn_second) {
+                    self.connection.out_id = id
+                    self.connection.modal_conn_second = false
+                    axios.post('/connection/add', {
+                        'entry_id': self.connection.entry_id,
+                        'out_id': self.connection.out_id,
+                        'episode_id': self.episode.episode_id
+                    })
+                    .then(function (response) {
+                        console.log(response.data)
+                        self.drawVideos('mount')
+                        self.connection.modal_conn_result = true
+                        
+                        setTimeout(function() {
+                            self.connection.modal_conn_result = false
+                        }, 1500)
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                        self.createModal = false;
+                    })
+                }
+                else {                 
+                    if(self.drag) {
+                        self.drag = false
+                        setTimeout(function() {
+                            let position = {
+                                x: group.position.x - width/2,
+                                y: group.position.y - height/2
+                            }
+                            let request = {
+                                meta: position,
+                                id: id
+                            }
+                            axios.post('/video/edit', request)
+                                .then(function (response) {
+                                    console.log('saved')
+                                })
+                                .catch(function (error) {
+                                    console.log(error)
+                                })
+                        }, 300);
                     }
-                    let request = {
-                        meta: position,
-                        id: id
-                    }
-                    axios.post('/video/edit', request)
-                        .then(function (response) {
-                            console.log('saved')
-                        })
-                        .catch(function (error) {
-                            console.log(error)
-                        })
-                }, 300);
+                }
             }
         },
         canvasMove: function(event) {
-            if(!this.drag) {
-                console.log(event.delta)
+            if(!this.drag && !this.line_draw) {
                 let parent = document.querySelector('.parent')
                 let x = parent.scrollLeft
                 let y = parent.scrollTop
@@ -164,6 +327,7 @@ export default {
         paper.setup('paper_root')
         this.drawGrid()
         this.drawVideos('mount')
+        this.drawConnections()
         let self = this
         view.onMouseDrag = function(event) {
             self.canvasMove(event)
