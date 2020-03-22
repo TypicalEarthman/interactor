@@ -32,6 +32,17 @@
         </div>
 	</transition>
 	<transition name="fade">
+        <div class="dialog" v-show="connection.configure">
+            <h4>
+            Customize the look of the options 
+            </h4>
+
+            <button @click="connection.configure=false" class="btn btn-primary btn-block btn-sm" style="position: absolute; left: 20px; bottom: 20px; right: 20px; width: auto">
+                Close
+            </button>
+        </div>
+	</transition>
+	<transition name="fade">
         <div class="floating_dialog" v-show="connection.modal_conn_result">
             <h4>
             Connection has been created
@@ -89,6 +100,7 @@ export default {
                 modal_conn_first: false,
                 modal_conn_second: false,
                 modal_conn_result: false,
+                configure: '',
                 entry_id: '',
                 out_id: ''
             },
@@ -192,7 +204,6 @@ export default {
                 let destination = this.rectangles[item.out_id]
                 let r1cent
                 let r2cent 
-                //Get the center points, they will be used as endpoints for the curve.
                 if(origin.x <= destination.x) {          
                     if(origin.y < destination.y) {
                         r1cent = new Point(origin.x + origin.width, origin.y + origin.height/2)
@@ -216,8 +227,6 @@ export default {
                 
                 let rc = new Rectangle(r1cent, r2cent)
 
-                // the handles are relative to the path's point
-                // not absolute.
                 let h1 = new Point(rc.topCenter.x - r1cent.x,rc.topCenter.y - r1cent.y)
                 let h2 = new Point(rc.bottomCenter.x - r2cent.x,rc.bottomCenter.y - r2cent.y)
             
@@ -226,7 +235,7 @@ export default {
                 
                 self.bezier[self.bezier.length] =  new Path(r1seg, r2seg)
                 
-                self.bezier[self.bezier.length - 1].strokeColor = '#41E598' //Give it some colour so we can see it.
+                self.bezier[self.bezier.length - 1].strokeColor = '#41E598'
                 
                 self.buttons[self.buttons.length] =  new Path.Circle(rc.center,8)
                 self.buttons[self.buttons.length - 1].fillColor = '#D15411'
@@ -239,22 +248,24 @@ export default {
             }
         },
         buttonEvents: function(button,connection) {
+            let self = this
             button.onMouseDown = function (event) {
                 console.log(connection)
+                self.connection.configure = true
             }
             button.onMouseEnter = function (event) {
-                document.querySelector('.parent').style.cursor = "pointer";
+                document.querySelector('.parent').style.cursor = "pointer"
             }
             button.onMouseLeave = function (event) {
-                document.querySelector('.parent').style.cursor = "default";
+                document.querySelector('.parent').style.cursor = "default"
             }
         },
         rectEvents: function(group,id,width,height,path) {
             group.onMouseEnter = function (event) {
-                document.querySelector('.parent').style.cursor = "pointer";
+                document.querySelector('.parent').style.cursor = "pointer"
             }
             group.onMouseLeave = function (event) {
-                document.querySelector('.parent').style.cursor = "default";
+                document.querySelector('.parent').style.cursor = "default"
             }
             let self = this
             group.onMouseDrag = function(event) {

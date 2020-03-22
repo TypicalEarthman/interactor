@@ -5171,6 +5171,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 paper__WEBPACK_IMPORTED_MODULE_0__["install"](window);
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -5183,6 +5194,7 @@ paper__WEBPACK_IMPORTED_MODULE_0__["install"](window);
         modal_conn_first: false,
         modal_conn_second: false,
         modal_conn_result: false,
+        configure: '',
         entry_id: '',
         out_id: ''
       },
@@ -5283,7 +5295,7 @@ paper__WEBPACK_IMPORTED_MODULE_0__["install"](window);
         var origin = this.rectangles[item.entry_id];
         var destination = this.rectangles[item.out_id];
         var r1cent = void 0;
-        var r2cent = void 0; //Get the center points, they will be used as endpoints for the curve.
+        var r2cent = void 0;
 
         if (origin.x <= destination.x) {
           if (origin.y < destination.y) {
@@ -5303,16 +5315,13 @@ paper__WEBPACK_IMPORTED_MODULE_0__["install"](window);
           }
         }
 
-        var rc = new Rectangle(r1cent, r2cent); // the handles are relative to the path's point
-        // not absolute.
-
+        var rc = new Rectangle(r1cent, r2cent);
         var h1 = new Point(rc.topCenter.x - r1cent.x, rc.topCenter.y - r1cent.y);
         var h2 = new Point(rc.bottomCenter.x - r2cent.x, rc.bottomCenter.y - r2cent.y);
         var r1seg = new Segment(r1cent, null, h1);
         var r2seg = new Segment(r2cent, h2, null);
         self.bezier[self.bezier.length] = new Path(r1seg, r2seg);
-        self.bezier[self.bezier.length - 1].strokeColor = '#41E598'; //Give it some colour so we can see it.
-
+        self.bezier[self.bezier.length - 1].strokeColor = '#41E598';
         self.buttons[self.buttons.length] = new Path.Circle(rc.center, 8);
         self.buttons[self.buttons.length - 1].fillColor = '#D15411';
         self.buttonEvents(self.buttons[self.buttons.length - 1], item);
@@ -5324,8 +5333,11 @@ paper__WEBPACK_IMPORTED_MODULE_0__["install"](window);
       }
     },
     buttonEvents: function buttonEvents(button, connection) {
+      var self = this;
+
       button.onMouseDown = function (event) {
         console.log(connection);
+        self.connection.configure = true;
       };
 
       button.onMouseEnter = function (event) {
@@ -6322,6 +6334,7 @@ __webpack_require__.r(__webpack_exports__);
         horiz.classList.add('inactive');
       }
     });
+    this.preload_videos();
   },
   data: function data() {
     return {
@@ -6345,21 +6358,8 @@ __webpack_require__.r(__webpack_exports__);
       var self = this;
 
       if (connections) {
-        console.log(connections);
         connections.forEach(function (item) {
-          options.push(self.episode.videos[item.out_id]);
-          axios.get(self.episode.videos[item.out_id].url_horizontal, {
-            responseType: 'blob'
-          }).then(function (response) {
-            var source = URL.createObjectURL(response.data);
-            self.episode.videos[item.out_id].url_horizontal = source;
-          });
-          axios.get(self.episode.videos[item.out_id].url_vertical, {
-            responseType: 'blob'
-          }).then(function (response) {
-            var source = URL.createObjectURL(response.data);
-            self.episode.videos[item.out_id].url_vertical = source;
-          });
+          options.push(self.episode.videos[item.id]);
         });
       }
 
@@ -6374,15 +6374,16 @@ __webpack_require__.r(__webpack_exports__);
         }).then(function (response) {
           var source = URL.createObjectURL(response.data);
           item.url_horizontal = source;
-          console.log(item.url_horizontal);
         });
-        axios.get(item.url_vertical, {
-          responseType: 'blob'
-        }).then(function (response) {
-          var source = URL.createObjectURL(response.data);
-          item.url_vertical = source;
-          console.log(item.url_vertical);
-        });
+
+        if (item.url_vertical != null) {
+          axios.get(item.url_vertical, {
+            responseType: 'blob'
+          }).then(function (response) {
+            var source = URL.createObjectURL(response.data);
+            item.url_vertical = source;
+          });
+        }
       });
     },
     end_video: function end_video(id) {
@@ -6390,12 +6391,8 @@ __webpack_require__.r(__webpack_exports__);
     },
     choose: function choose(video) {
       this.episode.current_video_id = video.id;
-
-      if (this.episode.horiz = true) {
-        this.src = this.episode.videos[this.current_video_id].url_horizontal;
-      } else {
-        this.src = this.episode.videos[this.current_video_id].url_vertical;
-      }
+      this.show_options = false;
+      this.preload_videos();
     }
   },
   watch: {},
@@ -6501,15 +6498,45 @@ __webpack_require__.r(__webpack_exports__);
     first: Boolean,
     vertical: Boolean
   },
+  watch: {
+    source: function source(val) {
+      this.episode.video_horiz_ref.play();
+
+      if (this.episode.videos[this.episode.current_video_id].url_vertical != null) {
+        console.log('vert play');
+        this.episode.video_vert_ref.play();
+      }
+
+      if (this.vertical) {
+        this.episode.video_vert_ref = this.$refs.videoElement;
+      } else {
+        this.episode.video_horiz_ref = this.$refs.videoElement;
+      }
+    }
+  },
   methods: {
     playpause: function playpause(event) {
-      if (this.$refs.videoElement.paused) {
+      console.log('click');
+
+      if (this.episode.video_horiz_ref.paused) {
         this.episode.video_horiz_ref.play();
-        this.episode.video_vert_ref.play();
+
+        if (this.episode.videos[this.episode.current_video_id].url_vertical != null) {
+          console.log('vert play');
+          this.episode.video_vert_ref.play();
+        }
+
         this.episode.cover = false;
       } else {
         this.episode.video_horiz_ref.pause();
-        this.episode.video_vert_ref.pause();
+        console.log('paused');
+        console.log(this.episode.video_horiz_ref);
+
+        if (this.episode.videos[this.episode.current_video_id].url_vertical != null) {
+          console.log('vert play');
+          this.episode.video_vert_ref.pause();
+        }
+
         this.episode.cover = true;
       }
     },
@@ -6522,8 +6549,16 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     onEnd: function onEnd() {
+      console.log(this.vertical);
       console.log('Video end');
-      this.$emit("end_video"); //this.$emit("end_video", this.id)
+
+      if (this.vertical) {
+        if (this.episode.videos[this.episode.current_video_id].url_vertical != null) {
+          this.$emit("end_video");
+        }
+      } else {
+        this.$emit("end_video");
+      }
     }
   },
   mounted: function mounted() {
@@ -24921,6 +24956,50 @@ var render = function() {
               {
                 name: "show",
                 rawName: "v-show",
+                value: _vm.connection.configure,
+                expression: "connection.configure"
+              }
+            ],
+            staticClass: "dialog"
+          },
+          [
+            _c("h4", [
+              _vm._v(
+                "\r\n            Customize the look of the options \r\n            "
+              )
+            ]),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary btn-block btn-sm",
+                staticStyle: {
+                  position: "absolute",
+                  left: "20px",
+                  bottom: "20px",
+                  right: "20px",
+                  width: "auto"
+                },
+                on: {
+                  click: function($event) {
+                    _vm.connection.configure = false
+                  }
+                }
+              },
+              [_vm._v("\r\n                Close\r\n            ")]
+            )
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("transition", { attrs: { name: "fade" } }, [
+        _c(
+          "div",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
                 value: _vm.connection.modal_conn_result,
                 expression: "connection.modal_conn_result"
               }
@@ -25747,8 +25826,7 @@ var render = function() {
     [
       _c("video", {
         ref: "videoElement",
-        attrs: { src: _vm.source, id: "video", preload: "auto", muted: "" },
-        domProps: { muted: true },
+        attrs: { src: _vm.source, id: "video", preload: "auto" },
         on: {
           ended: _vm.onEnd,
           click: _vm.playpause,

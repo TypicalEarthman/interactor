@@ -1,6 +1,6 @@
 <template>
     <div class="root_video_component">
-        <video :src="source" id="video" @ended="onEnd" @click="playpause" @timeupdate="onTimeUpdate()" ref="videoElement" preload="auto" muted
+        <video :src="source" id="video" @ended="onEnd" @click="playpause" @timeupdate="onTimeUpdate()" ref="videoElement" preload="auto"
         >
         </video>
         <progress-bar :value="completion">
@@ -32,16 +32,40 @@
             first: Boolean,
             vertical: Boolean
         },
+        watch: {
+            source: function (val) {
+                this.episode.video_horiz_ref.play()
+                if(this.episode.videos[this.episode.current_video_id].url_vertical != null) {
+                    console.log('vert play')
+                    this.episode.video_vert_ref.play()
+                }
+                if(this.vertical) {
+                    this.episode.video_vert_ref = this.$refs.videoElement
+                }
+                else {
+                    this.episode.video_horiz_ref = this.$refs.videoElement
+                }
+            }
+        },
         methods: {
             playpause: function(event) {
-                if(this.$refs.videoElement.paused) {
+                console.log('click')
+                if(this.episode.video_horiz_ref.paused) {
                     this.episode.video_horiz_ref.play()
-                    this.episode.video_vert_ref.play()
+                    if(this.episode.videos[this.episode.current_video_id].url_vertical != null) {
+                        console.log('vert play')
+                        this.episode.video_vert_ref.play()
+                    }
                     this.episode.cover = false
                 }
                 else {
                     this.episode.video_horiz_ref.pause()
-                    this.episode.video_vert_ref.pause()
+                    console.log('paused')
+                    console.log(this.episode.video_horiz_ref)
+                    if(this.episode.videos[this.episode.current_video_id].url_vertical != null) {
+                        console.log('vert play')
+                        this.episode.video_vert_ref.pause()
+                    }
                     this.episode.cover = true
                 }
             },
@@ -53,9 +77,17 @@
                 }
             },
             onEnd: function() {
+                console.log(this.vertical)
                 console.log('Video end')
-                this.$emit("end_video")
-                //this.$emit("end_video", this.id)
+                
+                if(this.vertical) {
+                    if(this.episode.videos[this.episode.current_video_id].url_vertical != null) {
+                        this.$emit("end_video")
+                    }
+                }
+                else {
+                    this.$emit("end_video")
+                }
             }
         },
         mounted() {

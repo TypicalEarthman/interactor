@@ -85,7 +85,6 @@ class EpisodeController extends Controller
         $videos = $episode->videos()->with('connections')->get();
         $root_video = $episode->root_video;
         $connections = $episode->connections;
-
         return view('projects/view',[
             'root_video' => $root_video,
             'videos' => $videos->keyBy('id'),
@@ -122,7 +121,7 @@ class EpisodeController extends Controller
         return view('editor/index',[
             'root_video' => $root_video,
             'videos' => $videos->keyBy('id'),
-            'connections' => $connections->keyBy('entry_id'),
+            'connections' => $connections,
             'project' => $project,
             'project_id' => $project_id,
             'episodes' => $episodes,

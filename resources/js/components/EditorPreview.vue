@@ -100,7 +100,9 @@
 					horiz.classList.remove('active')
 					horiz.classList.add('inactive')
                 }
-            })
+			})
+			
+			this.preload_videos()
 		},
 		data () {
 			return {
@@ -119,32 +121,18 @@
 		},
 		computed: {
 			options() {
-				let options = [];
+				let options = []
 
-				let connections = this.episode.videos[this.episode.current_video_id].connections;
+				let connections = this.episode.videos[this.episode.current_video_id].connections
 
                 let self = this
 
 				if(connections) {
-					console.log(connections)
 					connections.forEach(function(item) {
-                        options.push(self.episode.videos[item.out_id])
-                               
-                        axios.get(self.episode.videos[item.out_id].url_horizontal, {
-                            responseType: 'blob'
-                        }).then( response => {
-                            let source = URL.createObjectURL(response.data);
-                            self.episode.videos[item.out_id].url_horizontal = source;
-                        });
-                        axios.get(self.episode.videos[item.out_id].url_vertical, {
-                            responseType: 'blob'
-                        }).then( response => {
-                            let source = URL.createObjectURL(response.data);
-                            self.episode.videos[item.out_id].url_vertical = source;
-                        });
+                        options.push(self.episode.videos[item.id])  
 					})
 				}
-				return options;
+				return options
 			}
 			
 		},
@@ -155,16 +143,16 @@
                         responseType: 'blob'
                     }).then( response => {
                         let source = URL.createObjectURL(response.data);
-                        item.url_horizontal = source;
-                        console.log(item.url_horizontal)
-                    });
-                    axios.get(item.url_vertical, {
-                        responseType: 'blob'
-                    }).then( response => {
-                        let source = URL.createObjectURL(response.data);
-                        item.url_vertical = source;
-                        console.log(item.url_vertical)
-                    });
+                        item.url_horizontal = source
+					})
+					if(item.url_vertical != null) {
+						axios.get(item.url_vertical, {
+							responseType: 'blob'
+						}).then( response => {
+							let source = URL.createObjectURL(response.data);
+							item.url_vertical = source
+						})
+					}
                 })
             },
 			end_video: function(id) {
@@ -172,11 +160,8 @@
 			},
 			choose: function(video) {
 				this.episode.current_video_id = video.id
-				if (this.episode.horiz = true) {
-					this.src = this.episode.videos[this.current_video_id].url_horizontal
-				} else {
-					this.src = this.episode.videos[this.current_video_id].url_vertical
-				}
+				this.show_options = false
+				this.preload_videos()
 			}
 		},
 		watch: {
