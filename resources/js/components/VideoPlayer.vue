@@ -34,10 +34,12 @@
         },
         watch: {
             source: function (val) {
+                this.episode.cover = false
                 let playPromiseHoriz = this.episode.video_horiz_ref.play()
                 let self = this
                 if (playPromiseHoriz !== undefined) {
                     playPromiseHoriz.then(_ => {
+                        console.log('success hor')
                     // Automatic playback started!
                     // Show playing UI.
                     })
@@ -53,6 +55,7 @@
                     let playPromiseVert = this.episode.video_vert_ref.play()
                     if (playPromiseVert !== undefined) {
                         playPromiseVert.then(_ => {
+                            console.log('success vert')
                         // Automatic playback started!
                         // Show playing UI.
                         })

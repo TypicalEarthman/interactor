@@ -6499,11 +6499,13 @@ __webpack_require__.r(__webpack_exports__);
   },
   watch: {
     source: function source(val) {
+      this.episode.cover = false;
       var playPromiseHoriz = this.episode.video_horiz_ref.play();
       var self = this;
 
       if (playPromiseHoriz !== undefined) {
-        playPromiseHoriz.then(function (_) {// Automatic playback started!
+        playPromiseHoriz.then(function (_) {
+          console.log('success hor'); // Automatic playback started!
           // Show playing UI.
         })["catch"](function (error) {
           // Auto-play was prevented
@@ -6518,7 +6520,8 @@ __webpack_require__.r(__webpack_exports__);
         var playPromiseVert = this.episode.video_vert_ref.play();
 
         if (playPromiseVert !== undefined) {
-          playPromiseVert.then(function (_) {// Automatic playback started!
+          playPromiseVert.then(function (_) {
+            console.log('success vert'); // Automatic playback started!
             // Show playing UI.
           })["catch"](function (error) {
             // Auto-play was prevented
