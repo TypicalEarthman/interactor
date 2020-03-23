@@ -25,7 +25,6 @@
 				<div class="option-background">
 					{{ option.name }}
 				</div>
-				
 			</div>
 		</div>
 	</div>
@@ -114,7 +113,7 @@
 			project_preview: {
 				type: Boolean,
 				default() {
-					return false;
+					return false
 				}
 			},
 			episode: Object,

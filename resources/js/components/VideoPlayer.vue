@@ -34,10 +34,34 @@
         },
         watch: {
             source: function (val) {
-                this.episode.video_horiz_ref.play()
+                let playPromiseHoriz = this.episode.video_horiz_ref.play()
+                let self = this
+                if (playPromiseHoriz !== undefined) {
+                    playPromiseHoriz.then(_ => {
+                    // Automatic playback started!
+                    // Show playing UI.
+                    })
+                    .catch(error => {
+                        // Auto-play was prevented
+                        // Show paused UI.
+                        console.log('prevented auto play horiz')
+                    })
+                }
                 if(this.episode.videos[this.episode.current_video_id].url_vertical != null) {
                     console.log('vert play')
                     this.episode.video_vert_ref.play()
+                    let playPromiseVert = this.episode.video_vert_ref.play()
+                    if (playPromiseVert !== undefined) {
+                        playPromiseVert.then(_ => {
+                        // Automatic playback started!
+                        // Show playing UI.
+                        })
+                        .catch(error => {
+                            // Auto-play was prevented
+                            // Show paused UI.
+                            console.log('prevented auto play vert')
+                        })
+                    }
                 }
                 if(this.vertical) {
                     this.episode.video_vert_ref = this.$refs.videoElement

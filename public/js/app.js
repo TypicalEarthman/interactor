@@ -6313,7 +6313,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log(this.episode);
@@ -6500,11 +6499,33 @@ __webpack_require__.r(__webpack_exports__);
   },
   watch: {
     source: function source(val) {
-      this.episode.video_horiz_ref.play();
+      var playPromiseHoriz = this.episode.video_horiz_ref.play();
+      var self = this;
+
+      if (playPromiseHoriz !== undefined) {
+        playPromiseHoriz.then(function (_) {// Automatic playback started!
+          // Show playing UI.
+        })["catch"](function (error) {
+          // Auto-play was prevented
+          // Show paused UI.
+          console.log('prevented auto play horiz');
+        });
+      }
 
       if (this.episode.videos[this.episode.current_video_id].url_vertical != null) {
         console.log('vert play');
         this.episode.video_vert_ref.play();
+        var playPromiseVert = this.episode.video_vert_ref.play();
+
+        if (playPromiseVert !== undefined) {
+          playPromiseVert.then(function (_) {// Automatic playback started!
+            // Show playing UI.
+          })["catch"](function (error) {
+            // Auto-play was prevented
+            // Show paused UI.
+            console.log('prevented auto play vert');
+          });
+        }
       }
 
       if (this.vertical) {
