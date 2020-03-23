@@ -1,6 +1,6 @@
 <template>
     <div class="root_video_component">
-        <video :src="source" id="video" @ended="onEnd" @click="playpause" @timeupdate="onTimeUpdate()" ref="videoElement" preload="auto" muted
+        <video :src="source" id="video" @ended="onEnd" @click="playpause" @timeupdate="onTimeUpdate()" ref="videoElement" preload="auto"
         >
         </video>
         <progress-bar :value="completion">
@@ -34,7 +34,15 @@
         },
         watch: {
             source: function (val) {
-                this.episode.cover = false
+                this.episode.cover = true
+                //let video = this.episode.video_horiz_ref
+
+               /* var isPlaying = video.currentTime > 0 && !video.paused && !video.ended && video.readyState > 2;
+
+                if (!isPlaying) {
+                video.play();
+                }*/
+                /*
                 let playPromiseHoriz = this.episode.video_horiz_ref.play()
                 let self = this
                 if (playPromiseHoriz !== undefined) {
@@ -46,9 +54,10 @@
                     .catch(error => {
                         // Auto-play was prevented
                         // Show paused UI.
-                        console.log('prevented auto play horiz')
+                        console.log(error)
                     })
                 }
+                */
                 if(this.episode.videos[this.episode.current_video_id].url_vertical != null) {
                     console.log('vert play')
                     this.episode.video_vert_ref.play()

@@ -160,7 +160,7 @@
 			choose: function(video) {
 				this.episode.current_video_id = video.id
 				this.show_options = false
-				this.preload_videos()
+				// this.preload_videos()
 			}
 		},
 		watch: {

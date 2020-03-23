@@ -6390,8 +6390,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     choose: function choose(video) {
       this.episode.current_video_id = video.id;
-      this.show_options = false;
-      this.preload_videos();
+      this.show_options = false; // this.preload_videos()
     }
   },
   watch: {},
@@ -6499,20 +6498,29 @@ __webpack_require__.r(__webpack_exports__);
   },
   watch: {
     source: function source(val) {
-      this.episode.cover = false;
-      var playPromiseHoriz = this.episode.video_horiz_ref.play();
-      var self = this;
+      this.episode.cover = true; //let video = this.episode.video_horiz_ref
 
+      /* var isPlaying = video.currentTime > 0 && !video.paused && !video.ended && video.readyState > 2;
+        if (!isPlaying) {
+       video.play();
+       }*/
+
+      /*
+      let playPromiseHoriz = this.episode.video_horiz_ref.play()
+      let self = this
       if (playPromiseHoriz !== undefined) {
-        playPromiseHoriz.then(function (_) {
-          console.log('success hor'); // Automatic playback started!
+          playPromiseHoriz.then(_ => {
+              console.log('success hor')
+          // Automatic playback started!
           // Show playing UI.
-        })["catch"](function (error) {
-          // Auto-play was prevented
-          // Show paused UI.
-          console.log('prevented auto play horiz');
-        });
+          })
+          .catch(error => {
+              // Auto-play was prevented
+              // Show paused UI.
+              console.log(error)
+          })
       }
+      */
 
       if (this.episode.videos[this.episode.current_video_id].url_vertical != null) {
         console.log('vert play');
@@ -25850,8 +25858,7 @@ var render = function() {
     [
       _c("video", {
         ref: "videoElement",
-        attrs: { src: _vm.source, id: "video", preload: "auto", muted: "" },
-        domProps: { muted: true },
+        attrs: { src: _vm.source, id: "video", preload: "auto" },
         on: {
           ended: _vm.onEnd,
           click: _vm.playpause,
