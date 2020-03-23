@@ -25850,7 +25850,8 @@ var render = function() {
     [
       _c("video", {
         ref: "videoElement",
-        attrs: { src: _vm.source, id: "video", preload: "auto" },
+        attrs: { src: _vm.source, id: "video", preload: "auto", muted: "" },
+        domProps: { muted: true },
         on: {
           ended: _vm.onEnd,
           click: _vm.playpause,
