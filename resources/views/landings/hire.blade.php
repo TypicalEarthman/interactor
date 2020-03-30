@@ -16,6 +16,7 @@
     </head>
     <body id="page-top">
         <!-- Navigation-->
+        <!--
         <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
             <div class="container">
                 <a class="navbar-brand js-scroll-trigger" href="#page-top">Start Bootstrap</a><button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
@@ -29,17 +30,22 @@
                 </div>
             </div>
         </nav>
+        -->
         <!-- Masthead-->
         <header class="masthead">
             <div class="container h-100">
                 <div class="row h-100 align-items-center justify-content-center text-center">
                     <div class="col-lg-10 align-self-end">
-                        <h1 class="text-uppercase text-white font-weight-bold">Your Favorite Source of Free Bootstrap Themes</h1>
+                        <h1 class="text-uppercase text-white font-weight-bold wrap-none">
+                            Присоединяйся к Interactor!
+                        </h1>
                         <hr class="divider my-4" />
                     </div>
                     <div class="col-lg-8 align-self-baseline">
-                        <p class="text-white-75 font-weight-light mb-5">Start Bootstrap can help you build better websites using the Bootstrap framework! Just download a theme and start customizing, no strings attached!</p>
-                        <a class="btn btn-primary btn-xl js-scroll-trigger" href="#about">Find Out More</a>
+                        <p class="text-white-75 font-weight-light mb-5">Набираем ребят для работы в стартапе. Мы создаем онлайн кинотеатр интерактивного кино.</p>
+                        <a href="#about">
+                            <i class="fas fa-4x fa-angle-double-down text-primary mb-4"></i>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -49,10 +55,25 @@
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-lg-8 text-center">
-                        <h2 class="text-white mt-0">We've got what you need!</h2>
+                        <h2 class="text-white mt-0">Мы ищем тебя если ты: </h2>
                         <hr class="divider light my-4" />
-                        <p class="text-white-50 mb-4">Start Bootstrap has everything you need to get your new website up and running in no time! Choose one of our open source, free to download, and easy to use themes! No strings attached!</p>
-                        <a class="btn btn-light btn-xl js-scroll-trigger" href="#services">Get Started!</a>
+                        <ul class="text-white-50 mb-4">
+                            <li>
+                                Хочешь делать офигенные вещи
+                            </li>
+                            <li>
+                                Быстро учишься
+                            </li>
+                            <li>
+                                Хочешь получить опыт разработки и освоить новые технологии
+                            </li>
+                            <li>
+                                Готов уделять проекту время
+                            </li>
+                        </ul>
+                        <a href="#services">
+                            <i class="fas fa-4x fa-angle-double-down text-white mb-4"></i>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -60,106 +81,115 @@
         <!-- Services section-->
         <section class="page-section" id="services">
             <div class="container">
-                <h2 class="text-center mt-0">At Your Service</h2>
+                <h2 class="text-center mt-0">Проект и перспективы</h2>
                 <hr class="divider my-4" />
                 <div class="row">
                     <div class="col-lg-3 col-md-6 text-center">
                         <div class="mt-5">
-                            <i class="fas fa-4x fa-gem text-primary mb-4"></i>
-                            <h3 class="h4 mb-2">Sturdy Themes</h3>
-                            <p class="text-muted mb-0">Our themes are updated regularly to keep them bug free!</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 text-center">
-                        <div class="mt-5">
                             <i class="fas fa-4x fa-laptop-code text-primary mb-4"></i>
-                            <h3 class="h4 mb-2">Up to Date</h3>
-                            <p class="text-muted mb-0">All dependencies are kept current to keep things fresh.</p>
+                            <h3 class="h4 mb-2">Наш стэк</h3>
+                            <p class="text-muted mb-0">На проекте используются PHP фреймворк Laravel, JS фреймворк VueJS, JS библиотека Paper.js
+                            </p>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6 text-center">
                         <div class="mt-5">
-                            <i class="fas fa-4x fa-globe text-primary mb-4"></i>
-                            <h3 class="h4 mb-2">Ready to Publish</h3>
-                            <p class="text-muted mb-0">You can use this design as is, or you can make changes!</p>
+                            <i class="fas fa-4x fa-percentage text-primary mb-4"></i>
+                            <h3 class="h4 mb-2">Доля</h3>
+                            <p class="text-muted mb-0">Если все идет нормально и проект живет, то вы получите долю в компании</p>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6 text-center">
                         <div class="mt-5">
-                            <i class="fas fa-4x fa-heart text-primary mb-4"></i>
-                            <h3 class="h4 mb-2">Made with Love</h3>
-                            <p class="text-muted mb-0">Is it really open source if it's not made with love?</p>
+                            <i class="fas fa-4x fa-level-up-alt text-primary mb-4"></i>
+                            <h3 class="h4 mb-2">Возможность</h3>
+                            <p class="text-muted mb-0">Шанс попасть в крутую историю на моменте ее зарождения</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 text-center">
+                        <div class="mt-5">
+                            <i class="fas fa-4x fa-graduation-cap text-primary mb-4"></i>
+                            <h3 class="h4 mb-2">Бизнес-Акселератор</h3>
+                            <p class="text-muted mb-0">Наш проект проходит обучение в бизнес акселераторе b8</p>
                         </div>
                     </div>
                 </div>
+                <div class="text-center">
+                    <a href="#team">
+                        <i class="fas fa-4x fa-angle-double-down text-primary mb-4"></i>
+                    </a>
+                </div>
             </div>
         </section>
-        <!-- Portfolio section-->
-        <section id="portfolio">
-            <div class="container-fluid p-0">
-                <div class="row no-gutters">
-                    <div class="col-lg-4 col-sm-6">
-                        <a class="portfolio-box" href="{{ asset('images/portfolio/fullsize/1.jpg') }}"
-                            ><img class="img-fluid" src="{{ asset('images/portfolio/thumbnails/1.jpg') }}" alt="" />
-                            <div class="portfolio-box-caption">
-                                <div class="project-category text-white-50">Category</div>
-                                <div class="project-name">Project Name</div>
-                            </div></a
-                        >
-                    </div>
-                    <div class="col-lg-4 col-sm-6">
-                        <a class="portfolio-box" href="{{ asset('images/portfolio/fullsize/2.jpg') }}"
-                            ><img class="img-fluid" src="{{ asset('images/portfolio/thumbnails/2.jpg') }}" alt="" />
-                            <div class="portfolio-box-caption">
-                                <div class="project-category text-white-50">Category</div>
-                                <div class="project-name">Project Name</div>
-                            </div></a
-                        >
-                    </div>
-                    <div class="col-lg-4 col-sm-6">
-                        <a class="portfolio-box" href="{{ asset('images/portfolio/fullsize/3.jpg') }}"
-                            ><img class="img-fluid" src="{{ asset('images/portfolio/thumbnails/3.jpg') }}" alt="" />
-                            <div class="portfolio-box-caption">
-                                <div class="project-category text-white-50">Category</div>
-                                <div class="project-name">Project Name</div>
-                            </div></a
-                        >
-                    </div>
-                    <div class="col-lg-4 col-sm-6">
-                        <a class="portfolio-box" href="{{ asset('images/portfolio/fullsize/4.jpg') }}"
-                            ><img class="img-fluid" src="{{ asset('images/portfolio/thumbnails/4.jpg') }}" alt="" />
-                            <div class="portfolio-box-caption">
-                                <div class="project-category text-white-50">Category</div>
-                                <div class="project-name">Project Name</div>
-                            </div></a
-                        >
-                    </div>
-                    <div class="col-lg-4 col-sm-6">
-                        <a class="portfolio-box" href="{{ asset('images/portfolio/fullsize/5.jpg') }}"
-                            ><img class="img-fluid" src="{{ asset('images/portfolio/thumbnails/5.jpg') }}" alt="" />
-                            <div class="portfolio-box-caption">
-                                <div class="project-category text-white-50">Category</div>
-                                <div class="project-name">Project Name</div>
-                            </div></a
-                        >
-                    </div>
-                    <div class="col-lg-4 col-sm-6">
-                        <a class="portfolio-box" href="{{ asset('images/portfolio/fullsize/6.jpg') }}"
-                            ><img class="img-fluid" src="{{ asset('images/portfolio/thumbnails/6.jpg') }}" alt="" />
-                            <div class="portfolio-box-caption p-3">
-                                <div class="project-category text-white-50">Category</div>
-                                <div class="project-name">Project Name</div>
-                            </div></a
-                        >
+        <!-- Team section-->
+        <section class="page-section bg-primary" id="team">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 text-center">
+                        <h2 class="text-white mt-0">Команда: </h2>
+                        <hr class="divider light my-4" />
+                        <div class="row">
+                            <div class="col-lg-3 col-md-6 text-center">
+                                <div class="mt-5 text-center">
+                                    <img src="{{ asset('images/1.jpg') }}" class="mb-4 avatar"/>
+                                    <h3 class="h4 mb-2 text-white">Алексей "superalesha" Илларионов</h3>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 text-center">
+                                <div class="mt-5 text-center">
+                                    <img src="{{ asset('images/2.png') }}" class="mb-4 avatar"/>
+                                    <h3 class="h4 mb-2 text-white">Кирилл "terran" Кычкин</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#task">
+                            <i class="fas fa-4x fa-angle-double-down text-white mb-4"></i>
+                        </a>
                     </div>
                 </div>
             </div>
         </section>
         <!-- Call to action section-->
-        <section class="page-section bg-dark text-white">
-            <div class="container text-center">
-                <h2 class="mb-4">Free Download at Start Bootstrap!</h2>
-                <a class="btn btn-light btn-xl" href="https://startbootstrap.com/themes/creative/">Download Now!</a>
+        <section class="page-section bg-dark text-white" id="task">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 text-center">
+                        <h2 class="text-white mt-0">Что нужно делать? </h2>
+                        <hr class="divider light my-4" />
+                        <p class="text-white">
+                            Чтобы мы поняли насколько быстро и круто вы умеете впитывать знания и применять их на практике (вы примените те же технологии, что используются на проекте) вам необходимо разработать блог со следующим функционалом до четверга включительно:
+                        </p>
+                        <ul class="text-white-50 mb-4">
+                            <li>
+                                Добавление/редактирование новостей
+                            </li>
+                            <li>
+                                Авторизация/Регистрация (используя готовый пакет Laravel)
+                            </li>
+                            <li>
+                                Возможность оставлять комментарии
+                            </li>
+                            <li>
+                                Ставить лайки
+                            </li>
+                            <li>
+                                Категории и так далее добавлять НЕ нужно
+                            </li>
+                            <li>
+                                Получение и отправка данных используя axios
+                            </li>
+                            <li>
+                                Отображение страницы и данных через vuejs
+                            </li>
+                            <li>
+                                Загрузить проект на github
+                            </li>
+                        </ul>
+                        <a href="#contact">
+                            <i class="fas fa-4x fa-angle-double-down text-white mb-4"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
         </section>
         <!-- Contact section-->
@@ -167,26 +197,23 @@
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-lg-8 text-center">
-                        <h2 class="mt-0">Let's Get In Touch!</h2>
+                        <h2 class="mt-0">За дело!</h2>
                         <hr class="divider my-4" />
-                        <p class="text-muted mb-5">Ready to start your next project with us? Give us a call or send us an email and we will get back to you as soon as possible!</p>
+                        <p class="text-muted mb-5">Готов попробовать? Напиши нам о том, что собираешься попробовать свои силы. Не забудь представиться</p>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-lg-4 ml-auto text-center mb-5 mb-lg-0">
-                        <i class="fas fa-phone fa-3x mb-3 text-muted"></i>
-                        <div>+1 (555) 123-4567</div>
-                    </div>
-                    <div class="col-lg-4 mr-auto text-center">
-                        <i class="fas fa-envelope fa-3x mb-3 text-muted"></i
-                        ><!-- Make sure to change the email address in BOTH the anchor text and the link target below!--><a class="d-block" href="mailto:contact@yourwebsite.com">contact@yourwebsite.com</a>
+                <div class="row row-center">
+                    <div >
+                        <i class="fab fa-whatsapp mb-3 text-muted" style="font-size:15vw;"></i>
+                        <hr class="divider my-4" />
+                        <a href="https://wa.me/79142900484" style="text-decoration: underline;">+7 (914) 290-04-84</div>
                     </div>
                 </div>
             </div>
         </section>
         <!-- Footer-->
         <footer class="bg-light py-5">
-            <div class="container"><div class="small text-center text-muted">Copyright © 2020 - Start Bootstrap</div></div>
+            <div class="container"><div class="small text-center text-muted">Copyright © 2020 - LLC Interactor</div></div>
         </footer>
         <!-- Bootstrap core JS-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
