@@ -11,4 +11,8 @@ class LandingController extends Controller
     {
         return view('landings/hire');
     }
+    public function emotional()
+    {
+        return view('landings/emotional');
+    }
 }

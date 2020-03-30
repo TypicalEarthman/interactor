@@ -37,7 +37,7 @@
                 <div class="row h-100 align-items-center justify-content-center text-center">
                     <div class="col-lg-10 align-self-end">
                         <h1 class="text-uppercase text-white font-weight-bold wrap-none">
-                            Присоединяйся к Interactor!
+                            Emotional movies!
                         </h1>
                         <hr class="divider my-4" />
                     </div>
@@ -158,7 +158,7 @@
                         <h2 class="text-white mt-0">Что нужно делать? </h2>
                         <hr class="divider light my-4" />
                         <p class="text-white">
-                            Чтобы мы поняли насколько быстро и круто вы умеете впитывать знания и применять их на практике (вы примените те же технологии, что используются на проекте) вам необходимо разработать блог со следующим функционалом до 04.04.2020 включительно:
+                            Чтобы мы поняли насколько быстро и круто вы умеете впитывать знания и применять их на практике (вы примените те же технологии, что используются на проекте) вам необходимо разработать блог со следующим функционалом до четверга включительно:
                         </p>
                         <ul class="text-white-50 mb-4">
                             <li>
