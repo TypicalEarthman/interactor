@@ -6498,7 +6498,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   watch: {
     source: function source(val) {
-      this.episode.cover = true; //let video = this.episode.video_horiz_ref
+      this.episode.cover = true; // let video = this.episode.video_horiz_ref
 
       /* var isPlaying = video.currentTime > 0 && !video.paused && !video.ended && video.readyState > 2;
         if (!isPlaying) {

@@ -12,7 +12,6 @@
 */
 
 use App\Project;
-
 Route::view('/test', 'test');
 
 Route::get('/', 'ProjectController@generate')->name('main');
@@ -20,6 +19,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Auth::routes();
 
+Route::get('/hire',  'LandingController@hire')->name('landing.hire');
 Route::get('/dashboard',  'DashboardController@index')->name('dashboard');
 Route::post('/video/store', 'VideoController@store')->name('video.store');
 Route::post('/video/update', 'VideoController@update')->name('video.update');

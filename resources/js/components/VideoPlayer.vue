@@ -35,7 +35,7 @@
         watch: {
             source: function (val) {
                 this.episode.cover = true
-                //let video = this.episode.video_horiz_ref
+                // let video = this.episode.video_horiz_ref
 
                /* var isPlaying = video.currentTime > 0 && !video.paused && !video.ended && video.readyState > 2;
 
