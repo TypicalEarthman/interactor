@@ -186,6 +186,17 @@
                                 Загрузить проект на github
                             </li>
                         </ul>
+                        <h2 class="text-white mt-0"> Материалы, которые пригодятся вам в разработке:</h2>
+
+                        <a href="https://ru.hexlet.io/blog/posts/chto-takoe-mvc-rasskazyvaem-prostymi-slovami">https://ru.hexlet.io/blog/posts/chto-takoe-mvc-rasskazyvaem-prostymi-slovami</a>
+                        <hr class="divider light my-4" />
+
+                        <a href="https://laravel.com/">https://laravel.com/</a>
+                        <hr class="divider light my-4" />
+
+                        <a href="https://vuejs.org/">
+                         https://vuejs.org/</a>
+                         <hr class="divider light my-4" />
                         <a href="#contact">
                             <i class="fas fa-4x fa-angle-double-down text-white mb-4"></i>
                         </a>
