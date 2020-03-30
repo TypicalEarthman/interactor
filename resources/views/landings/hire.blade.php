@@ -43,6 +43,7 @@
                     </div>
                     <div class="col-lg-8 align-self-baseline">
                         <p class="text-white-75 font-weight-light mb-5">Набираем ребят для работы в стартапе. Мы создаем онлайн кинотеатр интерактивного кино.</p>
+                        <p class="text-white-75 font-weight-light mb-5">На выходе хотим получить  <a href="https://eko.com">что-то такое</a></p>
                         <a href="#about">
                             <i class="fas fa-4x fa-angle-double-down text-primary mb-4"></i>
                         </a>
