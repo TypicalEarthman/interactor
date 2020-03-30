@@ -200,6 +200,7 @@
                         <h2 class="mt-0">За дело!</h2>
                         <hr class="divider my-4" />
                         <p class="text-muted mb-5">Готов попробовать? Напиши нам о том, что собираешься попробовать свои силы. Не забудь представиться</p>
+                        <p class="text-muted mb-5">Если будут проблемы и вопросы - пиши</p>
                     </div>
                 </div>
                 <div class="row row-center">
