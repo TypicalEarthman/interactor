@@ -18,6 +18,7 @@ Route::get('/', 'ProjectController@generate')->name('main');
 Route::get('/home', 'HomeController@index')->name('home');
 
 Auth::routes();
+Route::post('/email/store', 'EmailController@store')->name('email.store');
 
 Route::get('/hire',  'LandingController@hire')->name('landing.hire');
 Route::get('/emotional',  'LandingController@emotional')->name('landing.emotional');
