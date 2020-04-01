@@ -57,36 +57,41 @@
                         <div class="mt-5">
                             <img src="{{ asset('images/sintel.jpg') }}" class="movie_pic mb-4"/>
                             <h3 class="h4 mb-2">Sintel</h3>
-                            <p class="text-muted mb-0">Sintel, also known as the Durian Movie Project from the Blender Foundation (from 2010) is a fantastic example of the kind of animation and storytelling the open source community is capable of. You will be amazed with stunning backgrounds and the amount of detail in props. By the end of this film you will be questioning why so many two hour movies put in theaters these days can’t make you feel like this one did!
+                            <p class="text-muted mb-2">Sintel, also known as the Durian Movie Project from the Blender Foundation (from 2010) is a fantastic example of the kind of animation and storytelling the open source community is capable of. You will be amazed with stunning backgrounds and the amount of detail in props. By the end of this film you will be questioning why so many two hour movies put in theaters these days can’t make you feel like this one did!
                             </p>
+                            <p class="font-weight-light mb-5">Available on <a href="https://youtu.be/eRsGyueVLvQ">YouTube</a></p>
                         </div>
                     </div>
                     <div>
                         <div class="mt-5">
                             <img src="{{ asset('images/blue.jpg') }}" class="movie_pic mb-4"/>
                             <h3 class="h4 mb-2">Love, Death & Robots - Zima blue</h3>
-                            <p class="text-muted mb-0">some desc here</p>
+                            <p class="text-muted mb-2">The best one from the "Love, death & robots" series. "Zima blue" is a complex layered cake, when you take the first layer and you like "Oh, i get it". But few moments later you realize that there is a second layer. And days later you take another layer and so on. And all of that complexity somehow packed in just 10 minutes. Just watch it, it may bring something new to your mind.</p>
+                            <p class="font-weight-light mb-5">Available on <a href="https://www.netflix.com/title/80174608">Netflix</a></p>
                         </div>
                     </div>
                     <div>
                         <div class="mt-5">
                             <img src="{{ asset('images/toyland.jpg') }}" class="movie_pic mb-4"/>
                             <h3 class="h4 mb-2">Toyland </h3>
-                            <p class="text-muted mb-0">Toyland is a film that works so brilliantly that it managed to be powerful, thought-provoking and even gut-wrenching. With sparse dialogue, director Jochen Alexander Freydank keeps us hooked throughout this superb short film. This harrowing, Oscar-nominated live-action short unfurls in 1942 Germany, where a mother dupes her son into believing that a group of Jewish neighbors are being taken to a fantasy world called Toyland</p>
+                            <p class="text-muted mb-2">Toyland is a film that works so brilliantly that it managed to be powerful, thought-provoking and even gut-wrenching. With sparse dialogue, director Jochen Alexander Freydank keeps us hooked throughout this superb short film. This harrowing, Oscar-nominated live-action short unfurls in 1942 Germany, where a mother dupes her son into believing that a group of Jewish neighbors are being taken to a fantasy world called Toyland</p>
+                            <p class="font-weight-light mb-5">Available on <a href="https://youtu.be/PwrySjp4J9Q">YouTube</a></p>
                         </div>
                     </div>
                     <div>
                         <div class="mt-5">
                             <img src="{{ asset('images/one-small-step2.jpg') }}" class="movie_pic mb-4"/>
                             <h3 class="h4 mb-2">One small step</h3>
-                            <p class="text-muted mb-0">One Small Step is a wonderful film that has a lot to say, about how much one person can effect your life and not giving up your dreams. Even though One Small Step is only six minutes long, it never feels rushed and, crucially, every moment feels resonant. Directors Andrew Chesworth and Bobby Pontillas are able to tell a complex story concisely, efficiently and in a universal way.</p>
+                            <p class="text-muted mb-2">One Small Step is a wonderful film that has a lot to say, about how much one person can effect your life and not giving up your dreams. Even though One Small Step is only six minutes long, it never feels rushed and, crucially, every moment feels resonant. Directors Andrew Chesworth and Bobby Pontillas are able to tell a complex story concisely, efficiently and in a universal way.</p>
+                            <p class="font-weight-light mb-5">Available on <a href="https://youtu.be/yWd4mzGqQYo">YouTube</a></p>
                         </div>
                     </div>
                     <div>
                         <div class="mt-5">
                             <img src="{{ asset('images/feast.jpg') }}" class="movie_pic mb-4"/>
                             <h3 class="h4 mb-2">Feast</h3>
-                            <p class="text-muted mb-0">Disney shorts are always amazing, and this short is no exception. Feast centers on Winston, a stray French bulldog, who was adopted by a man who would give him unhealthy table straps. But after the man finds a girlfriend, things start going green for Winston. By the end, you realize something that this short does: have a short, but well-rounded and detailed, story-line. You see everything in this story and you feel every emotion in this short, whether it's happiness and joy or depressed and sad. This short makes you feel everything going on in this small tale.</p>
+                            <p class="text-muted mb-2">Disney shorts are always amazing, and this short is no exception. Feast centers on Winston, a stray French bulldog, who was adopted by a man who would give him unhealthy table straps. But after the man finds a girlfriend, things start going green for Winston. By the end, you realize something that this short does: have a short, but well-rounded and detailed, story-line. You see everything in this story and you feel every emotion in this short, whether it's happiness and joy or depressed and sad. This short makes you feel everything going on in this small tale.</p>
+                            <p class="font-weight-light mb-5">Available on <a href="https://itunes.apple.com/us/movie/feast-2014/id958406739">iTunes</a></p>
                         </div>
                     </div>
                 </div>
