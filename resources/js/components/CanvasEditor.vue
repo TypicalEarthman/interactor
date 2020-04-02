@@ -94,6 +94,7 @@ export default {
     data () {
         return {
             rectangles: {},
+            rectanglesDrawing: [],
             drag: false,
             line_draw: false,
             connection: {
@@ -121,6 +122,10 @@ export default {
             this.connection.modal_conn_first = true
         },
         drawVideos: function(type) {
+            this.rectanglesDrawing.forEach(function(item) {
+                item.remove();
+            })
+            this.rectanglesDrawing = []
             let default_x = 20
             let default_y = 20
             let counter = 0
@@ -162,7 +167,7 @@ export default {
             }
         },
         drawRect: function(x,y,width,height,main,text,fill,key) {
-            let group = new Group()
+            this.rectanglesDrawing[this.rectanglesDrawing.length] =  new Group()
             let rectangle = new Rectangle(new Point(x, y), new Point(x+width, y+height))
             let radius = new Size(30, 30)
             let path = new Path.Rectangle(rectangle, radius)
@@ -182,9 +187,9 @@ export default {
                 fontSize: 14
             })
 
-            group.addChild(path)
-            group.addChild(text_block)
-            this.rectEvents(group,key,width,height,path)
+            this.rectanglesDrawing[this.rectanglesDrawing.length - 1].addChild(path)
+            this.rectanglesDrawing[this.rectanglesDrawing.length - 1].addChild(text_block)
+            this.rectEvents(this.rectanglesDrawing[this.rectanglesDrawing.length - 1],key,width,height,path)
             view.draw()
         },
         drawConnections: function() {

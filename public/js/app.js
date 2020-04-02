@@ -5188,6 +5188,7 @@ paper__WEBPACK_IMPORTED_MODULE_0__["install"](window);
   data: function data() {
     return {
       rectangles: {},
+      rectanglesDrawing: [],
       drag: false,
       line_draw: false,
       connection: {
@@ -5214,6 +5215,10 @@ paper__WEBPACK_IMPORTED_MODULE_0__["install"](window);
       this.connection.modal_conn_first = true;
     },
     drawVideos: function drawVideos(type) {
+      this.rectanglesDrawing.forEach(function (item) {
+        item.remove();
+      });
+      this.rectanglesDrawing = [];
       var default_x = 20;
       var default_y = 20;
       var counter = 0;
@@ -5257,7 +5262,7 @@ paper__WEBPACK_IMPORTED_MODULE_0__["install"](window);
       }
     },
     drawRect: function drawRect(x, y, width, height, main, text, fill, key) {
-      var group = new Group();
+      this.rectanglesDrawing[this.rectanglesDrawing.length] = new Group();
       var rectangle = new Rectangle(new Point(x, y), new Point(x + width, y + height));
       var radius = new Size(30, 30);
       var path = new Path.Rectangle(rectangle, radius);
@@ -5273,9 +5278,9 @@ paper__WEBPACK_IMPORTED_MODULE_0__["install"](window);
         fontFamily: 'Arial',
         fontSize: 14
       });
-      group.addChild(path);
-      group.addChild(text_block);
-      this.rectEvents(group, key, width, height, path);
+      this.rectanglesDrawing[this.rectanglesDrawing.length - 1].addChild(path);
+      this.rectanglesDrawing[this.rectanglesDrawing.length - 1].addChild(text_block);
+      this.rectEvents(this.rectanglesDrawing[this.rectanglesDrawing.length - 1], key, width, height, path);
       view.draw();
     },
     drawConnections: function drawConnections() {
