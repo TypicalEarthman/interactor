@@ -14,7 +14,8 @@
 use App\Project;
 Route::view('/test', 'test');
 
-Route::get('/', 'ProjectController@generate')->name('main');
+Route::get('/', 'HomeController@education')->name('main');
+//Route::get('/', 'ProjectController@generate')->name('main');
 Route::get('/home', 'HomeController@index')->name('home');
 
 Auth::routes();

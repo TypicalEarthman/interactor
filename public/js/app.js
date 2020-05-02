@@ -6640,7 +6640,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n#manager-root[data-v-08416e43] {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n            flex-flow: column wrap;\n    -webkit-box-pack: start;\n            justify-content: flex-start;\n    align-content: flex-start;\n}\n.controls[data-v-08416e43] {\n    position: absolute;\n    bottom: 0px;\n    left: 50%;\n    width: 300px;\n    margin: 0 0 0 -150px;\n}\n.parent[data-v-08416e43] {\n    padding: 0;\n    overflow: hidden;\n}\n.layer[data-v-08416e43] {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n            flex-flow: column;\n}\n.video[data-v-08416e43] {\n    background: #f00;\n    width: 100px;\n    height: 50px;\n    margin-bottom: 20px;\n    margin-right: 20px;\n}\n", ""]);
+exports.push([module.i, "\n#manager-root[data-v-08416e43] {\r\n    display: -webkit-box;\r\n    display: flex;\r\n    -webkit-box-orient: vertical;\r\n    -webkit-box-direction: normal;\r\n            flex-flow: column wrap;\r\n    -webkit-box-pack: start;\r\n            justify-content: flex-start;\r\n    align-content: flex-start;\n}\n.controls[data-v-08416e43] {\r\n    position: absolute;\r\n    bottom: 0px;\r\n    left: 50%;\r\n    width: 300px;\r\n    margin: 0 0 0 -150px;\n}\n.parent[data-v-08416e43] {\r\n    padding: 0;\r\n    overflow: hidden;\n}\n.layer[data-v-08416e43] {\r\n    display: -webkit-box;\r\n    display: flex;\r\n    -webkit-box-orient: vertical;\r\n    -webkit-box-direction: normal;\r\n            flex-flow: column;\n}\n.video[data-v-08416e43] {\r\n    background: #f00;\r\n    width: 100px;\r\n    height: 50px;\r\n    margin-bottom: 20px;\r\n    margin-right: 20px;\n}\r\n", ""]);
 
 // exports
 
@@ -6659,7 +6659,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.active[data-v-02862bc0] {\n\tposition: absolute;\n\ttop: 0;\n\tz-index: 150;\n}\n.inactive[data-v-02862bc0] {\n\tz-index: 100;\n\tleft: 0;\n\tposition: absolute;\n}\n.preview[data-v-02862bc0] {\n\tposition: relative;\n\theight: 100%;\n}\n.chooseOptions[data-v-02862bc0] {\n\tposition: absolute;\n\twidth: 100%;\n\ttop: 0;\n\tleft: 0;\n\tdisplay: -webkit-box;\n\tdisplay: flex;\n\t-webkit-box-orient: horizontal;\n\t-webkit-box-direction: normal;\n\t        flex-flow: row wrap;\n\tz-index: 500;\n\tjustify-content: space-around;\n\theight: 100%;\n\tz-index: 1000;\n}\n.option[data-v-02862bc0] {\n\tposition: relative;\n}\n.option-background[data-v-02862bc0] {\n\tdisplay: -webkit-box;\n\tdisplay: flex;\n\twidth: 100%;\n\theight: 100%;\n\t-webkit-box-pack: center;\n\t        justify-content: center;\n\t-webkit-box-align: center;\n\t        align-items: center;\n\tbackground: rgba(155,0,0,0.7);\n\tcursor: pointer;\n\tborder-radius: 10px;\n\t-webkit-transition: background .3s, -webkit-transform .3s;\n\ttransition: background .3s, -webkit-transform .3s;\n\ttransition: background .3s, transform .3s;\n\ttransition: background .3s, transform .3s, -webkit-transform .3s;\n}\n.option-background[data-v-02862bc0]:hover {\n\t-webkit-transform: scale(1.05);\n\t        transform: scale(1.05);\n\tbackground: rgba(155,0,0,0.8);\n}\n", ""]);
+exports.push([module.i, "\n.active[data-v-02862bc0] {\r\n\tposition: absolute;\r\n\ttop: 0;\r\n\tz-index: 150;\n}\n.inactive[data-v-02862bc0] {\r\n\tz-index: 100;\r\n\tleft: 0;\r\n\tposition: absolute;\n}\n.preview[data-v-02862bc0] {\r\n\tposition: relative;\r\n\theight: 100%;\n}\n.chooseOptions[data-v-02862bc0] {\r\n\tposition: absolute;\r\n\twidth: 100%;\r\n\ttop: 0;\r\n\tleft: 0;\r\n\tdisplay: -webkit-box;\r\n\tdisplay: flex;\r\n\t-webkit-box-orient: horizontal;\r\n\t-webkit-box-direction: normal;\r\n\t        flex-flow: row wrap;\r\n\tz-index: 500;\r\n\tjustify-content: space-around;\r\n\theight: 100%;\r\n\tz-index: 1000;\n}\n.option[data-v-02862bc0] {\r\n\tposition: relative;\n}\n.option-background[data-v-02862bc0] {\r\n\tdisplay: -webkit-box;\r\n\tdisplay: flex;\r\n\twidth: 100%;\r\n\theight: 100%;\r\n\t-webkit-box-pack: center;\r\n\t        justify-content: center;\r\n\t-webkit-box-align: center;\r\n\t        align-items: center;\r\n\tbackground: rgba(155,0,0,0.7);\r\n\tcursor: pointer;\r\n\tborder-radius: 10px;\r\n\t-webkit-transition: background .3s, -webkit-transform .3s;\r\n\ttransition: background .3s, -webkit-transform .3s;\r\n\ttransition: background .3s, transform .3s;\r\n\ttransition: background .3s, transform .3s, -webkit-transform .3s;\n}\n.option-background[data-v-02862bc0]:hover {\r\n\t-webkit-transform: scale(1.05);\r\n\t        transform: scale(1.05);\r\n\tbackground: rgba(155,0,0,0.8);\n}\r\n", ""]);
 
 // exports
 
@@ -26575,9 +26575,9 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\interactor\interactor\resources\js\app.js */"./resources/js/app.js");
-__webpack_require__(/*! C:\interactor\interactor\resources\sass\app.scss */"./resources/sass/app.scss");
-module.exports = __webpack_require__(/*! C:\interactor\interactor\resources\sass\vendor.scss */"./resources/sass/vendor.scss");
+__webpack_require__(/*! D:\interactor\resources\js\app.js */"./resources/js/app.js");
+__webpack_require__(/*! D:\interactor\resources\sass\app.scss */"./resources/sass/app.scss");
+module.exports = __webpack_require__(/*! D:\interactor\resources\sass\vendor.scss */"./resources/sass/vendor.scss");
 
 
 /***/ }),

@@ -10,7 +10,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
     -->
 
-    <title>interactor</title>
+    <title>@yield('title', 'interactor')</title>
 
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300&display=swap&subset=cyrillic" rel="stylesheet">
 
@@ -21,6 +21,8 @@
     <!-- Styles -->
     <link href="{{ asset('css/vendor.css') }}" rel="stylesheet">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    @yield('style')
 </head>
 <body>
     <div id="app">
