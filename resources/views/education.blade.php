@@ -28,17 +28,102 @@ body {
 	border: 5px solid #90c9f9;
 	padding: 1.5rem;
 }
+
+.video-cont {
+	position: relative;
+}
+
+.video-cont-link {
+	position: absolute;
+	background: #2296f3;
+	animation-name: highlight;
+	padding:  5px 10px 10px;
+	animation-duration: 1s;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+	animation-direction: alternate;
+	height: 40px;
+	font-size: 1rem;
+	cursor: pointer;
+}
+
+@keyframes highlight {
+	0% {
+		opacity: 1;
+		transform: scale(1.2);
+	}
+	80% {
+		opacity: 0;
+		transform: scale(1);
+	}
+	100% {
+		opacity: 0;
+		transform: scale(1);
+	}
+}
 </style>
 @endsection
 
 @section('content')
 <div style="padding: 50px 100px">
-	<h1 class="text-center display-4">Математика</h1>
+	<h1 class="text-center display-4 pt-5">Английский язык</h1>
+	<div class="row mb-5">
+		<div class="col-md-6">
+			<p>До:</p>
+			<img src="/images/eng.png" class="w-100" />
+			<p><a href="https://skyeng.ru/articles/vse-vremena-glagola-v-anglijskom-yazyke" target="_blank">Источник (SkyEng)</a></p>
+		</div>
+		<div class="col-md-6">
+			<p>После:</p>
+			<div class="p-3 level-2">
+				<h1>Are we felling tense yet?</h1>
+				<p class="mb-5">A visualization of what we mean in English by the various tenses.</p>
+				<div class="interactive mb-5">
+					<div v-for="(src, i) in engs" :key="'s' + i">
+						<img :src="'/images/' + src" class="w-100" v-show="i == eng_active" />
+					</div>
+					<img src="/images/eng_bot.png" class="w-100" />
+				</div>
+				<button @click="eng_change">Present Simple</button>
+				<button @click="eng_change">Present Progressive</button>
+				<button @click="eng_change">Future Simple</button>
+				<button @click="eng_change">Future Progressive</button>
+			</div>
+		</div>
+	</div>
+
+
+
+	<h1 class="text-center display-4 pt-5">Математика (видео)</h1>
+	<div class="row mb-5">
+		<div class="col-md-6">
+			<p>До:</p>
+			<div class="embed-responsive embed-responsive-16by9">
+				<iframe width="100%" src="https://www.youtube.com/embed/9NiVFyhY-f0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="embed-responsive-item"></iframe>
+			</div>
+			
+		</div>
+		<div class="col-md-6">
+			<p>После:</p>
+			<div v-for="(video, i) in math_videos" v-if="i == math_active" :key="'sq' + i" class="video-cont embed-responsive embed-responsive-16by9">
+				<video class="w-100 embed-responsive-item" :src="'/images/' + video.src" preload="true" looped controls></video>
+				<span v-for="link in video.links" class="video-cont-link" @click="changeMath(link.target)" :style="{ left : link.left + '%', top: link.top + '%', width: link.text ? 'auto' : link.width + '%' }">
+					<template v-if="link.text">
+						@{{ link.text }}
+					</template>
+				</span>
+			</div>
+			
+		</div>
+	</div>
+
+
+	<h1 class="text-center display-4 pt-5">Математика (интерактив)</h1>
 	<div class="row mb-5">
 		<div class="col-md-6">
 			<p>До:</p>
 			<img src="/images/math.png" class="w-100" />
-			<p><a href="#">Ссылка на источник</a></p>
+			<p><a href="http://fizmat.by/math/equation/quadratic" target="_blank">Источник (Подготовка к ЦТ (ЕГЭ)</a></p>
 		</div>
 		<div class="col-md-6">
 			<p>После:</p>
@@ -72,30 +157,11 @@ body {
 		</div>
 	</div>
 
-	<h1 class="text-center display-4 pt-5">Английский язык</h1>
-	<div class="row">
-		<div class="col-md-6">
-			<p>До:</p>
-			<img src="/images/eng.png" class="w-100" />
-		</div>
-		<div class="col-md-6">
-			<p>После:</p>
-			<div class="p-3 level-2">
-				<h1>Are we felling tense yet?</h1>
-				<p class="mb-5">A visualization of what we mean in English by the various tenses.</p>
-				<div class="interactive mb-5">
-					<template v-for="(src, i) in engs" :key="'s' + i">
-						<img :src="'/images/' + src" class="w-100" v-if="i == eng_active" />
-					</template>
-					<img src="/images/eng_bot.png" class="w-100" />
-				</div>
-				<button @click="eng_change">Present Simple</button>
-				<button @click="eng_change">Present Progressive</button>
-				<button @click="eng_change">Future Simple</button>
-				<button @click="eng_change">Future Progressive</button>
-			</div>
-		</div>
-	</div>
+	
+
+
+
+	
 </div>
 @endsection
 
@@ -111,6 +177,68 @@ body {
 				"eng_2.png",
 				"eng_3.png"
 			],
+			math_videos: [
+				{
+					src: "math_intro.mp4",
+					links: [
+						{
+							left: 3,
+							top: 29,
+							width: 20,
+							target: 1,
+						},
+						{
+							left: 27,
+							top: 29,
+							width: 20,
+							target: 2,
+						},
+						{
+							left: 60,
+							top: 29,
+							width: 25,
+							target: 3,
+						},
+					]
+				},
+				{
+					src: "math_1.mp4",
+					links: [
+						{
+							left: 0,
+							top: 0,
+							width: 10,
+							target: 0,
+							text: "Вернуться",
+						},
+					]
+				},
+				{
+					src: "math_2.mp4",
+					links: [
+						{
+							left: 0,
+							top: 0,
+							width: 10,
+							target: 0,
+							text: "Вернуться",
+						},
+					]
+				},
+				{
+					src: "math_3.mp4",
+					links: [
+						{
+							left: 0,
+							top: 0,
+							width: 10,
+							target: 0,
+							text: "Вернуться",
+						},
+					]
+				},
+			],
+			math_active: 0,
 			eng_active: 0,
 		},
 		watch: {
@@ -132,6 +260,9 @@ body {
 			eng_change() {
 				if(this.eng_active < 2) this.eng_active++;
 				else this.eng_active = 0;
+			},
+			changeMath(index) {
+				this.math_active = index;
 			}
 		}
 	}
