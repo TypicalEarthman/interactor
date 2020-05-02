@@ -34,17 +34,18 @@ body {
 @section('content')
 <div style="padding: 50px 100px">
 	<h1 class="text-center display-4">Математика</h1>
-	<div class="row">
+	<div class="row mb-5">
 		<div class="col-md-6">
 			<p>До:</p>
 			<img src="/images/math.png" class="w-100" />
+			<p><a href="#">Ссылка на источник</a></p>
 		</div>
 		<div class="col-md-6">
 			<p>После:</p>
 			<div class="p-3 level-2">
 				<h1>Что такое умножение?</h1>
 				<p class="mb-5">Это когда мы складываем число несколько раз.</p>
-				<div class="interactive">
+				<div class="interactive mb-5">
 					5 * 
 					<input type="text" v-model="math" style="width: 20px" maxlength="1" /> 
 					=
@@ -55,7 +56,7 @@ body {
 					=
 					@{{ mathSum }}
 				</div>
-				<p class="mb-5">Если мы умножаем - на +, получится -. Если же - на -, получится +.</p>
+				<p>Если мы умножаем - на +, получится -. Если же - на -, получится +.</p>
 				<div class="interactive">
 					
 					<input type="text" v-model="math2_1" style="width: 20px; text-align: center" maxlength="1" /> 
@@ -70,6 +71,31 @@ body {
 			</div>
 		</div>
 	</div>
+
+	<h1 class="text-center display-4 pt-5">Английский язык</h1>
+	<div class="row">
+		<div class="col-md-6">
+			<p>До:</p>
+			<img src="/images/eng.png" class="w-100" />
+		</div>
+		<div class="col-md-6">
+			<p>После:</p>
+			<div class="p-3 level-2">
+				<h1>Are we felling tense yet?</h1>
+				<p class="mb-5">A visualization of what we mean in English by the various tenses.</p>
+				<div class="interactive mb-5">
+					<template v-for="(src, i) in engs" :key="'s' + i">
+						<img :src="'/images/' + src" class="w-100" v-if="i == eng_active" />
+					</template>
+					<img src="/images/eng_bot.png" class="w-100" />
+				</div>
+				<button @click="eng_change">Present Simple</button>
+				<button @click="eng_change">Present Progressive</button>
+				<button @click="eng_change">Future Simple</button>
+				<button @click="eng_change">Future Progressive</button>
+			</div>
+		</div>
+	</div>
 </div>
 @endsection
 
@@ -80,6 +106,12 @@ body {
 			math: 3,
 			math2_1: "-",
 			math2_2: "+",
+			engs: [
+				"eng_1.png",
+				"eng_2.png",
+				"eng_3.png"
+			],
+			eng_active: 0,
 		},
 		watch: {
 			math(n) {
@@ -94,6 +126,12 @@ body {
 				let res = "-";
 				if(this.math2_1 == "-" && this.math2_2 == "-") res = "+";
 				return res;
+			}
+		},
+		methods: {
+			eng_change() {
+				if(this.eng_active < 2) this.eng_active++;
+				else this.eng_active = 0;
 			}
 		}
 	}
@@ -168,6 +206,7 @@ body {
 3. копировать блоки, всталвять в другой лонгрид
 4. просто перетащить картинку
 5. автоплеить видос (можно снимать самому тоже)
+6. инструмент нарезки картинок - аналог фотошопа
 
 	- Размер ставится по максимуму, каждый раз приходилось уменьшать размер. Причем, эти инструменты редактирования масштабов копец неудобные
 	- много разных элементов, которые нам не нужны. тоже с весом видео проблема.
